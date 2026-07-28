@@ -2,7 +2,7 @@
 """scrape_nadgryzieni.py
 
 Scrapes the Nadgryzieni episode list from:
-    https://retrorocketnetwork.pl/category/nadgryzen i-rss/
+    https://retrorocketnetwork.pl/category/nadgryzieni-rss/
 (there is a space in the URL text above only for readability – the real
 URL is https://retrorocketnetwork.pl/category/nadgryzieni-rss/)
 
@@ -47,13 +47,13 @@ import datetime
 import statistics
 from pathlib import Path
 
-import requests
+import urllib.request as urllib_req
 from bs4 import BeautifulSoup
 from dateutil import parser as dtparser
 
 BASE_URL = "https://retrorocketnetwork.pl/category/nadgryzieni-rss/"
 ARCHIVE_PATH = Path(
-    "/Users/tarkin/Library/Mobile Documents/com~apple~CloudDocs/! Hermes !/Scarif Vault/20-Podcast/Nadgryzieni — Episode Archive.md"
+    "/Users/tarkin/.hermes/profiles/c-3po/scripts/nadgryzieni_repo/Nadgryzieni Episode Archive.md"
 )
 BACKUP_TEMPLATE = (
     "/Users/tarkin/Library/Mobile Documents/com~apple~CloudDocs/! Hermes !/Scarif Vault/20-Podcast/Nadgryzieni — Episode Archive.backup.{timestamp}.md"
@@ -63,9 +63,8 @@ BACKUP_TEMPLATE = (
 # Helper utilities
 # ---------------------------------------------------------------------------
 def fetch(url: str) -> str:
-    resp = requests.get(url, timeout=30)
-    resp.raise_for_status()
-    return resp.text
+    with urllib_req.urlopen(url, timeout=30) as resp:
+        return resp.read().decode('utf-8')
 
 def get_next_page(soup: BeautifulSoup) -> str | None:
     # WordPress theme usually provides <link rel="next" href="…"> in the head
@@ -79,10 +78,21 @@ def get_next_page(soup: BeautifulSoup) -> str | None:
     return None
 
 def parse_episode_number(title: str) -> str:
-    # Try new format "598: …"
-    m = re.match(r"^(\d+):", title.strip())
+    # Try new format "598: …" or fractional like "100½: title"
+    m = re.match(r"^(\d+)([½⅓⅔]?)[:\s-]", title.strip())
     if m:
-        return m.group(1)
+        base = int(m.group(1))
+        frac = m.group(2)
+        if frac == '½':
+            return f"{base}.5"
+        elif frac == '⅓':
+            # Approximate as .3 per user instruction
+            return f"{base}.3"
+        elif frac == '⅔':
+            # Approximate as .6
+            return f"{base}.6"
+        else:
+            return str(base)
     # Try old format "Nadgryzieni – 05 – …"
     m = re.search(r"Nadgryzieni\s*(?:&#8211;|[-–])\s*(\d+)", title, re.I)
     if m:
@@ -233,13 +243,15 @@ def build_rows(episodes: list[tuple[str, str]]) -> list[dict]:
     return raw
 
 def markdown_table(rows: list[dict]) -> str:
-    header = "| Episode counter | Episode number | Episode title | Publish date | Duration |"
-    separator = "| - | ------------- | ------------ | ------------ | -------- |"
+    header = "| No. | Ep. | Episode title | Publish date | Duration |"
+    separator = "| --- | --- | ------------- | ------------ | -------- |"
+    # Sort rows by publish date (ISO) to meet requirement
+    sorted_rows = sorted(rows, key=lambda r: r['date'] or "")
     lines = [header, separator]
-    for r in rows:
+    for idx, r in enumerate(sorted_rows, start=1):
         # Escape any pipe characters in the title so the markdown table stays well‑formed
         sanitized_title = r['title'].replace('|', '\\|')
-        line = f"| {r['counter']} | {r['episode_number']} | {sanitized_title} | {r['date']} | {r['duration']} |"
+        line = f"| {idx} | {r['episode_number']} | {sanitized_title} | {r['date']} | {r['duration']} |"
         lines.append(line)
     return "\n".join(lines) + "\n"
 
