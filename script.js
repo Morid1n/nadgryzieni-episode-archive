@@ -1,20 +1,20 @@
-// Nadgryzieni Episode Chart
-// Uses Chart.js with horizontal scrolling for dense scatter plot
+// ===== Nadgryzieni Statistics Script =====
+// Uses Chart.js v4 to render episode duration data
 
-document.addEventListener('DOMContentLoaded', function() {
+// Load and render all data
+function loadData() {
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
-            renderChart(data);
             renderStats(data);
-            renderLegend(data);
+            renderChart(data);
         })
         .catch(error => {
             console.error('Error loading data:', error);
             document.getElementById('chart-wrapper').innerHTML =
                 '<p style="color: #F43E25; text-align: center; padding: 40px;">Błąd ładowania danych. Spróbuj odświeżyć stronę.</p>';
         });
-});
+}
 
 function renderStats(data) {
     document.getElementById('total-episodes').textContent = data.stats.total_episodes;
@@ -23,68 +23,35 @@ function renderStats(data) {
     document.getElementById('max-duration').textContent = Math.round(data.stats.max_duration);
 }
 
-function renderLegend(data) {
-    const legendItems = document.getElementById('legend-items');
-    legendItems.innerHTML = '';
-
-    for (const [key, info] of Object.entries(data.categories)) {
-        const item = document.createElement('div');
-        item.className = 'legend-item';
-        item.innerHTML =
-            '<div class="legend-color" style="background-color: ' + info.color + ';"></div>' +
-            '<span>' + info.label + '</span>';
-        legendItems.appendChild(item);
-    }
-}
-
 function renderChart(data) {
     const ctx = document.getElementById('episode-chart').getContext('2d');
 
-    // Group episodes by category for datasets
-    const datasets = {};
-    for (const [key, info] of Object.entries(data.categories)) {
-        datasets[key] = {
-            label: info.label,
-            data: [],
-            backgroundColor: info.color,
-            borderColor: info.color,
-            borderWidth: 0,
-            pointRadius: 5,
-            pointHoverRadius: 8,
-            pointHoverBorderWidth: 2,
-            pointHoverBorderColor: '#fff',
-            showLine: false,
-        };
-    }
+    const episodes = data.episodes.map(ep => ({
+        x: parseInt(ep.episode) || 0,
+        y: ep.minutes,
+        title: ep.title,
+        date: ep.date,
+        duration: ep.duration,
+        episode: ep.episode,
+    }));
 
-    // Populate datasets
-    data.episodes.forEach(ep => {
-        const point = {
-            x: parseInt(ep.episode) || 0,
-            y: ep.minutes,
-            title: ep.title,
-            date: ep.date,
-            duration: ep.duration,
-            episode: ep.episode,
-        };
-        if (datasets[ep.category]) {
-            datasets[ep.category].data.push(point);
-        }
-    });
-
-    // Sort datasets to match legend order
-    const orderedDatasets = [];
-    const legendOrder = ['main', 'live', 'po_godzinach', 'sp', 'half', 'special', 'afterparty', 'prawie', 'na_placu_budowy', 'na_spacerze', 'video', 'w_biegu'];
-    legendOrder.forEach(key => {
-        if (datasets[key] && datasets[key].data.length > 0) {
-            orderedDatasets.push(datasets[key]);
-        }
-    });
+    // Sort by episode number
+    episodes.sort((a, b) => a.x - b.x);
 
     const chart = new Chart(ctx, {
         type: 'scatter',
         data: {
-            datasets: orderedDatasets,
+            datasets: [{
+                label: 'Wszystkie odcinki',
+                data: episodes,
+                backgroundColor: 'rgba(99, 47, 83, 0.7)',
+                borderColor: '#632F53',
+                borderWidth: 1,
+                pointRadius: 4,
+                pointHoverRadius: 7,
+                pointHoverBorderWidth: 2,
+                pointHoverBorderColor: '#fff',
+            }]
         },
         options: {
             responsive: true,
@@ -191,4 +158,6 @@ function renderChart(data) {
             ],
         },
     });
-}// Cache: Thu Jul 30 11:02:11 CEST 2026
+}
+
+// Cache: Thu Jul 30 11:02:11 CEST 2026
