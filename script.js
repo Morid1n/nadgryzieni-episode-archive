@@ -89,7 +89,7 @@ function renderChart(data) {
                         },
                         label: function(context) {
                             const ep = context.raw;
-                            return 'T: ' + minutesToTime(ep.minutes);
+                            return 'T: ' + minutesToTime(ep.y);
                         },
                     },
                 },
