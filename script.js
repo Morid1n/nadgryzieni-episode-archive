@@ -160,4 +160,5 @@ function renderChart(data) {
     });
 }
 
-// Cache: Thu Jul 30 11:02:11 CEST 2026
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', loadData);
