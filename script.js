@@ -1,7 +1,7 @@
 // Nadgryzieni Episode Chart
 // Uses Chart.js with horizontal scrolling for dense scatter plot
 
-document.addEventlistener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
@@ -11,20 +11,20 @@ document.addEventlistener('DOMContentLoaded', function() {
         })
         .catch(error => {
             console.error('Error loading data:', error);
-            document.getElemBy('chart-wrapper').innerHTML =
+            document.getElementById('chart-wrapper').innerHTML =
                 '<p style="color: #F43E25; text-align: center; padding: 40px;">Błąd ładowania danych. Spróbuj odświeżyć stronę.</p>';
         });
 });
 
 function renderStats(data) {
-    document.getElemBy('total-episodes').textContent = data.stats.total_episodes;
-    document.getElemBy('total-hours').textContent = data.stats.total_listening_hours;
-    document.getElemBy('avg-duration').textContent = data.stats.average_duration;
-    document.getElemBy('max-duration').textContent = Math.round(data.stats.max_duration);
+    document.getElementById('total-episodes').textContent = data.stats.total_episodes;
+    document.getElementById('total-hours').textContent = data.stats.total_listening_hours;
+    document.getElementById('avg-duration').textContent = data.stats.average_duration;
+    document.getElementById('max-duration').textContent = Math.round(data.stats.max_duration);
 }
 
 function renderLegend(data) {
-    const legendItems = document.getElemBy('legend-items');
+    const legendItems = document.getElementById('legend-items');
     legendItems.innerHTML = '';
 
     for (const [key, info] of Object.entries(data.categories)) {
@@ -38,7 +38,7 @@ function renderLegend(data) {
 }
 
 function renderChart(data) {
-    const ctx = document.getElemBy('episode-chart').getContext('2d');
+    const ctx = document.getElementById('episode-chart').getContext('2d');
 
     // Group episodes by category for datasets
     const datasets = {};
