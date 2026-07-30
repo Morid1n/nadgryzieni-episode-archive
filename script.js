@@ -160,5 +160,5 @@ function renderChart(data) {
     });
 }
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', loadData);
+// Initialize (script is at bottom of body, DOM is already ready)
+loadData();
