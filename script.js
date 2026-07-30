@@ -3,7 +3,7 @@
 
 // Load and render all data
 function loadData() {
-    fetch('data.json')
+    fetch('data.json?v=100')
         .then(response => response.json())
         .then(data => {
             renderStats(data);
@@ -21,6 +21,13 @@ function renderStats(data) {
     document.getElementById('total-hours').textContent = data.stats.total_listening_hours;
     document.getElementById('avg-duration').textContent = data.stats.average_duration;
     document.getElementById('max-duration').textContent = Math.round(data.stats.max_duration);
+}
+
+function minutesToTime(minutes) {
+    const h = Math.floor(minutes / 60);
+    const m = Math.floor(minutes % 60);
+    const s = Math.round((minutes % 1) * 60);
+    return h.toString().padStart(2, '0') + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0');
 }
 
 function renderChart(data) {
@@ -128,39 +135,32 @@ function renderChart(data) {
                     beginAtZero: true,
                 },
             },
-            plugins: [
-                {
-                    id: 'avgLine',
-                    afterDraw: function(chart) {
-                        const ctx = chart.ctx;
-                        const yScale = chart.scales.y;
-                        const avgY = yScale.getPixelForValue(data.average_duration);
-                        ctx.save();
-                        ctx.strokeStyle = '#29505F';
-                        ctx.lineWidth = 2;
-                        ctx.setLineDash([5, 5]);
-                        ctx.beginPath();
-                        ctx.moveTo(chart.scales.x.left, avgY);
-                        ctx.lineTo(chart.scales.x.right, avgY);
-                        ctx.stroke();
-                        ctx.setLineDash([]);
-                        ctx.fillStyle = '#29505F';
-                        ctx.font = 'italic 10px sans-serif';
-                        ctx.textAlign = 'left';
-                        ctx.fillText('Średnia: ' + data.average_duration + ' min', chart.scales.x.left + 5, avgY - 5);
-                        ctx.restore();
-                    },
-                },
-            ],
         },
+        plugins: [
+            {
+                id: 'avgLine',
+                afterDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    const yScale = chart.scales.y;
+                    const avgY = yScale.getPixelForValue(data.average_duration);
+                    ctx.save();
+                    ctx.strokeStyle = '#29505F';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([5, 5]);
+                    ctx.beginPath();
+                    ctx.moveTo(chart.scales.x.left, avgY);
+                    ctx.lineTo(chart.scales.x.right, avgY);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    ctx.fillStyle = '#29505F';
+                    ctx.font = 'italic 10px sans-serif';
+                    ctx.textAlign = 'left';
+                    ctx.fillText('Średnia: ' + data.average_duration + ' min', chart.scales.x.left + 5, avgY - 5);
+                    ctx.restore();
+                },
+            },
+        ],
     });
-}
-
-function minutesToTime(minutes) {
-    const h = Math.floor(minutes / 60);
-    const m = Math.floor(minutes % 60);
-    const s = Math.round((minutes % 1) * 60);
-    return h.toString().padStart(2, '0') + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0');
 }
 
 // Initialize (script is at bottom of body, DOM is already ready)
