@@ -1,37 +1,30 @@
 // Nadgryzieni Episode Chart
 // Uses Chart.js with horizontal scrolling for dense scatter plot
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventlistener('DOMContentLoaded', function() {
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
-            try {
-                renderChart(data);
-                renderStats(data);
-                renderLegend(data);
-            } catch(e) {
-                console.error('Error in render:', e);
-                console.error('Stack:', e.stack);
-                document.getElementById('chart-wrapper').innerHTML =
-                    '<p style="color: #F43E25; text-align: center; padding: 40px;">Błąd: ' + e.message + '</p>';
-            }
+            renderChart(data);
+            renderStats(data);
+            renderLegend(data);
         })
         .catch(error => {
             console.error('Error loading data:', error);
-            document.getElementById('chart-wrapper').innerHTML =
+            document.getElemBy('chart-wrapper').innerHTML =
                 '<p style="color: #F43E25; text-align: center; padding: 40px;">Błąd ładowania danych. Spróbuj odświeżyć stronę.</p>';
         });
 });
 
 function renderStats(data) {
-    document.getElementById('total-episodes').textContent = data.stats.total_episodes;
-    document.getElementById('total-hours').textContent = data.stats.total_listening_hours;
-    document.getElementById('avg-duration').textContent = data.stats.average_duration;
-    document.getElementById('max-duration').textContent = Math.round(data.stats.max_duration);
+    document.getElemBy('total-episodes').textContent = data.stats.total_episodes;
+    document.getElemBy('total-hours').textContent = data.stats.total_listening_hours;
+    document.getElemBy('avg-duration').textContent = data.stats.average_duration;
+    document.getElemBy('max-duration').textContent = Math.round(data.stats.max_duration);
 }
 
 function renderLegend(data) {
-    const legendItems = document.getElementById('legend-items');
+    const legendItems = document.getElemBy('legend-items');
     legendItems.innerHTML = '';
 
     for (const [key, info] of Object.entries(data.categories)) {
@@ -45,7 +38,7 @@ function renderLegend(data) {
 }
 
 function renderChart(data) {
-    const ctx = document.getElementById('episode-chart').getContext('2d');
+    const ctx = document.getElemBy('episode-chart').getContext('2d');
 
     // Group episodes by category for datasets
     const datasets = {};
@@ -89,12 +82,13 @@ function renderChart(data) {
     });
 
     const chart = new Chart(ctx, {
+        type: 'scatter',
         data: {
             datasets: orderedDatasets,
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRat: false,
             interaction: {
                 intersect: false,
                 mode: 'point',
@@ -176,8 +170,8 @@ function renderChart(data) {
                     id: 'avgLine',
                     afterDraw: function(chart) {
                         const ctx = chart.ctx;
-                        const yAxis = chart.scales.y;
-                        const avgY = yAxis.getPixelForValue(data.average_duration);
+                        const yScale = chart.scales.y;
+                        const avgY = yScale.getPixelForValue(data.average_duration);
                         ctx.save();
                         ctx.strokeStyle = '#29505F';
                         ctx.lineWidth = 2;
