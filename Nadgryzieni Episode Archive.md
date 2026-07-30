@@ -137,7 +137,7 @@
 | 135 | 124   | 124: Mamy Google Glass ;-) i Chromebook Pixel                                                                | 2013-05-17   | 1:05:33  |
 | 136 | 125   | 125: Cały na Biało                                                                                           | 2013-05-24   | 1:01:11  |
 | 137 | 126   | 126: Wtopa                                                                                                   | 2013-05-31   | 1:05:03  |
-| 138 | 127   | Nadgryzieni – 127 – Prism i WWDC 2013 z nami w MacLife Cafe                                                  | 2013-06-07   | 17:35    |
+| 138 | 127   | 127: Prism i WWDC 2013 z nami w MacLife Cafe                                                                   | 2013-06-07   | 17:35    |
 | 139 | 128   | 128: Adobe Creative Cloud i wywiad z Jasonem Levine                                                          | 2013-06-07   | 31:17    |
 | 140 | 129   | 129: Nasze wrażenia po WWDC 2013                                                                             | 2013-06-14   | 1:36:58  |
 | 141 | 130   | 130: (Po Godzinach) iOS 7; Norbert vs. Moridin [explicit]                                                    | 2013-06-21   | 46:02    |
