@@ -88,7 +88,7 @@ function renderChart(data) {
         },
         options: {
             responsive: true,
-            maintainAspectRat: false,
+            maintainAspectRatio: false,
             interaction: {
                 intersect: false,
                 mode: 'point',
