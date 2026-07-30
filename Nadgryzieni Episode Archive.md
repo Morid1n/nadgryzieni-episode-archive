@@ -137,7 +137,7 @@
 | 135 | 124   | 124: Mamy Google Glass ;-) i Chromebook Pixel                                                                | 2013-05-17   | 1:05:33  |
 | 136 | 125   | 125: Cały na Biało                                                                                           | 2013-05-24   | 1:01:11  |
 | 137 | 126   | 126: Wtopa                                                                                                   | 2013-05-31   | 1:05:03  |
-| 138 | 127   | 127: Prism i WWDC 2013 z nami w MacLife Cafe                                                                   | 2013-06-07   | 17:35    |
+| 138 | 127   | 127: Prism i WWDC 2013 z nami w MacLife Cafe                                                                 | 2013-06-07   | 17:35    |
 | 139 | 128   | 128: Adobe Creative Cloud i wywiad z Jasonem Levine                                                          | 2013-06-07   | 31:17    |
 | 140 | 129   | 129: Nasze wrażenia po WWDC 2013                                                                             | 2013-06-14   | 1:36:58  |
 | 141 | 130   | 130: (Po Godzinach) iOS 7; Norbert vs. Moridin [explicit]                                                    | 2013-06-21   | 46:02    |
@@ -439,7 +439,7 @@
 | 437 | 471   | 471: Jak działają nowe skanery na lotniskach?                                                                | 2024-04-26   | 1:51:48  |
 | 438 | 472   | 472: Pik pik, pik pik, czyli podróżowanie po Tajwanie                                                        | 2024-05-03   | 2:03:25  |
 | 439 | 473   | 473: Nowe iPad Pro i Air pokazane na konferencji Let Loose!                                                  | 2024-05-08   | 1:59:40  |
-| 440 | 474   | 474: iPad to przyszłość komputerów                                                                           | 2024-05-10   | ?        |
+| 440 | 474   | 474: iPad to przyszłość komputerów                                                                           | 2024-05-10   | 2:15:29  |
 | 441 | 475   | 475: iPad Pro i Air – pierwsze wrażenia                                                                      | 2024-05-17   | 2:31:56  |
 | 442 | 476   | 476: Scarlett Johansson mówi nie!                                                                            | 2024-05-24   | 2:45:36  |
 | 443 | 477   | 477: Czy Thomas istnieje naprawdę?                                                                           | 2024-05-31   | 2:13:03  |
