@@ -40,6 +40,7 @@ write to ``Episode Archive.dry.md`` instead of the real file (no commit).
 """
 
 import sys
+from typing import Optional
 import re
 import os
 import shutil
@@ -51,9 +52,9 @@ import urllib.request as urllib_req
 from bs4 import BeautifulSoup
 from dateutil import parser as dtparser
 
-BASE_URL = "https://retrorocketnetwork.pl/category/nadgryzieni-rss/"
+BASE_URL = "https://retrorocketnetwork.pl/category/nadgryzieni/"
 ARCHIVE_PATH = Path(
-    "/Users/tarkin/.hermes/profiles/c-3po/scripts/nadgryzieni_repo/Nadgryzieni Episode Archive.md"
+    "/Users/tarkin/Library/Mobile Documents/com~apple~CloudDocs/! Hermes !/Scarif Vault/20-Podcast/Nadgryzieni — Episode Archive.md"
 )
 BACKUP_TEMPLATE = (
     "/Users/tarkin/Library/Mobile Documents/com~apple~CloudDocs/! Hermes !/Scarif Vault/20-Podcast/Nadgryzieni — Episode Archive.backup.{timestamp}.md"
@@ -66,11 +67,11 @@ def fetch(url: str) -> str:
     with urllib_req.urlopen(url, timeout=30) as resp:
         return resp.read().decode('utf-8')
 
-def get_next_page(soup: BeautifulSoup) -> str | None:
+def get_next_page(soup: BeautifulSoup) -> Optional[str]:
     # WordPress theme usually provides <link rel="next" href="…"> in the head
     link = soup.find('link', {'rel': 'next'})
     if link and link.get('href'):
-        return link['href']
+        return str(link['href'])
     # Fallback: look for a pagination anchor with text "Next" or similar
     nav = soup.find('a', string=re.compile(r'next', re.I))
     if nav and nav.get('href'):
@@ -100,14 +101,14 @@ def parse_episode_number(title: str) -> str:
     # No number → special placeholder
     return "SP"
 
-def extract_duration(text: str) -> str | None:
+def extract_duration(text: str) -> Optional[str]:
     # Look for a line starting with "Duration:" (case‑insensitive)
     m = re.search(r"Duration:\s*([\d:]+)", text, re.I)
     if m:
         return m.group(1).strip()
     return None
 
-def extract_filesize(text: str) -> float | None:
+def extract_filesize(text: str) -> Optional[float]:
     # Find patterns like "12 MB" or "12 MB"
     m = re.search(r"([\d.]+)\s*MB", text, re.I)
     if m:
@@ -131,13 +132,19 @@ def sec_to_hms(seconds: int) -> str:
 # ---------------------------------------------------------------------------
 # Main scraping logic
 # ---------------------------------------------------------------------------
+PAGE_LIMIT = int(os.getenv('PAGE_LIMIT', '0'))
+
 def crawl_episode_links() -> list[tuple[str, str]]:
     """Return a list of (title, episode_url) tuples by walking pagination."""
     results = []
     next_page = BASE_URL
+    pages_crawled = 0
     while next_page:
+        pages_crawled += 1
+        if PAGE_LIMIT and pages_crawled > PAGE_LIMIT:
+            break
         html = fetch(next_page)
-        soup = BeautifulSoup(html, "lxml")
+        soup = BeautifulSoup(html, "html.parser")
         # The theme lists episodes as <article> with an <h2><a href=...>
         for article in soup.find_all('article'):
             a = article.find('a')
@@ -151,7 +158,7 @@ def crawl_episode_links() -> list[tuple[str, str]]:
 
 def scrape_episode_detail(title: str, url: str) -> dict:
     html = fetch(url)
-    soup = BeautifulSoup(html, "lxml")
+    soup = BeautifulSoup(html, "html.parser")
     # Date – try <time datetime="..."> first
     date_str = None
     time_tag = soup.find('time')
