@@ -42,7 +42,7 @@ function renderChart(data) {
         type: 'scatter',
         data: {
             datasets: [{
-                label: 'Wszystkie odcinki',
+                label: '',
                 data: episodes,
                 backgroundColor: 'rgba(99, 47, 83, 0.7)',
                 borderColor: '#632F53',
@@ -78,15 +78,11 @@ function renderChart(data) {
                     callbacks: {
                         title: function(context) {
                             const ep = context[0].raw;
-                            return 'Odcinek ' + ep.episode + ': ' + ep.title;
+                            return 'Ep: ' + ep.episode;
                         },
                         label: function(context) {
                             const ep = context.raw;
-                            return [
-                                'Data: ' + ep.date,
-                                'Czas trwania: ' + ep.duration,
-                                'Minuty: ' + ep.y.toFixed(1),
-                            ];
+                            return 'T: ' + minutesToTime(ep.minutes);
                         },
                     },
                 },
@@ -158,6 +154,13 @@ function renderChart(data) {
             ],
         },
     });
+}
+
+function minutesToTime(minutes) {
+    const h = Math.floor(minutes / 60);
+    const m = Math.floor(minutes % 60);
+    const s = Math.round((minutes % 1) * 60);
+    return h.toString().padStart(2, '0') + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0');
 }
 
 // Initialize (script is at bottom of body, DOM is already ready)
