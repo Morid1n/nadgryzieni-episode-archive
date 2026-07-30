@@ -10,4 +10,4 @@ VENV="/Users/tarkin/.hermes/hermes-agent/venv"
 source "$VENV/bin/activate"
 
 cd "$SCRIPT_DIR"
-python3 "$SCRIPT_DIR/scrape_nadgryzieni.py" "$@"
+python3 "$SCRIPT_DIR/scrape_nadgryzieni_v2.py" "$@"
