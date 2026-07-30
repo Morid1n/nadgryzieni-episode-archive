@@ -5,9 +5,16 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
-            renderChart(data);
-            renderStats(data);
-            renderLegend(data);
+            try {
+                renderChart(data);
+                renderStats(data);
+                renderLegend(data);
+            } catch(e) {
+                console.error('Error in render:', e);
+                console.error('Stack:', e.stack);
+                document.getElementById('chart-wrapper').innerHTML =
+                    '<p style="color: #F43E25; text-align: center; padding: 40px;">Błąd: ' + e.message + '</p>';
+            }
         })
         .catch(error => {
             console.error('Error loading data:', error);
