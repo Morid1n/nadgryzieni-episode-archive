@@ -439,7 +439,7 @@
 | 437 | 471   | 471: Jak działają nowe skanery na lotniskach?                                                                | 2024-04-26   | 1:51:48  |
 | 438 | 472   | 472: Pik pik, pik pik, czyli podróżowanie po Tajwanie                                                        | 2024-05-03   | 2:03:25  |
 | 439 | 473   | 473: Nowe iPad Pro i Air pokazane na konferencji Let Loose!                                                  | 2024-05-08   | 1:59:40  |
-| 440 | 474   | 474: iPad to przyszłość komputerów                                                                           | 2024-05-10   | 2:15:29  |
+| 440 | 474   | 474: iPad to przyszłość komputerów                                                                           | 2024-05-10   | 2:15:30  |
 | 441 | 475   | 475: iPad Pro i Air – pierwsze wrażenia                                                                      | 2024-05-17   | 2:31:56  |
 | 442 | 476   | 476: Scarlett Johansson mówi nie!                                                                            | 2024-05-24   | 2:45:36  |
 | 443 | 477   | 477: Czy Thomas istnieje naprawdę?                                                                           | 2024-05-31   | 2:13:03  |
