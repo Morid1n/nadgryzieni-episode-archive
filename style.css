@@ -1,0 +1,266 @@
+/* ===== RRN Color Palette ===== */
+:root {
+    --rrn-red: #F43E25;
+    --rrn-red-light: #f53e25;
+    --rrn-teal: #83AEB4;
+    --rrn-dark-teal: #29505F;
+    --rrn-light-gray: #f0f0f0;
+    --rrn-dark-text: #111;
+    --rrn-light-text: #f7f7f7;
+    --rrn-accent-green: #cae153;
+    --rrn-accent-cyan: #47CFEB;
+    --rrn-purple: #632F53;
+    --rrn-orange: #ff6900;
+    --rrn-blue: #0693e3;
+    --rrn-bright-cyan: #00d084;
+    --rrn-soft-cyan: #8ed1fc;
+}
+
+/* ===== Reset & Base ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    background-color: var(--rrn-teal);
+    color: var(--rrn-dark-text);
+    line-height: 1.6;
+}
+
+/* ===== Layout ===== */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ===== Header ===== */
+header {
+    background-color: var(--rrn-red);
+    color: var(--rrn-light-text);
+    padding: 40px 0 30px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+header .subtitle {
+    font-size: 1.05rem;
+    opacity: 0.92;
+}
+
+/* ===== Stats Overview ===== */
+.stats-overview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 30px 0 20px;
+    justify-content: center;
+}
+
+.stat-card {
+    background: var(--rrn-light-text);
+    border-radius: 12px;
+    padding: 20px 28px;
+    text-align: center;
+    min-width: 140px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--rrn-light-gray);
+    flex: 1;
+}
+
+.stat-value {
+    display: block;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--rrn-red);
+    line-height: 1;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--rrn-dark-teal);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ===== Chart Section ===== */
+.chart-container {
+    background: var(--rrn-light-text);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--rrn-light-gray);
+}
+
+.chart-wrapper {
+    width: 100%;
+    height: 420px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rrn-dark-teal) var(--rrn-light-gray);
+}
+
+#episode-chart {
+    min-width: 1600px;
+    width: 100%;
+    height: 100%;
+}
+
+.chart-hint {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--rrn-dark-teal);
+    margin-top: 12px;
+    opacity: 0.7;
+}
+
+/* ===== Legend ===== */
+.legend {
+    background: var(--rrn-light-text);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--rrn-light-gray);
+}
+
+.legend-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--rrn-dark-teal);
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.legend-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--rrn-dark-text);
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+/* ===== Footer Links ===== */
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.github-link, .rrn-link {
+    color: var(--rrn-red);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.github-link:hover, .rrn-link:hover {
+    color: var(--rrn-red-light);
+    text-decoration: underline;
+}
+
+/* ===== Custom Scrollbar ===== */
+.chart-wrapper::-webkit-scrollbar {
+    height: 10px;
+}
+
+.chart-wrapper::-webkit-scrollbar-track {
+    background: var(--rrn-light-gray);
+    border-radius: 5px;
+}
+
+.chart-wrapper::-webkit-scrollbar-thumb {
+    background: var(--rrn-dark-teal);
+    border-radius: 5px;
+}
+
+.chart-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--rrn-red);
+}
+footer {
+    background-color: var(--rrn-dark-teal);
+    color: var(--rrn-light-text);
+    text-align: center;
+    padding: 24px 0;
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.7rem;
+    }
+
+    .stat-card {
+        min-width: 100px;
+        padding: 16px 16px;
+    }
+
+    .stat-value {
+        font-size: 1.7rem;
+    }
+
+    .chart-container {
+        padding: 20px;
+    }
+
+    .legend {
+        padding: 20px;
+    }
+
+    .legend-item {
+        font-size: 0.78rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-overview {
+        gap: 10px;
+    }
+
+    .stat-card {
+        min-width: 80px;
+        padding: 14px 10px;
+    }
+
+    .stat-value {
+        font-size: 1.4rem;
+    }
+
+    .footer-links {
+        gap: 20px;
+    }
+}

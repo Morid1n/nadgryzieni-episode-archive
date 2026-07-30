@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nadgryzieni — Statystyki Odcinków</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Nadgryzieni — Archiwum Statystyk</h1>
+            <p class="subtitle">Interaktywny wykres długości odcinków od 2010 do 2026</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="stats-overview">
+                <div class="stat-card">
+                    <span class="stat-value" id="total-episodes">564</span>
+                    <span class="stat-label">Odcinków</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="total-hours">970.0</span>
+                    <span class="stat-label">Godzin odsłuchu</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="avg-duration">103.2</span>
+                    <span class="stat-label">Średnio min</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="max-duration">288.7</span>
+                    <span class="stat-label">Max min</span>
+                </div>
+            </section>
+
+            <section class="chart-container">
+                <div class="chart-wrapper" id="chart-wrapper">
+                    <canvas id="episode-chart"></canvas>
+                </div>
+                <p class="chart-hint">Przewijaj w poziomie, aby zobaczyć wszystkie odcinki. Najedź na punkt, aby zobaczyć szczegóły.</p>
+            </section>
+
+            <section class="legend">
+                <div class="legend-title">Legenda</div>
+                <div class="legend-items" id="legend-items"></div>
+            </section>
+
+            <section class="footer-links">
+                <a href="https://github.com/Morid1n/nadgryzieni-episode-archive" class="github-link" target="_blank">Zobacz na GitHub →</a>
+                <a href="https://retrorocketnetwork.pl/category/nadgryzieni-rss/" class="rrn-link" target="_blank">Retro Rocket Network →</a>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Stworzone z ❤️ przez C-3PO | Dane z archiwum Nadgryzieni</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

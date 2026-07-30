@@ -1,0 +1,5138 @@
+{
+  "episodes": [
+    {
+      "episode": "1",
+      "title": "01: Come see our latest recap",
+      "date": "2010-01-28",
+      "duration": "42:55",
+      "minutes": 42.92,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "2",
+      "title": "02: Aperture 3",
+      "date": "2010-03-02",
+      "duration": "43:21",
+      "minutes": 43.35,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "3",
+      "title": "03: Podróże z Apple",
+      "date": "2010-05-26",
+      "duration": "21:04",
+      "minutes": 21.07,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "4",
+      "title": "04: WWDC 2010",
+      "date": "2010-06-16",
+      "duration": "12:53",
+      "minutes": 12.88,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "5",
+      "title": "05: iPhone 4",
+      "date": "2010-07-07",
+      "duration": "15:50",
+      "minutes": 15.83,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "6",
+      "title": "06: Antennagate",
+      "date": "2010-07-23",
+      "duration": "45:34",
+      "minutes": 45.57,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "7",
+      "title": "07: Ten po wakacjach",
+      "date": "2010-10-04",
+      "duration": "32:46",
+      "minutes": 32.77,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "8",
+      "title": "08: Windows Phone 7 i nowy iMagazine",
+      "date": "2010-10-21",
+      "duration": "39:06",
+      "minutes": 39.1,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "9",
+      "title": "09: Back to the Mac",
+      "date": "2010-10-25",
+      "duration": "32:20",
+      "minutes": 32.33,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "10",
+      "title": "10: iLife z problemami",
+      "date": "2010-11-02",
+      "duration": "44:10",
+      "minutes": 44.17,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "11",
+      "title": "11: Nowe Apple TV",
+      "date": "2010-11-08",
+      "duration": "44:15",
+      "minutes": 44.25,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "12",
+      "title": "12: Kradzieże, SSD i rock & roll",
+      "date": "2010-11-11",
+      "duration": "1:06:32",
+      "minutes": 66.53,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "13",
+      "title": "13: The Beatles i Woz",
+      "date": "2010-11-20",
+      "duration": "47:50",
+      "minutes": 47.83,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "14",
+      "title": "14: Biedronka z IBM i MacBook Air",
+      "date": "2010-11-25",
+      "duration": "30:28",
+      "minutes": 30.47,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "15",
+      "title": "15: E-Prasa i iOS 4.2.1",
+      "date": "2010-11-29",
+      "duration": "30:48",
+      "minutes": 30.8,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "16",
+      "title": "16: Powrót krwiożerczych świń 2",
+      "date": "2010-12-05",
+      "duration": "1:16:49",
+      "minutes": 76.82,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "17",
+      "title": "17: C(*)(*)ki i cenzura",
+      "date": "2010-12-10",
+      "duration": "47:00",
+      "minutes": 47.0,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "18",
+      "title": "18: Zadyma i wykorzystanie naszych iPadów",
+      "date": "2010-12-19",
+      "duration": "1:12:02",
+      "minutes": 72.03,
+      "category": "main",
+      "year": 2010
+    },
+    {
+      "episode": "19",
+      "title": "19: Sprzątaczka Design Studios",
+      "date": "2011-01-16",
+      "duration": "1:21:36",
+      "minutes": 81.6,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "20",
+      "title": "20: “You should either be bored or dead by now. Thanks for listening.”",
+      "date": "2011-01-27",
+      "duration": "42:22",
+      "minutes": 42.37,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "21",
+      "title": "21: Hate-ujemy/Hejtujemy(?) FaceTime!",
+      "date": "2011-01-28",
+      "duration": "30:02",
+      "minutes": 30.03,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "22",
+      "title": "22: The Dark Side",
+      "date": "2011-02-11",
+      "duration": "56:09",
+      "minutes": 56.15,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "23",
+      "title": "23: Ten po feriach",
+      "date": "2011-02-25",
+      "duration": "59:47",
+      "minutes": 59.78,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "24",
+      "title": "24: MacBooki Pro early-2011, OS X Lion i iPad 2",
+      "date": "2011-03-07",
+      "duration": "1:04:06",
+      "minutes": 64.1,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "25",
+      "title": "25: iPad 2",
+      "date": "2011-03-16",
+      "duration": "47:05",
+      "minutes": 47.08,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "26",
+      "title": "26: Życie po premierze iPada 2 i trochę o Fuji X100",
+      "date": "2011-03-29",
+      "duration": "51:54",
+      "minutes": 51.9,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "27",
+      "title": "27: Zajarany jak szczerbaty na suchara",
+      "date": "2011-04-14",
+      "duration": "1:02:49",
+      "minutes": 62.82,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "28",
+      "title": "28: Jak idziecie do burdelu to zostawcie iPhone’a w domu",
+      "date": "2011-04-21",
+      "duration": "54:45",
+      "minutes": 54.75,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "29",
+      "title": "29: Sony popełniło totalny fuckup",
+      "date": "2011-04-28",
+      "duration": "1:19:58",
+      "minutes": 79.97,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "30",
+      "title": "30: Miss FaceTime oraz gość specjalny – Steve Ballmer",
+      "date": "2011-05-06",
+      "duration": "1:28:26",
+      "minutes": 88.43,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "31",
+      "title": "31: (Ekstra) Audycja Podcasty i podcasterzy z Polskiego Radia Wrocław",
+      "date": "2011-05-09",
+      "duration": "16:28",
+      "minutes": 16.47,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "32",
+      "title": "32: Justin Bieber, Mac i Blondynka",
+      "date": "2011-05-19",
+      "duration": "57:39",
+      "minutes": 57.65,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "33",
+      "title": "33: Apple ani nie zaprzecza, ani nie potwierdza",
+      "date": "2011-05-24",
+      "duration": "1:34:12",
+      "minutes": 94.2,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "34",
+      "title": "34: WWDC i Audiobooki",
+      "date": "2011-06-03",
+      "duration": "2:09:20",
+      "minutes": 129.33,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "35",
+      "title": "35: iOS 5, Mac OS X Lion i iCloud",
+      "date": "2011-06-10",
+      "duration": "2:15:25",
+      "minutes": 135.42,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "36",
+      "title": "36: Nie wiemy jaki dzisiaj mamy mieć tytuł",
+      "date": "2011-06-18",
+      "duration": "1:45:21",
+      "minutes": 105.35,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "37",
+      "title": "37: Po pięciu minutach miała banan na twarzy i szczerzyła zęby",
+      "date": "2011-06-24",
+      "duration": "2:09:26",
+      "minutes": 129.43,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "38",
+      "title": "38: Jak dzieci, słowo daję",
+      "date": "2011-07-01",
+      "duration": "2:28:51",
+      "minutes": 148.85,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "39",
+      "title": "39: Księga Hioba",
+      "date": "2011-07-09",
+      "duration": "1:31:38",
+      "minutes": 91.63,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "40",
+      "title": "40: Dominikowi ukradli rower, a mi padł MicroSIM",
+      "date": "2011-07-16",
+      "duration": "2:17:59",
+      "minutes": 137.98,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "41",
+      "title": "41: To jest jakiś obłęd, czyli nowe Maki i OS X Lion",
+      "date": "2011-07-24",
+      "duration": "2:00:46",
+      "minutes": 120.77,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "42",
+      "title": "42: Chińczycy mają podrobione Apple Store, a my nie mamy żadnego",
+      "date": "2011-07-29",
+      "duration": "2:04:56",
+      "minutes": 124.93,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "43",
+      "title": "43: Mac Mini z SSD, Mini Server i MacBook Air 13″",
+      "date": "2011-08-05",
+      "duration": "1:24:26",
+      "minutes": 84.43,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "44",
+      "title": "44: Budujemy Hackintosha i MacBook Air 13″",
+      "date": "2011-08-12",
+      "duration": "1:44:21",
+      "minutes": 104.35,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "45",
+      "title": "45: iStig i wszystko o jego Hackintoshu",
+      "date": "2011-08-13",
+      "duration": "1:35:53",
+      "minutes": 95.88,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "46",
+      "title": "46: Nie ma dla nas tematów tabu",
+      "date": "2011-08-19",
+      "duration": "1:17:29",
+      "minutes": 77.48,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "47",
+      "title": "47: Steve Jobs jeszcze żyje – nie uśmiercajmy go",
+      "date": "2011-08-25",
+      "duration": "1:05:29",
+      "minutes": 65.48,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "48",
+      "title": "48: IFA 2011 część 1",
+      "date": "2011-09-09",
+      "duration": "42:48",
+      "minutes": 42.8,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "49",
+      "title": "49: IFA 2011 część 2",
+      "date": "2011-09-15",
+      "duration": "22:16",
+      "minutes": 22.27,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "50",
+      "title": "50: webOS leży i czeka aż przejdzie mi foch",
+      "date": "2011-09-16",
+      "duration": "1:59:13",
+      "minutes": 119.22,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "51",
+      "title": "51: Okład z młodych piersi",
+      "date": "2011-09-20",
+      "duration": "58:48",
+      "minutes": 58.8,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "51.5",
+      "title": "51½: (Po Godzinach) Aśnaebaem czoreay",
+      "date": "2011-09-24",
+      "duration": "1:11:17",
+      "minutes": 71.28,
+      "category": "po_godzinach",
+      "year": 2011
+    },
+    {
+      "episode": "52",
+      "title": "52: iTunes Store i iBookstore Polska",
+      "date": "2011-09-29",
+      "duration": "1:15:32",
+      "minutes": 75.53,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "53",
+      "title": "53: Let’s Talk iPhone",
+      "date": "2011-10-04",
+      "duration": "1:43:09",
+      "minutes": 103.15,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "54",
+      "title": "54: Thank you Steve",
+      "date": "2011-10-07",
+      "duration": "1:15:10",
+      "minutes": 75.17,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "55",
+      "title": "55: Pierwsi Polacy z iPhone 4S",
+      "date": "2011-10-17",
+      "duration": "1:40:05",
+      "minutes": 100.08,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "56",
+      "title": "56: Podsumowanie iOS 5, iCloud i iPhone 4S",
+      "date": "2011-10-21",
+      "duration": "1:50:14",
+      "minutes": 110.23,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "57",
+      "title": "57: Gra o Tron, Biografia Steve’a Jobsa i filmy w iTunes Store Polska",
+      "date": "2011-10-27",
+      "duration": "1:00:16",
+      "minutes": 60.27,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "58",
+      "title": "58: Widzimy, nawet jeśli nie patrzymy",
+      "date": "2011-11-03",
+      "duration": "1:54:28",
+      "minutes": 114.47,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "59",
+      "title": "59: 1800 czego? Minut? Pesos kolumbijskich?",
+      "date": "2011-11-10",
+      "duration": "1:33:54",
+      "minutes": 93.9,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "61",
+      "title": "61: SSD zmienia światopogląd",
+      "date": "2011-11-18",
+      "duration": "1:43:30",
+      "minutes": 103.5,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "62",
+      "title": "62: Black Friday",
+      "date": "2011-11-25",
+      "duration": "2:25:20",
+      "minutes": 145.33,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "63",
+      "title": "63: Wiemy o Was wszystko!",
+      "date": "2011-12-01",
+      "duration": "1:51:14",
+      "minutes": 111.23,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "64",
+      "title": "64: Liroy – Grand Papa polskiego Rapa",
+      "date": "2011-12-08",
+      "duration": "1:23:06",
+      "minutes": 83.1,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "65",
+      "title": "65: Not Safe For Work",
+      "date": "2011-12-23",
+      "duration": "2:13:41",
+      "minutes": 133.68,
+      "category": "main",
+      "year": 2011
+    },
+    {
+      "episode": "66",
+      "title": "66: Panu z ptaka pociekło!",
+      "date": "2012-01-05",
+      "duration": "1:37:32",
+      "minutes": 97.53,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "67",
+      "title": "67: edukacyjne Apple, beznadziejne CES i czyszczący Samsung",
+      "date": "2012-01-13",
+      "duration": "1:32:14",
+      "minutes": 92.23,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "68",
+      "title": "68: iPad to komputer pełną gębą!",
+      "date": "2012-01-19",
+      "duration": "1:18:02",
+      "minutes": 78.03,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "69",
+      "title": "69: Zamykamy ACTA",
+      "date": "2012-01-26",
+      "duration": "1:18:52",
+      "minutes": 78.87,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "70",
+      "title": "70: Czy i jaki dysk sieciowy wybrać do naszego Maka?",
+      "date": "2012-02-06",
+      "duration": "1:40:14",
+      "minutes": 100.23,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "71",
+      "title": "71: Nadrabiamy",
+      "date": "2012-02-10",
+      "duration": "54:02",
+      "minutes": 54.03,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "72",
+      "title": "72: Woz!!!",
+      "date": "2012-02-15",
+      "duration": "28:00",
+      "minutes": 28.0,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "73",
+      "title": "73: OS X Mountain Lion i Macworld",
+      "date": "2012-02-20",
+      "duration": "1:34:23",
+      "minutes": 94.38,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "74",
+      "title": "74: Łyka jak pelikan cegłę",
+      "date": "2012-03-01",
+      "duration": "1:15:57",
+      "minutes": 75.95,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "75",
+      "title": "75: iPad 3 – relacja na żywo z prezentacji",
+      "date": "2012-03-09",
+      "duration": "2:02:32",
+      "minutes": 122.53,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "76",
+      "title": "76: iPad 3G",
+      "date": "2012-03-14",
+      "duration": "1:00:19",
+      "minutes": 60.32,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "77",
+      "title": "77: Moim sponsorem jest NFZ",
+      "date": "2012-03-20",
+      "duration": "1:05:53",
+      "minutes": 65.88,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "78",
+      "title": "78: Wydawnictwa, a iPad",
+      "date": "2012-03-29",
+      "duration": "1:29:08",
+      "minutes": 89.13,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "79",
+      "title": "79: Słyszę głosy",
+      "date": "2012-04-05",
+      "duration": "1:32:37",
+      "minutes": 92.62,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "80",
+      "title": "80: Szukamy Pierwszego Polaka z Flashbackiem",
+      "date": "2012-04-13",
+      "duration": "1:24:24",
+      "minutes": 84.4,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "81",
+      "title": "81: Urodzeni Mordercy",
+      "date": "2012-04-19",
+      "duration": "1:21:57",
+      "minutes": 81.95,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "82",
+      "title": "82: Zdradzamy wielkie tajemnice!",
+      "date": "2012-04-26",
+      "duration": "2:01:52",
+      "minutes": 121.87,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "83",
+      "title": "83: Moherowe Berety atakują Apple!",
+      "date": "2012-05-10",
+      "duration": "1:41:20",
+      "minutes": 101.33,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "84",
+      "title": "84: Grubszy od dwóch Airów",
+      "date": "2012-05-18",
+      "duration": "1:38:15",
+      "minutes": 98.25,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "85",
+      "title": "85: Memory Fajnd Tim Cook i wszystko jasne",
+      "date": "2012-05-31",
+      "duration": "1:27:15",
+      "minutes": 87.25,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "86",
+      "title": "86: iOS 6 i MacBook Pro z ekranem Retina",
+      "date": "2012-06-15",
+      "duration": "1:09:22",
+      "minutes": 69.37,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "86.5",
+      "title": "86½: (Live) WWDC 2012",
+      "date": "2012-06-15",
+      "duration": "2:36:22",
+      "minutes": 156.37,
+      "category": "live",
+      "year": 2012
+    },
+    {
+      "episode": "87",
+      "title": "87: Uważaj jak i gdzie wkładasz",
+      "date": "2012-06-21",
+      "duration": "1:28:40",
+      "minutes": 88.67,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "88",
+      "title": "88: Poradnik: Jakim jesteś Makiem?",
+      "date": "2012-06-28",
+      "duration": "1:30:22",
+      "minutes": 90.37,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "89",
+      "title": "89: Upadek Triady i jego wpływ na wahania rynku technologicznego",
+      "date": "2012-07-05",
+      "duration": "45:27",
+      "minutes": 45.45,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "90",
+      "title": "90: Kamil z Policją w pościgu za iPhonem",
+      "date": "2012-07-06",
+      "duration": "17:02",
+      "minutes": 17.03,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "91",
+      "title": "91: Android jest w wersji pre-alpha!",
+      "date": "2012-07-12",
+      "duration": "1:19:09",
+      "minutes": 79.15,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "92",
+      "title": "92: Szybko i płynnie, czyli wszystko o Mountain Lion",
+      "date": "2012-07-26",
+      "duration": "1:21:52",
+      "minutes": 81.87,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "93",
+      "title": "93: Nie będzie iPada 8″",
+      "date": "2012-08-02",
+      "duration": "1:07:10",
+      "minutes": 67.17,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "94",
+      "title": "94: Aż chciałbym mieć knajpę, żeby mieć terminal Square",
+      "date": "2012-08-09",
+      "duration": "1:17:03",
+      "minutes": 77.05,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "95",
+      "title": "95: Jak tanio wejść w ekosystem Apple?",
+      "date": "2012-08-26",
+      "duration": "1:21:28",
+      "minutes": 81.47,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "96",
+      "title": "96: Dominik o Google Nexus 7",
+      "date": "2012-09-03",
+      "duration": "1:26:13",
+      "minutes": 86.22,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "97",
+      "title": "97: Relacja z IFA 2012",
+      "date": "2012-09-08",
+      "duration": "1:09:01",
+      "minutes": 69.02,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "97.3",
+      "title": "97⅓: (Live) Premiera iPhone 5, iPodów i iTunes 11",
+      "date": "2012-09-19",
+      "duration": "2:28:20",
+      "minutes": 148.33,
+      "category": "live",
+      "year": 2012
+    },
+    {
+      "episode": "97.6",
+      "title": "97⅔: iDresden i premiera iPhone 5",
+      "date": "2012-09-26",
+      "duration": "53:45",
+      "minutes": 53.75,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "98",
+      "title": "98: Paradoks!",
+      "date": "2012-10-04",
+      "duration": "3:10:06",
+      "minutes": 190.1,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "99",
+      "title": "99: Aplikacje, aplikacje, aplikacje",
+      "date": "2012-10-12",
+      "duration": "1:50:16",
+      "minutes": 110.27,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "100",
+      "title": "100: Sto! [konkurs]",
+      "date": "2012-10-18",
+      "duration": "1:26:18",
+      "minutes": 86.3,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "100.5",
+      "title": "100½: (Live) A Little More Live!",
+      "date": "2012-10-24",
+      "duration": "40:16",
+      "minutes": 40.27,
+      "category": "live",
+      "year": 2012
+    },
+    {
+      "episode": "101",
+      "title": "101: To je amelinium!",
+      "date": "2012-10-25",
+      "duration": "1:42:01",
+      "minutes": 102.02,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "102",
+      "title": "102: Rezerwowe Psy",
+      "date": "2012-11-07",
+      "duration": "1:15:24",
+      "minutes": 75.4,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "103",
+      "title": "103: Straciliśmy flow, ale mamy orgazm moralny",
+      "date": "2012-11-08",
+      "duration": "1:19:31",
+      "minutes": 79.52,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "104",
+      "title": "104: HTC jest mniejsze niż dział cateringu Samsunga",
+      "date": "2012-11-15",
+      "duration": "1:20:26",
+      "minutes": 80.43,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "105",
+      "title": "105: Mniej żreć!",
+      "date": "2012-11-29",
+      "duration": "59:34",
+      "minutes": 59.57,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "SP",
+      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 01 – iPhone i iPad",
+      "date": "2012-12-10",
+      "duration": "30:10",
+      "minutes": 30.17,
+      "category": "sp",
+      "year": 2012
+    },
+    {
+      "episode": "SP",
+      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 02 – Mac i OS X",
+      "date": "2012-12-11",
+      "duration": "16:24",
+      "minutes": 16.4,
+      "category": "sp",
+      "year": 2012
+    },
+    {
+      "episode": "SP",
+      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 03 – Ekosystem Apple",
+      "date": "2012-12-12",
+      "duration": "16:28",
+      "minutes": 16.47,
+      "category": "sp",
+      "year": 2012
+    },
+    {
+      "episode": "SP",
+      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 04 – Rodzina iPadów",
+      "date": "2012-12-13",
+      "duration": "18:23",
+      "minutes": 18.38,
+      "category": "sp",
+      "year": 2012
+    },
+    {
+      "episode": "SP",
+      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 05 – MacBooki",
+      "date": "2012-12-14",
+      "duration": "18:56",
+      "minutes": 18.93,
+      "category": "sp",
+      "year": 2012
+    },
+    {
+      "episode": "SP",
+      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 06 – Windows 8 i RT",
+      "date": "2012-12-15",
+      "duration": "18:14",
+      "minutes": 18.23,
+      "category": "sp",
+      "year": 2012
+    },
+    {
+      "episode": "SP",
+      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 07 – Android",
+      "date": "2012-12-16",
+      "duration": "20:43",
+      "minutes": 20.72,
+      "category": "sp",
+      "year": 2012
+    },
+    {
+      "episode": "106",
+      "title": "106: Wszystkiego Najlepszego!!!",
+      "date": "2012-12-21",
+      "duration": "35:42",
+      "minutes": 35.7,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "107",
+      "title": "107: Prawdziwy Macuser wymienia komputer jak mu coś nie działa",
+      "date": "2012-12-29",
+      "duration": "1:12:38",
+      "minutes": 72.63,
+      "category": "main",
+      "year": 2012
+    },
+    {
+      "episode": "108",
+      "title": "108: Kebaba autokorekta!",
+      "date": "2013-01-03",
+      "duration": "1:31:42",
+      "minutes": 91.7,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "109",
+      "title": "109: Nexus 4 i tani iPhone",
+      "date": "2013-01-11",
+      "duration": "1:25:00",
+      "minutes": 85.0,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "110",
+      "title": "110: Witamy Was dwukrotnie!",
+      "date": "2013-01-24",
+      "duration": "1:37:14",
+      "minutes": 97.23,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "111",
+      "title": "111: Nadgryzieni mają nowy feed RSS!",
+      "date": "2013-01-30",
+      "duration": "2:26",
+      "minutes": 2.43,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "112",
+      "title": "112: Trzy słowa do prowadzącego",
+      "date": "2013-01-31",
+      "duration": "1:05:25",
+      "minutes": 65.42,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "113",
+      "title": "113: Cookoo, Spotify, Hackintosh i Jailbreak",
+      "date": "2013-02-08",
+      "duration": "1:13:40",
+      "minutes": 73.67,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "114",
+      "title": "114: Mój Pierwszy Tweet",
+      "date": "2013-02-15",
+      "duration": "41:05",
+      "minutes": 41.08,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "115",
+      "title": "115: O hui! Kończymy Nadgryzionych i zaczynamy Umalowanych!",
+      "date": "2013-03-01",
+      "duration": "1:43:35",
+      "minutes": 103.58,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "116",
+      "title": "116: Norbert puszcza się za darmo, ale wybiera partnerkę",
+      "date": "2013-03-08",
+      "duration": "1:25:50",
+      "minutes": 85.83,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "117",
+      "title": "117: Czy możemy prosić wersję z angielskimi napisami?",
+      "date": "2013-03-15",
+      "duration": "1:14:29",
+      "minutes": 74.48,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "118",
+      "title": "118: Siri podnosi spódnicę",
+      "date": "2013-03-21",
+      "duration": "43:28",
+      "minutes": 43.47,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "119",
+      "title": "119: Kukiz (ale nie Tomek), jabłka i jeżynki",
+      "date": "2013-03-29",
+      "duration": "51:19",
+      "minutes": 51.32,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "120",
+      "title": "120: Wystarczy, żeby Wittamina się rozebrała",
+      "date": "2013-04-05",
+      "duration": "1:23:20",
+      "minutes": 83.33,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "121",
+      "title": "121: F*** you very much!",
+      "date": "2013-04-11",
+      "duration": "1:44:36",
+      "minutes": 104.6,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "122",
+      "title": "122: Na studiach to się teraz tańczy w seksowych strojach",
+      "date": "2013-04-26",
+      "duration": "1:06:37",
+      "minutes": 66.62,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "123",
+      "title": "123: Kreatywnie Nakręceni!",
+      "date": "2013-05-10",
+      "duration": "1:19:52",
+      "minutes": 79.87,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "124",
+      "title": "124: Mamy Google Glass ;-) i Chromebook Pixel",
+      "date": "2013-05-17",
+      "duration": "1:05:33",
+      "minutes": 65.55,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "125",
+      "title": "125: Cały na Biało",
+      "date": "2013-05-24",
+      "duration": "1:01:11",
+      "minutes": 61.18,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "126",
+      "title": "126: Wtopa",
+      "date": "2013-05-31",
+      "duration": "1:05:03",
+      "minutes": 65.05,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "127",
+      "title": "127: Prism i WWDC 2013 z nami w MacLife Cafe",
+      "date": "2013-06-07",
+      "duration": "17:35",
+      "minutes": 17.58,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "128",
+      "title": "128: Adobe Creative Cloud i wywiad z Jasonem Levine",
+      "date": "2013-06-07",
+      "duration": "31:17",
+      "minutes": 31.28,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "129",
+      "title": "129: Nasze wrażenia po WWDC 2013",
+      "date": "2013-06-14",
+      "duration": "1:36:58",
+      "minutes": 96.97,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "130",
+      "title": "130: (Po Godzinach) iOS 7; Norbert vs. Moridin [explicit]",
+      "date": "2013-06-21",
+      "duration": "46:02",
+      "minutes": 46.03,
+      "category": "po_godzinach",
+      "year": 2013
+    },
+    {
+      "episode": "131",
+      "title": "131: iPhone, plastic–fantastic?",
+      "date": "2013-07-05",
+      "duration": "51:38",
+      "minutes": 51.63,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "132",
+      "title": "132: iPad only!",
+      "date": "2013-07-22",
+      "duration": "55:12",
+      "minutes": 55.2,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "133",
+      "title": "133: Sprzedałem wszystko co miałem … i nerkę",
+      "date": "2013-08-05",
+      "duration": "46:27",
+      "minutes": 46.45,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "134",
+      "title": "134: Jesteśmy zaniepokojeni",
+      "date": "2013-08-09",
+      "duration": "42:55",
+      "minutes": 42.92,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "135",
+      "title": "135: Szukamy pracy; idziemy do kina na „Jobs”",
+      "date": "2013-08-23",
+      "duration": "43:56",
+      "minutes": 43.93,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "135",
+      "title": "135: Szukamy pracy; idziemy do kina na „Jobs”",
+      "date": "2013-08-30",
+      "duration": "58:30",
+      "minutes": 58.5,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "137",
+      "title": "137: Prawie wszystko o iPhone 5c i 5s",
+      "date": "2013-09-13",
+      "duration": "1:11:43",
+      "minutes": 71.72,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "138",
+      "title": "138: Wrażenia z iPhone’a 5S po tygodniu",
+      "date": "2013-10-03",
+      "duration": "52:16",
+      "minutes": 52.27,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "139",
+      "title": "139: Wspólne oglądanie premiery iPadów w Applecaffe!",
+      "date": "2013-10-18",
+      "duration": "44:29",
+      "minutes": 44.48,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "140",
+      "title": "140: Wiele kobiet chce…",
+      "date": "2013-11-29",
+      "duration": "52:55",
+      "minutes": 52.92,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "141",
+      "title": "141: Najlepsze aplikacje 2013 roku",
+      "date": "2013-12-06",
+      "duration": "52:52",
+      "minutes": 52.87,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "142",
+      "title": "142: Bang & Olufsen – bo na początku tej drogi jest człowiek…",
+      "date": "2013-12-13",
+      "duration": "1:09:25",
+      "minutes": 69.42,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "143",
+      "title": "143: O dwóch takich z przydomkiem Pro",
+      "date": "2013-12-20",
+      "duration": "50:04",
+      "minutes": 50.07,
+      "category": "main",
+      "year": 2013
+    },
+    {
+      "episode": "144",
+      "title": "144: (Na Spacerze) Na Spacerze z Google Glass",
+      "date": "2014-01-16",
+      "duration": "41:25",
+      "minutes": 41.42,
+      "category": "na_spacerze",
+      "year": 2014
+    },
+    {
+      "episode": "145",
+      "title": "145: Kości zostały rzucone",
+      "date": "2014-01-23",
+      "duration": "40:38",
+      "minutes": 40.63,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "146",
+      "title": "146: Nasze urodziny, Czarny Roman i Mac Pro",
+      "date": "2014-02-07",
+      "duration": "1:11:06",
+      "minutes": 71.1,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "147",
+      "title": "147: Miłość na Bogato",
+      "date": "2014-02-28",
+      "duration": "1:03:24",
+      "minutes": 63.4,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "148",
+      "title": "148: Not Safe for Running",
+      "date": "2014-03-07",
+      "duration": "1:40:51",
+      "minutes": 100.85,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "149",
+      "title": "149: #PierwszaPolka",
+      "date": "2014-03-14",
+      "duration": "41:54",
+      "minutes": 41.9,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "150",
+      "title": "150: Taki ze mnie buntownik",
+      "date": "2014-03-18",
+      "duration": "49:48",
+      "minutes": 49.8,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "151",
+      "title": "151: Good evening ladies and gentlemen!",
+      "date": "2014-04-14",
+      "duration": "1:47:00",
+      "minutes": 107.0,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "152",
+      "title": "152: Wywiad z Dmitrim Glukhovskym",
+      "date": "2014-05-30",
+      "duration": "25:45",
+      "minutes": 25.75,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "153",
+      "title": "153: Wspólnego Oglądanie WWDC 2014!",
+      "date": "2014-06-02",
+      "duration": "2:28",
+      "minutes": 2.47,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "200",
+      "title": "200: Legendarna Chwila – WWDC 2014",
+      "date": "2014-06-03",
+      "duration": "1:01:47",
+      "minutes": 61.78,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "201",
+      "title": "201: Nasze iPody w samochodach",
+      "date": "2014-06-11",
+      "duration": "39:27",
+      "minutes": 39.45,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "201.5",
+      "title": "201½: (Video) Legendarna Chwila – WWDC 2014",
+      "date": "2014-06-11",
+      "duration": "29:05",
+      "minutes": 29.08,
+      "category": "half",
+      "year": 2014
+    },
+    {
+      "episode": "202",
+      "title": "202: Człowiek Orkiestra; Zaplecze Technologiczne",
+      "date": "2014-07-04",
+      "duration": "1:07:58",
+      "minutes": 67.97,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "203",
+      "title": "203: (Po Godzinach) Uber Hipster",
+      "date": "2014-07-04",
+      "duration": "1:19:21",
+      "minutes": 79.35,
+      "category": "po_godzinach",
+      "year": 2014
+    },
+    {
+      "episode": "204",
+      "title": "204: (W Biegu) iWatch i MacBook Air 12″ z Retiną",
+      "date": "2014-07-11",
+      "duration": "17:34",
+      "minutes": 17.57,
+      "category": "w_biegu",
+      "year": 2014
+    },
+    {
+      "episode": "205",
+      "title": "205: Awykonalne",
+      "date": "2014-07-18",
+      "duration": "50:29",
+      "minutes": 50.48,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "206",
+      "title": "206: Politycznie niepoprawni [Explicit]",
+      "date": "2014-07-31",
+      "duration": "2:02:13",
+      "minutes": 122.22,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "207",
+      "title": "207: Unikalny jak Apple; konkurs w odcinku też [Explicit]",
+      "date": "2014-08-01",
+      "duration": "1:25:49",
+      "minutes": 85.82,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "208",
+      "title": "208: Na Bogato i tablet z Androidem",
+      "date": "2014-08-20",
+      "duration": "1:30:01",
+      "minutes": 90.02,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "209",
+      "title": "209: Leniwa Zuza – Odcinek Optymistyczny",
+      "date": "2014-09-02",
+      "duration": "1:50:38",
+      "minutes": 110.63,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "210",
+      "title": "210: Dobrze posiedzieć przy Żubrze",
+      "date": "2014-09-03",
+      "duration": "2:36:39",
+      "minutes": 156.65,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "211",
+      "title": "211: Jestem taki trochę zmieszany",
+      "date": "2014-09-15",
+      "duration": "1:21:26",
+      "minutes": 81.43,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "212",
+      "title": "212: Bardziej jestem zainteresowana spłaszczaniem żelków, żeby zrobiły się z nich małe latające spodki",
+      "date": "2014-09-26",
+      "duration": "2:01:35",
+      "minutes": 121.58,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "213",
+      "title": "213: Raz w Tygodniu, Czasami Dwa",
+      "date": "2014-11-07",
+      "duration": "0:11",
+      "minutes": 0.18,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "214",
+      "title": "214: Politycznie i Religijnie Poprawny",
+      "date": "2014-12-01",
+      "duration": "17:33",
+      "minutes": 17.55,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "215",
+      "title": "215: Nie będę tego ciął",
+      "date": "2014-12-02",
+      "duration": "15:53",
+      "minutes": 15.88,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "216",
+      "title": "216: Internet of Things",
+      "date": "2014-12-03",
+      "duration": "9:23",
+      "minutes": 9.38,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "217",
+      "title": "217: Googlowo-Androidowo",
+      "date": "2014-12-04",
+      "duration": "10:09",
+      "minutes": 10.15,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "218",
+      "title": "218: Gwiazdka z Google",
+      "date": "2014-12-05",
+      "duration": "9:40",
+      "minutes": 9.67,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "218.5",
+      "title": "218½: (Prawie) na żywo z premiery Moto X, Moto G, Moto 360 i Nexusa 6",
+      "date": "2014-12-08",
+      "duration": "16:52",
+      "minutes": 16.87,
+      "category": "half",
+      "year": 2014
+    },
+    {
+      "episode": "219",
+      "title": "219: Technologia we mgle",
+      "date": "2014-12-09",
+      "duration": "16:01",
+      "minutes": 16.02,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "220",
+      "title": "220: iPhone vs. iPad",
+      "date": "2014-12-10",
+      "duration": "18:07",
+      "minutes": 18.12,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "221",
+      "title": "221: Monitorujemy",
+      "date": "2014-12-11",
+      "duration": "19:15",
+      "minutes": 19.25,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "222",
+      "title": "222: Fotografujemy",
+      "date": "2014-12-12",
+      "duration": "35:46",
+      "minutes": 35.77,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "223",
+      "title": "223: Pierwszy Polak, który zapłacił 650 PLN kary w Pendolino",
+      "date": "2014-12-15",
+      "duration": "23:44",
+      "minutes": 23.73,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "224",
+      "title": "224: iPhone dla reszty z nas",
+      "date": "2014-12-16",
+      "duration": "15:42",
+      "minutes": 15.7,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "225",
+      "title": "225: Daj mi pięć rubli; po co Ci 20 rubli?",
+      "date": "2014-12-17",
+      "duration": "14:19",
+      "minutes": 14.32,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "226",
+      "title": "226: Panowie odpowiedzialni za macanie",
+      "date": "2014-12-18",
+      "duration": "11:34",
+      "minutes": 11.57,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "227",
+      "title": "227: Mądry Mini Żuczek",
+      "date": "2014-12-19",
+      "duration": "19:40",
+      "minutes": 19.67,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "228",
+      "title": "228: Jak to jest żyć w Ameryce",
+      "date": "2014-12-29",
+      "duration": "16:20",
+      "minutes": 16.33,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "229",
+      "title": "229: B&O Polska z MacBookami",
+      "date": "2014-12-30",
+      "duration": "18:32",
+      "minutes": 18.53,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "230",
+      "title": "230: Workflow dla iOS",
+      "date": "2014-12-31",
+      "duration": "15:53",
+      "minutes": 15.88,
+      "category": "main",
+      "year": 2014
+    },
+    {
+      "episode": "231",
+      "title": "231: Norbert jedzie do USA po Apple Watcha",
+      "date": "2015-01-05",
+      "duration": "31:29",
+      "minutes": 31.48,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "232",
+      "title": "232: Plotki o MacBook Air 12″ z Retiną, a Norbert jest owcą",
+      "date": "2015-01-07",
+      "duration": "44:43",
+      "minutes": 44.72,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "233",
+      "title": "233: Helikoptery, słuchawki i muzyka",
+      "date": "2015-01-08",
+      "duration": "29:02",
+      "minutes": 29.03,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "234",
+      "title": "234: Dominika nowy MacBook Pro 13″ z Retiną",
+      "date": "2015-01-09",
+      "duration": "30:57",
+      "minutes": 30.95,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "235",
+      "title": "235: Gadżet Roku 2014 iMagazine",
+      "date": "2015-01-12",
+      "duration": "15:58",
+      "minutes": 15.97,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "236",
+      "title": "236: Siri, odsłoń zegarek",
+      "date": "2015-01-13",
+      "duration": "20:22",
+      "minutes": 20.37,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "237",
+      "title": "237: Wojtek ma banana",
+      "date": "2015-01-14",
+      "duration": "20:11",
+      "minutes": 20.18,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "238",
+      "title": "238: Guess who’s back",
+      "date": "2015-01-16",
+      "duration": "52:46",
+      "minutes": 52.77,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "239",
+      "title": "239: Nozbe wygrywa okładkę iMagazine!",
+      "date": "2015-01-19",
+      "duration": "25:40",
+      "minutes": 25.67,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "240",
+      "title": "240: Odcinek Wielosokowy, czyli bla bla bla Retina",
+      "date": "2015-01-23",
+      "duration": "56:41",
+      "minutes": 56.68,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "241",
+      "title": "241: Photos, Music & Rock 'n’ Roll",
+      "date": "2015-02-06",
+      "duration": "1:10:04",
+      "minutes": 70.07,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "242",
+      "title": "242: Nasze Oprogramowanie na Mac OS X",
+      "date": "2015-02-13",
+      "duration": "1:48:01",
+      "minutes": 108.02,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "243",
+      "title": "243: Dominik wali Peryskopa z Ciderem (cz. 1)",
+      "date": "2015-04-01",
+      "duration": "1:26:29",
+      "minutes": 86.48,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "244",
+      "title": "244: Dominik wali Peryskopa z Ciderem (cz. 2)",
+      "date": "2015-04-01",
+      "duration": "1:20:07",
+      "minutes": 80.12,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "245",
+      "title": "245: Poproszę PIN i Zielony [In Loving Memory Edition]",
+      "date": "2015-04-09",
+      "duration": "1:10:46",
+      "minutes": 70.77,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "246",
+      "title": "246: Nie lubię mówić, że Apple zrobiło jakikolwiek fuckup, ale to jest fuckup",
+      "date": "2015-04-23",
+      "duration": "39:50",
+      "minutes": 39.83,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "247",
+      "title": "247: Bo spać trzeba z kobietą, a nie zegarkiem",
+      "date": "2015-05-08",
+      "duration": "59:48",
+      "minutes": 59.8,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "248",
+      "title": "248: Uprawiam Nordic Walking, ale bez tego Nordic",
+      "date": "2015-05-20",
+      "duration": "1:02:00",
+      "minutes": 62.0,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "249",
+      "title": "249: Nowocześni jaskiniowcy",
+      "date": "2015-06-24",
+      "duration": "1:52:54",
+      "minutes": 112.9,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "250",
+      "title": "250: Prawdziwy Macuser myje klawiaturę w zmywarce",
+      "date": "2015-07-14",
+      "duration": "1:43:44",
+      "minutes": 103.73,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "251",
+      "title": "251: WWDC 2015 Part One – Apple się odchudza",
+      "date": "2015-07-14",
+      "duration": "1:26:48",
+      "minutes": 86.8,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "252",
+      "title": "252: WWDC 2015 Part Two – Nielegalne zakupy",
+      "date": "2015-07-23",
+      "duration": "1:31:10",
+      "minutes": 91.17,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "253",
+      "title": "253: A mówiłeś, że nie jesteś 14-letnią dziewczynką, czyli nasze apps na iPhone",
+      "date": "2015-08-12",
+      "duration": "1:20:16",
+      "minutes": 80.27,
+      "category": "main",
+      "year": 2015
+    },
+    {
+      "episode": "254",
+      "title": "254: (Po Godzinach) Obiboki",
+      "date": "2015-12-15",
+      "duration": "2:33:34",
+      "minutes": 153.57,
+      "category": "po_godzinach",
+      "year": 2015
+    },
+    {
+      "episode": "255",
+      "title": "255: Reportaż z Apple TV Tech Talks",
+      "date": "2016-01-13",
+      "duration": "2:30:49",
+      "minutes": 150.82,
+      "category": "main",
+      "year": 2016
+    },
+    {
+      "episode": "256",
+      "title": "256: Duże jest lepsze!",
+      "date": "2016-05-12",
+      "duration": "44:07",
+      "minutes": 44.12,
+      "category": "main",
+      "year": 2016
+    },
+    {
+      "episode": "257",
+      "title": "257: (Po Godzinach) Ja jestem dinozaurem, a Ty jesteś Wojtek [NSFW]",
+      "date": "2016-05-17",
+      "duration": "1:15:58",
+      "minutes": 75.97,
+      "category": "po_godzinach",
+      "year": 2016
+    },
+    {
+      "episode": "258",
+      "title": "258: Tom Cook",
+      "date": "2016-05-25",
+      "duration": "46:49",
+      "minutes": 46.82,
+      "category": "main",
+      "year": 2016
+    },
+    {
+      "episode": "259",
+      "title": "259: Nowy Top Gear, Nowe MacBooki Pro i Nowe iPhone’y",
+      "date": "2016-06-03",
+      "duration": "1:00:36",
+      "minutes": 60.6,
+      "category": "main",
+      "year": 2016
+    },
+    {
+      "episode": "260",
+      "title": "260: Chwila przed WWDC 2016",
+      "date": "2016-06-09",
+      "duration": "48:25",
+      "minutes": 48.42,
+      "category": "main",
+      "year": 2016
+    },
+    {
+      "episode": "261",
+      "title": "261: iChwila po WWDC 2016",
+      "date": "2016-06-14",
+      "duration": "1:54:39",
+      "minutes": 114.65,
+      "category": "main",
+      "year": 2016
+    },
+    {
+      "episode": "262",
+      "title": "262: (Po Godzinach) Szeryf drogowy, Tesla Model S i spalony zasilacz [NSFW]",
+      "date": "2016-07-21",
+      "duration": "52:06",
+      "minutes": 52.1,
+      "category": "po_godzinach",
+      "year": 2016
+    },
+    {
+      "episode": "263",
+      "title": "263: (Po Godzinach) Problemy pierwszego świata",
+      "date": "2016-07-27",
+      "duration": "1:34:42",
+      "minutes": 94.7,
+      "category": "po_godzinach",
+      "year": 2016
+    },
+    {
+      "episode": "264",
+      "title": "264: MacBook Pro 13″ Touch Bar vs. Escape",
+      "date": "2017-01-26",
+      "duration": "1:26:16",
+      "minutes": 86.27,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "265",
+      "title": "265: Smog, zanieczyszczenia i SmoothAir",
+      "date": "2017-01-31",
+      "duration": "47:47",
+      "minutes": 47.78,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "266",
+      "title": "266: WOŚP, Gadżet Roku i The Man in the High Castle",
+      "date": "2017-02-01",
+      "duration": "1:18:25",
+      "minutes": 78.42,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "267",
+      "title": "267: Bo świat się wokół dupy kręci",
+      "date": "2017-02-03",
+      "duration": "1:13:04",
+      "minutes": 73.07,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "268",
+      "title": "268: W AirPods wyglądam jak stylowy człowiek, czyli jak debil",
+      "date": "2017-02-17",
+      "duration": "1:36:16",
+      "minutes": 96.27,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "269",
+      "title": "269: Apple Watch zamiast iPhone’a",
+      "date": "2017-02-24",
+      "duration": "1:41:27",
+      "minutes": 101.45,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "270",
+      "title": "270: Oczywiście mnóstwo kutasów jest",
+      "date": "2017-03-03",
+      "duration": "1:59:00",
+      "minutes": 119.0,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "271",
+      "title": "271: Porzygałem się, czyli odcinek o iPhone 7 (PRODUCT)RED",
+      "date": "2017-03-22",
+      "duration": "1:05:42",
+      "minutes": 65.7,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "272",
+      "title": "272: Kłamałeś",
+      "date": "2017-03-30",
+      "duration": "1:19:30",
+      "minutes": 79.5,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "273",
+      "title": "273: Half-Life 3 potwierdzony!",
+      "date": "2017-04-07",
+      "duration": "1:28:17",
+      "minutes": 88.28,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "274",
+      "title": "274: Przynajmniej koty nie tupią",
+      "date": "2017-04-14",
+      "duration": "1:47:50",
+      "minutes": 107.83,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "275",
+      "title": "275: Star Wars: The Last Jedi – Kolory Zbuntowanego Zwiastunu",
+      "date": "2017-04-18",
+      "duration": "1:26:36",
+      "minutes": 86.6,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "276",
+      "title": "276: Samsung Galaxy S8, Xiaomi Mi6, LG G6 i trochę o iPhone",
+      "date": "2017-04-21",
+      "duration": "1:11:15",
+      "minutes": 71.25,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "277",
+      "title": "277: Trudno jest złapać kontakt z ludźmi i robić na ulicach",
+      "date": "2017-04-24",
+      "duration": "2:02:50",
+      "minutes": 122.83,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "278",
+      "title": "278: Przemyślenia przed WWDC 2017",
+      "date": "2017-05-31",
+      "duration": "1:36:42",
+      "minutes": 96.7,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "279",
+      "title": "279: Teraz już nie pozwalają mi programować",
+      "date": "2017-07-06",
+      "duration": "1:51:43",
+      "minutes": 111.72,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "280",
+      "title": "280: Skąd ci biedni ludzie mają to zrozumieć?",
+      "date": "2017-07-11",
+      "duration": "1:46:45",
+      "minutes": 106.75,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "281",
+      "title": "281: Głośność dysku",
+      "date": "2017-10-04",
+      "duration": "1:42:18",
+      "minutes": 102.3,
+      "category": "main",
+      "year": 2017
+    },
+    {
+      "episode": "282",
+      "title": "282: iPhone X, Raspberry Pi i nowy setup",
+      "date": "2018-02-09",
+      "duration": "1:34:08",
+      "minutes": 94.13,
+      "category": "main",
+      "year": 2018
+    },
+    {
+      "episode": "283",
+      "title": "283: iMac Pro i ciąg dalszy Raspberry Pi i nowy setup",
+      "date": "2018-02-16",
+      "duration": "1:22:00",
+      "minutes": 82.0,
+      "category": "main",
+      "year": 2018
+    },
+    {
+      "episode": "284",
+      "title": "284: (Po Godzinach) Mac vs. Windows, Xbox vs. PlayStation, itp.",
+      "date": "2018-02-23",
+      "duration": "59:18",
+      "minutes": 59.3,
+      "category": "po_godzinach",
+      "year": 2018
+    },
+    {
+      "episode": "285",
+      "title": "285: (Po Godzinach) IEM Katowice 2018 i nasze ulubione aplikacje na Mac",
+      "date": "2018-03-07",
+      "duration": "1:07:38",
+      "minutes": 67.63,
+      "category": "po_godzinach",
+      "year": 2018
+    },
+    {
+      "episode": "286",
+      "title": "286: HomePod, tylko HomePod",
+      "date": "2018-03-07",
+      "duration": "1:19:32",
+      "minutes": 79.53,
+      "category": "main",
+      "year": 2018
+    },
+    {
+      "episode": "287",
+      "title": "287: Przygoda z HomePodem",
+      "date": "2018-03-16",
+      "duration": "1:33:41",
+      "minutes": 93.68,
+      "category": "main",
+      "year": 2018
+    },
+    {
+      "episode": "288",
+      "title": "288: HomeKit i nowy GerdaLock",
+      "date": "2018-03-19",
+      "duration": "52:26",
+      "minutes": 52.43,
+      "category": "main",
+      "year": 2018
+    },
+    {
+      "episode": "289",
+      "title": "289: Stowarzyszenie Anonimowych Alkoholików",
+      "date": "2019-11-18",
+      "duration": "1:09:30",
+      "minutes": 69.5,
+      "category": "main",
+      "year": 2019
+    },
+    {
+      "episode": "290",
+      "title": "290: Nowy 16-calowy MacBook Pro",
+      "date": "2019-11-25",
+      "duration": "1:32:48",
+      "minutes": 92.8,
+      "category": "main",
+      "year": 2019
+    },
+    {
+      "episode": "291",
+      "title": "291: Toksyczność",
+      "date": "2019-11-28",
+      "duration": "1:27:44",
+      "minutes": 87.73,
+      "category": "main",
+      "year": 2019
+    },
+    {
+      "episode": "292",
+      "title": "292: Kto nie lubi 69 niech pierwszy rzuci kamieniem!",
+      "date": "2019-12-04",
+      "duration": "1:07:53",
+      "minutes": 67.88,
+      "category": "main",
+      "year": 2019
+    },
+    {
+      "episode": "293",
+      "title": "293: Mac Pro, Pro Display XDR, MacBook Pro 16″ i Komandosi",
+      "date": "2019-12-13",
+      "duration": "1:09:57",
+      "minutes": 69.95,
+      "category": "main",
+      "year": 2019
+    },
+    {
+      "episode": "294",
+      "title": "294: To będzie bardzo zły odcinek, który teraz nagrywamy (Epizod 1)",
+      "date": "2019-12-22",
+      "duration": "1:55:29",
+      "minutes": 115.48,
+      "category": "main",
+      "year": 2019
+    },
+    {
+      "episode": "295",
+      "title": "295: Nie rób ze mnie takiego potwora; naprawdę jest tak źle? (Epizod 2)",
+      "date": "2020-01-09",
+      "duration": "1:39:43",
+      "minutes": 99.72,
+      "category": "main",
+      "year": 2020
+    },
+    {
+      "episode": "296",
+      "title": "296: Nasze dygresje mają dygresje (Epizod 3)",
+      "date": "2020-01-17",
+      "duration": "1:47:42",
+      "minutes": 107.7,
+      "category": "main",
+      "year": 2020
+    },
+    {
+      "episode": "297",
+      "title": "297: NLEstation 2020, sekret budowy hackintosha, Mac i eGPU, VR, monitory do grania i do grafiki",
+      "date": "2020-01-26",
+      "duration": "3:32:44",
+      "minutes": 212.73,
+      "category": "main",
+      "year": 2020
+    },
+    {
+      "episode": "298",
+      "title": "298: Swift Playgrounds, App Store, macOS Catalina i deweloperzy (Epizod 4)",
+      "date": "2020-02-14",
+      "duration": "1:33:54",
+      "minutes": 93.9,
+      "category": "main",
+      "year": 2020
+    },
+    {
+      "episode": "299",
+      "title": "299: (Prawie) Wszystko o klawiaturach mechanicznych",
+      "date": "2020-02-21",
+      "duration": "1:57:08",
+      "minutes": 117.13,
+      "category": "prawie",
+      "year": 2020
+    },
+    {
+      "episode": "300",
+      "title": "300: Zapowiedź Zapowiedzi Reaktywacji",
+      "date": "2021-03-10",
+      "duration": "9:10",
+      "minutes": 9.17,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "301",
+      "title": "301: Surowa Eksperymentalna Reaktywacja",
+      "date": "2021-03-12",
+      "duration": "1:31:33",
+      "minutes": 91.55,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "302",
+      "title": "302: Nasz setup audio i wideo",
+      "date": "2021-03-19",
+      "duration": "2:20:10",
+      "minutes": 140.17,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "303",
+      "title": "303: Zaparkował w poprzek Kanału Sueskiego",
+      "date": "2021-03-26",
+      "duration": "2:48:15",
+      "minutes": 168.25,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "304",
+      "title": "304: Cyberpunk 2077 to oszustwo i najlepsza gra na świecie",
+      "date": "2021-04-02",
+      "duration": "1:56:56",
+      "minutes": 116.93,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "305",
+      "title": "305: Najlepszy polski 4-gwiazdkowy podcast technologiczny",
+      "date": "2021-04-09",
+      "duration": "1:18:02",
+      "minutes": 78.03,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "306",
+      "title": "306: Wszystko co wiemy o kwietniowym „Spring Loaded” Apple Special Event",
+      "date": "2021-04-16",
+      "duration": "2:39:16",
+      "minutes": 159.27,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "307",
+      "title": "307: (Live) „Spring Loaded” – analiza nowości od Apple na żywo",
+      "date": "2021-04-22",
+      "duration": "1:28:37",
+      "minutes": 88.62,
+      "category": "live",
+      "year": 2021
+    },
+    {
+      "episode": "308",
+      "title": "308: Dodatkowe informacje nt. AirTags, iPadów Pro, iMaców i Apple TV ze „Spring Loaded”",
+      "date": "2021-04-23",
+      "duration": "2:03:24",
+      "minutes": 123.4,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "309",
+      "title": "309: Kalibrujemy Apple TV, gadamy o plecaku innym niż wszystkie i odradzamy Mortal Kombat",
+      "date": "2021-05-01",
+      "duration": "1:27:25",
+      "minutes": 87.42,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "310",
+      "title": "310: (Prawie) Wszystko o VR (wirtualnej rzeczywistości)",
+      "date": "2021-05-07",
+      "duration": "2:31:42",
+      "minutes": 151.7,
+      "category": "prawie",
+      "year": 2021
+    },
+    {
+      "episode": "311",
+      "title": "311: Chciałbym mieć małego",
+      "date": "2021-05-16",
+      "duration": "2:25:15",
+      "minutes": 145.25,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "312",
+      "title": "312: iMac 24″ (2021), iPad Pro (2021) i Apple TV 4K 2. generacji (też 2021)",
+      "date": "2021-05-26",
+      "duration": "3:01:25",
+      "minutes": 181.42,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "313",
+      "title": "313: Mam małego (iPhone’a 12 Mini)",
+      "date": "2021-05-28",
+      "duration": "1:25:24",
+      "minutes": 85.4,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "314",
+      "title": "314: (Po Godzinach) Apple TV 4K (2021) Spectacular!",
+      "date": "2021-06-03",
+      "duration": "1:34:01",
+      "minutes": 94.02,
+      "category": "po_godzinach",
+      "year": 2021
+    },
+    {
+      "episode": "315",
+      "title": "315: (Live) WWDC 2021",
+      "date": "2021-06-09",
+      "duration": "1:31:28",
+      "minutes": 91.47,
+      "category": "live",
+      "year": 2021
+    },
+    {
+      "episode": "316",
+      "title": "316: iOS 15, bezstratne i przestrzenne Apple Music, iPhone 13 i iPad Pro M1",
+      "date": "2021-06-11",
+      "duration": "1:24:18",
+      "minutes": 84.3,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "317",
+      "title": "317: Międzynarodowy znak pokoju dla Zuckerberga",
+      "date": "2021-06-18",
+      "duration": "1:08:32",
+      "minutes": 68.53,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "318",
+      "title": "318: (Prawie) Wszystko o Microsoft Flight Simulator 2020 na Xbox i PC",
+      "date": "2021-06-25",
+      "duration": "1:43:44",
+      "minutes": 103.73,
+      "category": "prawie",
+      "year": 2021
+    },
+    {
+      "episode": "319",
+      "title": "319: Kang może trafić do łagru przez Apple’a",
+      "date": "2021-07-02",
+      "duration": "2:03:59",
+      "minutes": 123.98,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "320",
+      "title": "320: Czy Wojtek kupuje samolot, nowego Nintendo Switcha z OLED, robota sprzątającego i VR?",
+      "date": "2021-07-09",
+      "duration": "56:05",
+      "minutes": 56.08,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "321",
+      "title": "321: Valve Steam Deck i japońskie przyjemności dla dorosłych",
+      "date": "2021-07-16",
+      "duration": "1:48:58",
+      "minutes": 108.97,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "322",
+      "title": "322: MagSafe Battery Pack",
+      "date": "2021-07-26",
+      "duration": "40:02",
+      "minutes": 40.03,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "323",
+      "title": "323: Urządzenie do kopania tyłka, kokpity simracingowe, kierownice oraz nowości od Elgato",
+      "date": "2021-07-30",
+      "duration": "1:29:36",
+      "minutes": 89.6,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "324",
+      "title": "324: Jak do Windowsa dodać funkcje z macOS",
+      "date": "2021-08-09",
+      "duration": "2:18:24",
+      "minutes": 138.4,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "325",
+      "title": "325: Chwalimy Galaxy Z Flip 3 i hate’ujemy 1Password 8",
+      "date": "2021-08-20",
+      "duration": "1:11:20",
+      "minutes": 71.33,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "326",
+      "title": "326: iPhone 13 będzie droższy i własne domeny w iCloud+",
+      "date": "2021-09-02",
+      "duration": "1:09:24",
+      "minutes": 69.4,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "327",
+      "title": "327: Elektromobilność, Ionity, Polska vs Czechy i Porsche Taycan Cross Turismo",
+      "date": "2021-09-06",
+      "duration": "1:08:05",
+      "minutes": 68.08,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "328",
+      "title": "328: EIZO CG319X i przygotowania do premiery iPhone 13",
+      "date": "2021-09-10",
+      "duration": "1:17:24",
+      "minutes": 77.4,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "329",
+      "title": "329: (Live) California Streaming",
+      "date": "2021-09-16",
+      "duration": "45:32",
+      "minutes": 45.53,
+      "category": "live",
+      "year": 2021
+    },
+    {
+      "episode": "330",
+      "title": "330: Wszystko o iPhone 13, 13 Mini, 13 Pro, 13 Pro Max, Apple Watch Series 7, iPad Mini i iPad 10,2”",
+      "date": "2021-09-21",
+      "duration": "2:21:47",
+      "minutes": 141.78,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "331",
+      "title": "331: Idziesz do wieży na Hrabinę",
+      "date": "2021-10-05",
+      "duration": "2:19:47",
+      "minutes": 139.78,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "332",
+      "title": "332: Dyson V15 z laserami",
+      "date": "2021-10-08",
+      "duration": "1:36:35",
+      "minutes": 96.58,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "333",
+      "title": "333: Nowe Mac na „Unleashed”!",
+      "date": "2021-10-15",
+      "duration": "1:28:16",
+      "minutes": 88.27,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "334",
+      "title": "334: Wrażenia na gorąco po Unleashed",
+      "date": "2021-10-22",
+      "duration": "1:41:27",
+      "minutes": 101.45,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "335",
+      "title": "335: MacBook Pro 14″ i 16″ (late 2021)",
+      "date": "2021-10-22",
+      "duration": "2:13:00",
+      "minutes": 133.0,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "336",
+      "title": "336: Łzy jednorożca i sproszkowany penis yaka, czyli testy MacBooka Pro 16″ z M1 Pro",
+      "date": "2021-10-29",
+      "duration": "1:22:34",
+      "minutes": 82.57,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "337",
+      "title": "337: MacBook Pro 14” z M1 Pro",
+      "date": "2021-11-10",
+      "duration": "57:25",
+      "minutes": 57.42,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "338",
+      "title": "338: Nie zabijaj",
+      "date": "2021-11-12",
+      "duration": "1:51:11",
+      "minutes": 111.18,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "339",
+      "title": "339: Seriale, Mac i symulatory",
+      "date": "2021-12-02",
+      "duration": "1:47:50",
+      "minutes": 107.83,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "340",
+      "title": "340: Fundacja na Apple TV+, Black Friday i wybór pierwszego aparatu",
+      "date": "2021-12-02",
+      "duration": "1:39:43",
+      "minutes": 99.72,
+      "category": "main",
+      "year": 2021
+    },
+    {
+      "episode": "341",
+      "title": "341: (Na Placu Budowy) Testy NVIDIA 3080 Ti i Wojtek kupił szmatkę Apple",
+      "date": "2021-12-10",
+      "duration": "2:34:57",
+      "minutes": 154.95,
+      "category": "na_placu_budowy",
+      "year": 2021
+    },
+    {
+      "episode": "342",
+      "title": "342: (Na Placu Budowy) Gamepad, Assasin’s Creeda i Game Pass",
+      "date": "2021-12-16",
+      "duration": "1:01:34",
+      "minutes": 61.57,
+      "category": "na_placu_budowy",
+      "year": 2021
+    },
+    {
+      "episode": "343",
+      "title": "343: (Na Placu Budowy) Żyjemy w Matrixie",
+      "date": "2021-12-21",
+      "duration": "3:11:33",
+      "minutes": 191.55,
+      "category": "na_placu_budowy",
+      "year": 2021
+    },
+    {
+      "episode": "344",
+      "title": "344: (Na Placu Budowy) Podsumowanie 2021",
+      "date": "2022-01-04",
+      "duration": "1:40:11",
+      "minutes": 100.18,
+      "category": "na_placu_budowy",
+      "year": 2022
+    },
+    {
+      "episode": "345",
+      "title": "345: (Na Placu Budowy) Konsorcjum od nazw USB i HDMI to debile",
+      "date": "2022-01-11",
+      "duration": "2:58:49",
+      "minutes": 178.82,
+      "category": "na_placu_budowy",
+      "year": 2022
+    },
+    {
+      "episode": "346",
+      "title": "346: Blisko, ale jednak obok prawdy",
+      "date": "2022-01-24",
+      "duration": "1:46:21",
+      "minutes": 106.35,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "347",
+      "title": "347: Nie słuchajcie tego odcinka; no mówiłem nie słuchajcie!",
+      "date": "2022-02-01",
+      "duration": "1:44:16",
+      "minutes": 104.27,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "348",
+      "title": "348: Ten bez Joe’a Rogana, ale z oponami samochodowymi",
+      "date": "2022-02-05",
+      "duration": "1:26:02",
+      "minutes": 86.03,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "349",
+      "title": "349: Ten z Samsung Galaxy S22 Ultra",
+      "date": "2022-02-14",
+      "duration": "2:15:51",
+      "minutes": 135.85,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "350",
+      "title": "350: Mac Studio i Studio Display",
+      "date": "2022-03-11",
+      "duration": "2:22:52",
+      "minutes": 142.87,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "351",
+      "title": "351: Pierwsze wrażenia ze Steam Decka i więcej o Mac Studio i Studio Display",
+      "date": "2022-03-25",
+      "duration": "2:02:54",
+      "minutes": 122.9,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "352",
+      "title": "352: QNAP padł po 7 latach, ale zdalnie naprawili mi RAID-a za darmo",
+      "date": "2022-03-26",
+      "duration": "2:33:03",
+      "minutes": 153.05,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "353",
+      "title": "353: Nowy setup ze stojącym biurkiem",
+      "date": "2022-04-04",
+      "duration": "2:40:48",
+      "minutes": 160.8,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "354",
+      "title": "354: Biurka stojące i bieżnie chodzące",
+      "date": "2022-04-09",
+      "duration": "2:16:50",
+      "minutes": 136.83,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "355",
+      "title": "355: Czy sztuczna inteligencja malująca to, co chcemy, ograniczy naszą kreatywność?",
+      "date": "2022-04-22",
+      "duration": "3:03:24",
+      "minutes": 183.4,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "356",
+      "title": "356: Nowe technologie dla Netflix and Chill",
+      "date": "2022-04-24",
+      "duration": "2:44:42",
+      "minutes": 164.7,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "357",
+      "title": "357: Mordercza mikrofalówka z AI",
+      "date": "2022-04-29",
+      "duration": "58:34",
+      "minutes": 58.57,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "358",
+      "title": "358: BSOD i keyloggery",
+      "date": "2022-05-09",
+      "duration": "1:49:35",
+      "minutes": 109.58,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "359",
+      "title": "359: Życie z czujnikiem obecności w Homekicie, zamiast czujnika ruchu",
+      "date": "2022-05-13",
+      "duration": "2:40:11",
+      "minutes": 160.18,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "360",
+      "title": "360: Piracić starocie na legalu",
+      "date": "2022-05-23",
+      "duration": "2:17:09",
+      "minutes": 137.15,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "361",
+      "title": "361: Z kim się trzeba przespać, żeby odblokować bana na Instagramie",
+      "date": "2022-05-30",
+      "duration": "3:45:11",
+      "minutes": 225.18,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "362",
+      "title": "362: Przygotowania do WWDC22 (i trochę o Diablo Immortal)",
+      "date": "2022-06-03",
+      "duration": "2:26:08",
+      "minutes": 146.13,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "363",
+      "title": "363: (Live) WWDC22!",
+      "date": "2022-06-08",
+      "duration": "2:12:14",
+      "minutes": 132.23,
+      "category": "live",
+      "year": 2022
+    },
+    {
+      "episode": "364",
+      "title": "364: Ciąg dalszy WWDC22 i Roborock S7 MaxV Ultra",
+      "date": "2022-06-11",
+      "duration": "2:41:25",
+      "minutes": 161.42,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "365",
+      "title": "365: Disney+, Sony WH-1000XM5 i Dolby Atmos",
+      "date": "2022-06-20",
+      "duration": "3:08:53",
+      "minutes": 188.88,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "366",
+      "title": "366: Pierwszy Polak w becie DALL-E 2",
+      "date": "2022-06-28",
+      "duration": "1:18:38",
+      "minutes": 78.63,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "367",
+      "title": "367: Najlepszy komputer do fotografii",
+      "date": "2022-07-05",
+      "duration": "1:43:29",
+      "minutes": 103.48,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "368",
+      "title": "368: Twórca CarPlay dla Tesli – Michał Gapiński – opowiada o swoim projekcie, a MacBook Pro z M2 ma problemy",
+      "date": "2022-07-05",
+      "duration": "1:45:13",
+      "minutes": 105.22,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "369",
+      "title": "369: Lufthansa, California, policja i ban",
+      "date": "2022-07-11",
+      "duration": "1:52:56",
+      "minutes": 112.93,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "370",
+      "title": "370: Najbardziej instagramowa klawiatura i hejter VRu testuje HTC Vive Pro 2",
+      "date": "2022-07-15",
+      "duration": "3:27:58",
+      "minutes": 207.97,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "371",
+      "title": "371: Pierwsze problemy MacBooków Air M2 i życie z Porsche, ale bez portfela",
+      "date": "2022-07-24",
+      "duration": "2:19:51",
+      "minutes": 139.85,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "372",
+      "title": "372: Czy Ty jesteś jednym z tych psycholi?",
+      "date": "2022-08-02",
+      "duration": "3:27:05",
+      "minutes": 207.08,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "373",
+      "title": "373: Który w historii iPhone był najlepszy?",
+      "date": "2022-08-08",
+      "duration": "1:37:59",
+      "minutes": 97.98,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "374",
+      "title": "374: Nasze apps na iPhone",
+      "date": "2022-08-16",
+      "duration": "3:54:50",
+      "minutes": 234.83,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "375",
+      "title": "375: Dowodów brak",
+      "date": "2022-08-22",
+      "duration": "52:08",
+      "minutes": 52.13,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "376",
+      "title": "376: Symulator jazdy, który jest dziełem sztuki",
+      "date": "2022-08-27",
+      "duration": "1:36:57",
+      "minutes": 96.95,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "377",
+      "title": "377: Przygotowania do premiery iPhone’ów 14 i zginane laptopy",
+      "date": "2022-09-04",
+      "duration": "1:50:04",
+      "minutes": 110.07,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "378",
+      "title": "378: (Live) Far Out!",
+      "date": "2022-09-11",
+      "duration": "1:16:35",
+      "minutes": 76.58,
+      "category": "live",
+      "year": 2022
+    },
+    {
+      "episode": "379",
+      "title": "379: Redaktor i fotograf reagują na konferencję „Far Out” Apple!",
+      "date": "2022-09-16",
+      "duration": "1:35:25",
+      "minutes": 95.42,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "380",
+      "title": "380: Apple i teorie spiskowe",
+      "date": "2022-09-19",
+      "duration": "1:46:48",
+      "minutes": 106.8,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "381",
+      "title": "381: Na żywo aż dojedzie Apple Watch Ultra i AirPods Pro 2",
+      "date": "2022-09-28",
+      "duration": "2:27:54",
+      "minutes": 147.9,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "382",
+      "title": "382: iPhone 14 Pro, Apple Watch Ultra i AirPods Pro 2 – szeroko o nowościach Apple",
+      "date": "2022-10-03",
+      "duration": "3:21:17",
+      "minutes": 201.28,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "383",
+      "title": "383: Unboxing na żywo, USB-C jako standard wtyczek do ładowania to zło i Google Pixel",
+      "date": "2022-10-10",
+      "duration": "2:42:27",
+      "minutes": 162.45,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "384",
+      "title": "384: iPhone 14, Oculus Pro, Peak Design Mobile",
+      "date": "2022-10-18",
+      "duration": "4:14:38",
+      "minutes": 254.63,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "385",
+      "title": "385: Nowy iPad, iPad Pro i Apple TV pokazane",
+      "date": "2022-10-22",
+      "duration": "3:12:40",
+      "minutes": 192.67,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "386",
+      "title": "386: Apple popsuło ANC w AirPods, iPhone z USB-C i Sony a7R V",
+      "date": "2022-11-02",
+      "duration": "1:38:43",
+      "minutes": 98.72,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "387",
+      "title": "387: iPad Pro M2, najszybsze buty świata i nagrywanie całego życia na Macu",
+      "date": "2022-11-07",
+      "duration": "2:12:15",
+      "minutes": 132.25,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "388",
+      "title": "388: Thomas kupił Maca!",
+      "date": "2022-11-12",
+      "duration": "2:13:19",
+      "minutes": 133.32,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "389",
+      "title": "389: Black Friday, początek końca Twittera i smartfon vs. DSLR",
+      "date": "2022-11-21",
+      "duration": "3:44:59",
+      "minutes": 224.98,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "390",
+      "title": "390: Apple XR headset, realityOS i organizacja przestrzeni na biurku",
+      "date": "2022-11-28",
+      "duration": "1:34:27",
+      "minutes": 94.45,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "391",
+      "title": "391: Rozmowy z AI, kopanie komputera prądem, The Pheripheral i Wednesday",
+      "date": "2022-12-07",
+      "duration": "3:12:10",
+      "minutes": 192.17,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "392",
+      "title": "392: FBI niezadowolone z Apple, Orbitkey Clip V2, 40“ 5K ultrawide",
+      "date": "2022-12-12",
+      "duration": "1:41:36",
+      "minutes": 101.6,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "393",
+      "title": "393: Przygody początkującego drukarza 3D",
+      "date": "2022-12-19",
+      "duration": "3:42:09",
+      "minutes": 222.15,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "394",
+      "title": "394: LastPass zhackowany i Apple Advanced Data Protection",
+      "date": "2022-12-25",
+      "duration": "3:00:04",
+      "minutes": 180.07,
+      "category": "main",
+      "year": 2022
+    },
+    {
+      "episode": "395",
+      "title": "395: Przez pizzę do aresztu",
+      "date": "2023-01-01",
+      "duration": "2:41:52",
+      "minutes": 161.87,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "396",
+      "title": "396: Podsumowanie 2022 – przełomowe technologie, najlepsze programy, gry, filmy, seriale itd.",
+      "date": "2023-01-06",
+      "duration": "2:42:16",
+      "minutes": 162.27,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "397",
+      "title": "397: Nowości z CES 2023, Roborock zapomniał gdzie mieszka i Oreo",
+      "date": "2023-01-13",
+      "duration": "3:10:57",
+      "minutes": 190.95,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "398",
+      "title": "398: Nowy MacBook Pro z M2 Pro/Max, Mac Mini z M2 Pro i HomePod 2",
+      "date": "2023-01-20",
+      "duration": "2:54:21",
+      "minutes": 174.35,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "399",
+      "title": "399: Kryptowaluty dla zabieganych – wprowadzenie",
+      "date": "2023-01-23",
+      "duration": "1:23:15",
+      "minutes": 83.25,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "400",
+      "title": "400: Rocznica, VW ID Buzz, MacBook Pro i Mac Mini z M2 Pro/Max",
+      "date": "2023-01-28",
+      "duration": "3:45:17",
+      "minutes": 225.28,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "401",
+      "title": "401: Galaxy S23, AI, MacBooki Pro M2 Pro/Max i arcydzieło kina",
+      "date": "2023-02-02",
+      "duration": "1:31:15",
+      "minutes": 91.25,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "402",
+      "title": "402: HomeKit sterowany przez GPT3, A.I. Google’a pokazane i Samsung Galaxy S23",
+      "date": "2023-02-09",
+      "duration": "3:28:58",
+      "minutes": 208.97,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "403",
+      "title": "403: Bing Chat zwariował!",
+      "date": "2023-02-17",
+      "duration": "1:53:59",
+      "minutes": 113.98,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "405",
+      "title": "405: Burger i frytki z czekoladą",
+      "date": "2023-02-23",
+      "duration": "1:28:18",
+      "minutes": 88.3,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "406",
+      "title": "406: (Strefa Bitcoin) Proof-of-work vs. proof-of-stake",
+      "date": "2023-03-01",
+      "duration": "1:23:48",
+      "minutes": 83.8,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "407",
+      "title": "407: Wentylator sufitowy i najcięższy samolot świata",
+      "date": "2023-03-03",
+      "duration": "3:32:34",
+      "minutes": 212.57,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "408",
+      "title": "408: Zombie Zombie Zombie",
+      "date": "2023-03-16",
+      "duration": "3:20:54",
+      "minutes": 200.9,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "409",
+      "title": "409: Midjourney v5",
+      "date": "2023-03-22",
+      "duration": "43:08",
+      "minutes": 43.13,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "410",
+      "title": "410: Mac Mini z M2 Pro i Studio Display",
+      "date": "2023-03-31",
+      "duration": "2:02:03",
+      "minutes": 122.05,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "411",
+      "title": "411: (Poradnik) Jakim jesteś Makiem?",
+      "date": "2023-04-07",
+      "duration": "2:07:19",
+      "minutes": 127.32,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "412",
+      "title": "412: Oczyszczanie powietrza w HomeKit",
+      "date": "2023-04-14",
+      "duration": "1:32:05",
+      "minutes": 92.08,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "413",
+      "title": "413: Zacząłem robić tatuaż całego ciała",
+      "date": "2023-04-21",
+      "duration": "2:19:55",
+      "minutes": 139.92,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "414",
+      "title": "414: Kod, który otwiera wszystko",
+      "date": "2023-04-28",
+      "duration": "2:59:04",
+      "minutes": 179.07,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "415",
+      "title": "415: Moja nowa Omega już podwoiła swoją wartość",
+      "date": "2023-05-05",
+      "duration": "2:27:26",
+      "minutes": 147.43,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "416",
+      "title": "416: Final Cut Pro i Logic Pro",
+      "date": "2023-05-13",
+      "duration": "3:47:04",
+      "minutes": 227.07,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "417",
+      "title": "417: The Legend of Zelda: Tears of the Kingdom",
+      "date": "2023-05-19",
+      "duration": "2:04:24",
+      "minutes": 124.4,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "418",
+      "title": "418: UE nas rozszyfruje",
+      "date": "2023-05-26",
+      "duration": "2:43:47",
+      "minutes": 163.78,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "419",
+      "title": "419: Ten przed WWDC23",
+      "date": "2023-06-01",
+      "duration": "2:42:13",
+      "minutes": 162.22,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "420",
+      "title": "420: (Live) WWDC23!",
+      "date": "2023-06-05",
+      "duration": "1:32:44",
+      "minutes": 92.73,
+      "category": "live",
+      "year": 2023
+    },
+    {
+      "episode": "421",
+      "title": "421: Dużo nowego info o Apple Vision Pro i recenzja Diablo 4",
+      "date": "2023-06-09",
+      "duration": "4:48:39",
+      "minutes": 288.65,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "422",
+      "title": "422: Wojtek chce Pro Display XDR",
+      "date": "2023-06-16",
+      "duration": "2:28:55",
+      "minutes": 148.92,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "423",
+      "title": "423: MacBook Air 15“ i Black Mirror",
+      "date": "2023-06-23",
+      "duration": "2:04:07",
+      "minutes": 124.12,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "424",
+      "title": "424: Kremy i technologia",
+      "date": "2023-06-30",
+      "duration": "1:38:30",
+      "minutes": 98.5,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "425",
+      "title": "425: Threads są nielegalne w EU, w przeciwieństwie do nagości na Instagramie",
+      "date": "2023-07-07",
+      "duration": "1:48:18",
+      "minutes": 108.3,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "426",
+      "title": "426: Pro Display XDR – pierwsze wrażenia",
+      "date": "2023-07-14",
+      "duration": "2:12:41",
+      "minutes": 132.68,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "427",
+      "title": "427: Retro Gry, które nas ukształtowały",
+      "date": "2023-07-21",
+      "duration": "2:37:56",
+      "minutes": 157.93,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "428",
+      "title": "428: UFO, X, XDR, UK i Porsche 718 GT4 RS",
+      "date": "2023-07-30",
+      "duration": "3:33:44",
+      "minutes": 213.73,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "429",
+      "title": "429: Bardzo pretensjonalny odcinek z zegarkami i samochodami",
+      "date": "2023-08-07",
+      "duration": "1:51:50",
+      "minutes": 111.83,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "430",
+      "title": "430: Możesz schować ptaszka",
+      "date": "2023-08-11",
+      "duration": "1:50:38",
+      "minutes": 110.63,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "431",
+      "title": "431: Baldur’s Gate 3 i inne nieznaczące tematy",
+      "date": "2023-08-18",
+      "duration": "2:16:59",
+      "minutes": 136.98,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "432",
+      "title": "432: Sztuczna Inteligencja zmieni wszystko",
+      "date": "2023-08-25",
+      "duration": "1:42:14",
+      "minutes": 102.23,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "433",
+      "title": "433: Premiera iPhone 15 dnia 12 września 2023",
+      "date": "2023-09-01",
+      "duration": "2:19:46",
+      "minutes": 139.77,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "434",
+      "title": "434: iPhone 15 Pro/Ultra – czego oczekujemy?",
+      "date": "2023-09-09",
+      "duration": "3:38:28",
+      "minutes": 218.47,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "435",
+      "title": "435: (Live) iPhone 15 na Wonderlust",
+      "date": "2023-09-12",
+      "duration": "1:19:30",
+      "minutes": 79.5,
+      "category": "live",
+      "year": 2023
+    },
+    {
+      "episode": "436",
+      "title": "436: iPhone 15 (Plus) (Pro) (Max) – przemyślenia po premierze",
+      "date": "2023-09-15",
+      "duration": "1:33:56",
+      "minutes": 93.93,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "437",
+      "title": "437: iPhone 15/Plus/Pro/Max – pierwsze wrażenia",
+      "date": "2023-09-22",
+      "duration": "2:29:08",
+      "minutes": 149.13,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "438",
+      "title": "438: Dłuższe wrażenia z iPhone’ów 15 Pro i ulubione nowości iOS 17",
+      "date": "2023-10-02",
+      "duration": "2:13:07",
+      "minutes": 133.12,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "439",
+      "title": "439: macOS 14 Sonoma – pierwsze wrażenia",
+      "date": "2023-10-06",
+      "duration": "2:59:15",
+      "minutes": 179.25,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "440",
+      "title": "440: Sztuczna inteligencja w naszyjniku, kamerze i telefonie",
+      "date": "2023-10-13",
+      "duration": "2:23:30",
+      "minutes": 143.5,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "441",
+      "title": "441: Nasz setup dla iPhone 15 Pro",
+      "date": "2023-10-20",
+      "duration": "1:15:00",
+      "minutes": 75.0,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "442",
+      "title": "442: Humanoidalne roboty w magazynach Amazonu",
+      "date": "2023-10-27",
+      "duration": "2:37:45",
+      "minutes": 157.75,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "443",
+      "title": "443: Czarny MacBook Pro z M3 / Pro / Max",
+      "date": "2023-11-03",
+      "duration": "3:05:38",
+      "minutes": 185.63,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "444",
+      "title": "444: iMac M3 i globalna migawka, czyli rewolucja w aparatach",
+      "date": "2023-11-10",
+      "duration": "2:33:40",
+      "minutes": 153.67,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "445",
+      "title": "445: Steam Deck OLED, migracja do iCloud Keychain i Humane AI Pin",
+      "date": "2023-11-17",
+      "duration": "2:45:32",
+      "minutes": 165.53,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "446",
+      "title": "446: Ostatni wynalazek człowieka – Sztuczna Inteligencja",
+      "date": "2023-11-24",
+      "duration": "2:05:05",
+      "minutes": 125.08,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "447",
+      "title": "447: Steam Deck OLED – pierwsze wrażenia",
+      "date": "2023-11-29",
+      "duration": "1:30:21",
+      "minutes": 90.35,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "448",
+      "title": "448: Nosiłem zegarek za 3 miliony zł!!!",
+      "date": "2023-12-08",
+      "duration": "1:48:15",
+      "minutes": 108.25,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "449",
+      "title": "449: Kupiłem Meta Quest 3",
+      "date": "2023-12-18",
+      "duration": "3:11:21",
+      "minutes": 191.35,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "450",
+      "title": "450: Apple ma zakaz sprzedaży Apple Watch!",
+      "date": "2023-12-22",
+      "duration": "2:26:21",
+      "minutes": 146.35,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "451",
+      "title": "451: Mam okulary Meta Ray-Ban Wayfarer z kamerami!",
+      "date": "2023-12-29",
+      "duration": "3:16:22",
+      "minutes": 196.37,
+      "category": "main",
+      "year": 2023
+    },
+    {
+      "episode": "452",
+      "title": "452: Wielkie Podsumowanie 2023",
+      "date": "2024-01-05",
+      "duration": "3:11:50",
+      "minutes": 191.83,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "453",
+      "title": "453: Fala nowości z CES 2024",
+      "date": "2024-01-12",
+      "duration": "3:01:46",
+      "minutes": 181.77,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "454",
+      "title": "454: Samsung Galaxy S24 Ultra",
+      "date": "2024-01-19",
+      "duration": "3:02:38",
+      "minutes": 182.63,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "455",
+      "title": "455: Elektryczny Porsche Macan",
+      "date": "2024-01-26",
+      "duration": "1:43:35",
+      "minutes": 103.58,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "456",
+      "title": "456: Są pierwsze recenzje Vision Pro",
+      "date": "2024-02-02",
+      "duration": "2:43:38",
+      "minutes": 163.63,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "457",
+      "title": "457: Quest 3 vs. Vision Pro",
+      "date": "2024-02-09",
+      "duration": "3:09:48",
+      "minutes": 189.8,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "458",
+      "title": "458: Oczywiście, że nadal o Vision Pro i Quest 3",
+      "date": "2024-02-16",
+      "duration": "2:21:10",
+      "minutes": 141.17,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "459",
+      "title": "459: Mamy Vision Pro!",
+      "date": "2024-02-23",
+      "duration": "2:44:14",
+      "minutes": 164.23,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "460",
+      "title": "460: (Afterparty) Luźno o BoboVR, AVP i Quest 3",
+      "date": "2024-02-25",
+      "duration": "1:05:10",
+      "minutes": 65.17,
+      "category": "afterparty",
+      "year": 2024
+    },
+    {
+      "episode": "461",
+      "title": "461: (English) Talking Vision Pro with Casey Liss",
+      "date": "2024-02-26",
+      "duration": "39:28",
+      "minutes": 39.47,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "462",
+      "title": "462: Nowe Maki i iPady w marcu?",
+      "date": "2024-03-01",
+      "duration": "2:55:25",
+      "minutes": 175.42,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "463",
+      "title": "463: Nowy MacBook Air (early 2024) z Apple M3",
+      "date": "2024-03-08",
+      "duration": "2:03:42",
+      "minutes": 123.7,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "464",
+      "title": "464: Polski deweloper vs. Apple z Michałem Śliwińskim z Nozbe",
+      "date": "2024-03-13",
+      "duration": "1:41:12",
+      "minutes": 101.2,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "465",
+      "title": "465: Jakiego MacBooka wybrać i odkurzacz wchodzący po schodach",
+      "date": "2024-03-15",
+      "duration": "1:33:00",
+      "minutes": 93.0,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "466",
+      "title": "466: Sony Alpha 9 III, Apple podane do sądu przez USA oraz problem z M1 i M2",
+      "date": "2024-03-22",
+      "duration": "2:33:23",
+      "minutes": 153.38,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "467",
+      "title": "467: USA vs. Apple, odkurzacz za 13 zł i promocja Sonosa",
+      "date": "2024-03-29",
+      "duration": "2:06:12",
+      "minutes": 126.2,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "468",
+      "title": "468: Hack, który prawie zniszczył świat i Google, które zabiło kolejny swój produkt",
+      "date": "2024-04-05",
+      "duration": "1:14:35",
+      "minutes": 74.58,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "469",
+      "title": "469: AI zabija ludzi, a my rozmawiamy o sprzęcie do simracingu",
+      "date": "2024-04-12",
+      "duration": "2:48:57",
+      "minutes": 168.95,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "470",
+      "title": "470: Czego oczekujemy po WWDC 2024",
+      "date": "2024-04-19",
+      "duration": "3:19:12",
+      "minutes": 199.2,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "471",
+      "title": "471: Jak działają nowe skanery na lotniskach?",
+      "date": "2024-04-26",
+      "duration": "1:51:48",
+      "minutes": 111.8,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "472",
+      "title": "472: Pik pik, pik pik, czyli podróżowanie po Tajwanie",
+      "date": "2024-05-03",
+      "duration": "2:03:25",
+      "minutes": 123.42,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "473",
+      "title": "473: Nowe iPad Pro i Air pokazane na konferencji Let Loose!",
+      "date": "2024-05-08",
+      "duration": "1:59:40",
+      "minutes": 119.67,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "474",
+      "title": "474: iPad to przyszłość komputerów",
+      "date": "2024-05-10",
+      "duration": "2:15:30",
+      "minutes": 135.5,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "475",
+      "title": "475: iPad Pro i Air – pierwsze wrażenia",
+      "date": "2024-05-17",
+      "duration": "2:31:56",
+      "minutes": 151.93,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "476",
+      "title": "476: Scarlett Johansson mówi nie!",
+      "date": "2024-05-24",
+      "duration": "2:45:36",
+      "minutes": 165.6,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "477",
+      "title": "477: Czy Thomas istnieje naprawdę?",
+      "date": "2024-05-31",
+      "duration": "2:13:03",
+      "minutes": 133.05,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "478",
+      "title": "478: (Prawie) Wszystko o iPad Pro z M4",
+      "date": "2024-06-07",
+      "duration": "1:17:53",
+      "minutes": 77.88,
+      "category": "prawie",
+      "year": 2024
+    },
+    {
+      "episode": "479",
+      "title": "479: WWDC 2024 – podsumowanie i przemyślenia",
+      "date": "2024-06-11",
+      "duration": "1:52:47",
+      "minutes": 112.78,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "480",
+      "title": "480: Na żywo z Apple Park i WWDC 2024",
+      "date": "2024-06-14",
+      "duration": "1:13:27",
+      "minutes": 73.45,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "481",
+      "title": "481: Spielberg wyrzuca Apple Watcha!",
+      "date": "2024-06-21",
+      "duration": "4:14:32",
+      "minutes": 254.53,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "482",
+      "title": "482: Apple zabiera swoje grabki z piaskownicy",
+      "date": "2024-06-28",
+      "duration": "2:24:48",
+      "minutes": 144.8,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "483",
+      "title": "483: Unia Europejska zaściankiem świata",
+      "date": "2024-07-05",
+      "duration": "2:20:33",
+      "minutes": 140.55,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "484",
+      "title": "484: Jaki plecak, statyw i aparat wybrać?",
+      "date": "2024-07-12",
+      "duration": "2:00:46",
+      "minutes": 120.77,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "485",
+      "title": "485: Galaxy AI, Z Fold6 i Z Flip6",
+      "date": "2024-07-19",
+      "duration": "1:24:24",
+      "minutes": 84.4,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "486",
+      "title": "486: CrowdStrike – największa awaria informatyczna w historii świata",
+      "date": "2024-07-26",
+      "duration": "1:46:38",
+      "minutes": 106.63,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "487",
+      "title": "487: Jak podpiąć klimatyzację do HomeKit?",
+      "date": "2024-08-02",
+      "duration": "2:34:00",
+      "minutes": 154.0,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "488",
+      "title": "488: Koniec Intela",
+      "date": "2024-08-09",
+      "duration": "1:38:32",
+      "minutes": 98.53,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "489",
+      "title": "489: Google Pixel 9 Pro XL Fold",
+      "date": "2024-08-16",
+      "duration": "1:43:31",
+      "minutes": 103.52,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "490",
+      "title": "490: AGD i AI, jak zainstalować Fortnite na iOS i Google Pixel 9 Pro XL",
+      "date": "2024-08-23",
+      "duration": "2:36:55",
+      "minutes": 156.92,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "491",
+      "title": "491: Co pokaże Apple obok iPhone’ów 16 Pro?",
+      "date": "2024-08-30",
+      "duration": "1:39:17",
+      "minutes": 99.28,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "492",
+      "title": "492: Budowanie swojego workflow i przewidywania nt. iPhone’ów 16 Pro",
+      "date": "2024-09-06",
+      "duration": "1:57:51",
+      "minutes": 117.85,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "493",
+      "title": "493: (Live) Premiera iPhone’ów 16 Pro",
+      "date": "2024-09-09",
+      "duration": "2:01:07",
+      "minutes": 121.12,
+      "category": "live",
+      "year": 2024
+    },
+    {
+      "episode": "494",
+      "title": "494: iPhone 16 czy PlayStation 5 Pro – co jest droższe?",
+      "date": "2024-09-13",
+      "duration": "2:36:19",
+      "minutes": 156.32,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "495",
+      "title": "495: iPhone 16, 16 Pro i AirPods 4 – pierwsze wrażenia",
+      "date": "2024-09-20",
+      "duration": "3:05:14",
+      "minutes": 185.23,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "496",
+      "title": "496: Jak rozpocząć przygodę z VR?",
+      "date": "2024-09-27",
+      "duration": "2:15:52",
+      "minutes": 135.87,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "497",
+      "title": "497: Social media, komunikatory i my",
+      "date": "2024-10-04",
+      "duration": "1:14:37",
+      "minutes": 74.62,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "498",
+      "title": "498: Marzenie o tatuażu",
+      "date": "2024-10-11",
+      "duration": "55:51",
+      "minutes": 55.85,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "499",
+      "title": "499: Polak mieszkający w Bangkoku w Tajlandii",
+      "date": "2024-10-18",
+      "duration": "2:27:46",
+      "minutes": 147.77,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "500",
+      "title": "500: Okulary AR Meta Orion zamiast smartfona",
+      "date": "2024-10-25",
+      "duration": "3:45:18",
+      "minutes": 225.3,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "501",
+      "title": "501: Nowy Mac Mini, MacBook Pro i iMac z M4 Pro / Max",
+      "date": "2024-11-01",
+      "duration": "2:23:33",
+      "minutes": 143.55,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "502",
+      "title": "502: Jeszcze więcej o nowych MacBookach Pro i Macach Mini",
+      "date": "2024-11-08",
+      "duration": "44:32",
+      "minutes": 44.53,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "503",
+      "title": "503: Rekordowy M4 Pro i ekran nanostrukturalny w MacBook Pro",
+      "date": "2024-11-15",
+      "duration": "2:22:15",
+      "minutes": 142.25,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "504",
+      "title": "504: Microsoft Fail Simulator 2024",
+      "date": "2024-11-22",
+      "duration": "2:11:58",
+      "minutes": 131.97,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "505",
+      "title": "505: Black Friday, gadżety i Mac gaming",
+      "date": "2024-11-28",
+      "duration": "2:10:48",
+      "minutes": 130.8,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "506",
+      "title": "506: Prawdziwe pieniądze zarabia się na oszukiwaniu klientów",
+      "date": "2024-12-06",
+      "duration": "2:28:19",
+      "minutes": 148.32,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "507",
+      "title": "507: Sora, Apple Intelligence, Gemini 2.0, App Store Awards i Thomas eksperymentuje z tajską kuchnią",
+      "date": "2024-12-13",
+      "duration": "1:54:13",
+      "minutes": 114.22,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "508",
+      "title": "508: Sztuka pracy zdalnej",
+      "date": "2024-12-20",
+      "duration": "3:41:49",
+      "minutes": 221.82,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "509",
+      "title": "509: Ogromny scam okradający YouTuberów na miliony dolarów, którego sami promowali",
+      "date": "2024-12-27",
+      "duration": "2:07:52",
+      "minutes": 127.87,
+      "category": "main",
+      "year": 2024
+    },
+    {
+      "episode": "510",
+      "title": "510: Wielkie Podsumowanie 2024",
+      "date": "2025-01-03",
+      "duration": "3:43:30",
+      "minutes": 223.5,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "511",
+      "title": "511: CES 2025, NVIDIA 5090, wybuchający Cybertruck i wiele więcej",
+      "date": "2025-01-08",
+      "duration": "2:41:13",
+      "minutes": 161.22,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "512",
+      "title": "512: Japonia – prawie wszystko co musisz wiedzieć przed pierwszą podróżą",
+      "date": "2025-01-12",
+      "duration": "3:57:22",
+      "minutes": 237.37,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "513",
+      "title": "513: Najważniejsze nowości z CES 2015",
+      "date": "2025-01-16",
+      "duration": "2:24:30",
+      "minutes": 144.5,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "514",
+      "title": "514: Ban TikToka, Samsung S25 Ultra i Nintendo Switch 2",
+      "date": "2025-01-24",
+      "duration": "2:07:16",
+      "minutes": 127.27,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "515",
+      "title": "515: Chińskie AI właśnie podbija świat, mamy 5090 (lol) i 15 lat Nadgryzionych",
+      "date": "2025-01-31",
+      "duration": "53:30",
+      "minutes": 53.5,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "516",
+      "title": "516: AI bronią przeciwko ludzkości",
+      "date": "2025-02-07",
+      "duration": "2:05:21",
+      "minutes": 125.35,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "517",
+      "title": "517: Projekt Home Assistant i HomeKit (cz. 1) oraz Powerbeats Pro 2",
+      "date": "2025-02-14",
+      "duration": "1:55:47",
+      "minutes": 115.78,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "518",
+      "title": "518: iPhone 16e – logo kusi, cena boli",
+      "date": "2025-02-21",
+      "duration": "1:49:12",
+      "minutes": 109.2,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "519",
+      "title": "519: Thomas kupił Maca Mini M4, elektryki zimą i więcej o Advanced Data Protection",
+      "date": "2025-02-28",
+      "duration": "3:12:17",
+      "minutes": 192.28,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "520",
+      "title": "520: MacBook Air M4, Mac Studio M4 Max i M3 Ultra oraz iPad Air M3 i iPad A16",
+      "date": "2025-03-07",
+      "duration": "1:23:41",
+      "minutes": 83.68,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "521",
+      "title": "521: (Afterparty) Nowe hobby Thomasa i Wojtka",
+      "date": "2025-03-11",
+      "duration": "1:25:53",
+      "minutes": 85.88,
+      "category": "afterparty",
+      "year": 2025
+    },
+    {
+      "episode": "522",
+      "title": "522: Jabłko gnije od wnętrza",
+      "date": "2025-03-14",
+      "duration": "3:01:29",
+      "minutes": 181.48,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "523",
+      "title": "523: Drukowanie 3D dla każdego, czyli c.d. przygód Thomasa",
+      "date": "2025-03-21",
+      "duration": "2:11:09",
+      "minutes": 131.15,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "524",
+      "title": "524: (Solo) Trzęsienie ziemi w Bangkoku, Thomas ewakuowany, a WWDC w czerwcu",
+      "date": "2025-03-28",
+      "duration": "1:14:56",
+      "minutes": 74.93,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "525",
+      "title": "525: Nintendo Switch 2 oficjalnie pokazany!",
+      "date": "2025-04-04",
+      "duration": "2:51:47",
+      "minutes": 171.78,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "526",
+      "title": "526: Ile podrożeje iPhone i Biały Lotos z perspektywy Polaka mieszkającego w Tajlandii",
+      "date": "2025-04-11",
+      "duration": "2:27:09",
+      "minutes": 147.15,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "527",
+      "title": "527: Jak zainstalować smart zamek do drzwi wejściowych w domu",
+      "date": "2025-04-18",
+      "duration": "2:39:33",
+      "minutes": 159.55,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "528",
+      "title": "528: Rowerowy kask z interkomem i Black Mirror",
+      "date": "2025-04-25",
+      "duration": "2:19:02",
+      "minutes": 139.03,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "529",
+      "title": "529: Przenosiny z 1Password na Apple Passwords / iCloud Keychain",
+      "date": "2025-05-02",
+      "duration": "2:17:05",
+      "minutes": 137.08,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "530",
+      "title": "530: iPhone 17 Air i Pro – podsumowanie plotek",
+      "date": "2025-05-09",
+      "duration": "1:57:38",
+      "minutes": 117.63,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "531",
+      "title": "531: iOS 19 – tak będzie wyglądał",
+      "date": "2025-05-16",
+      "duration": "1:51:11",
+      "minutes": 111.18,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "532",
+      "title": "532: I/O 2025, monopol Google i audiobooki",
+      "date": "2025-05-23",
+      "duration": "1:58:04",
+      "minutes": 118.07,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "533",
+      "title": "533: Oszukiwali Michała przez 15 lat na setki dolarów!",
+      "date": "2025-05-30",
+      "duration": "2:41:33",
+      "minutes": 161.55,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "534",
+      "title": "534: Ruski hacker ukradł mi konto",
+      "date": "2025-06-06",
+      "duration": "1:00:29",
+      "minutes": 60.48,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "535",
+      "title": "535: WWDC25 – omówienie nowości Apple na gorąco!",
+      "date": "2025-06-10",
+      "duration": "1:28:12",
+      "minutes": 88.2,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "536",
+      "title": "536: WWDC25 – czego nie pokazano?",
+      "date": "2025-06-12",
+      "duration": "1:35:08",
+      "minutes": 95.13,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "537",
+      "title": "537: Kubica wygrał 24h Le Mans, a Michał wymienił SSD w Mac Mini M4!",
+      "date": "2025-06-20",
+      "duration": "1:39:24",
+      "minutes": 99.4,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "538",
+      "title": "538: USA – Disneyland, Wielki Kanion, Las Vegas, Los Angeles i więcej",
+      "date": "2025-06-27",
+      "duration": "2:21:48",
+      "minutes": 141.8,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "539",
+      "title": "539: Apple działa na szkodę swoich użytkowników i F1 Movie",
+      "date": "2025-07-04",
+      "duration": "2:01:18",
+      "minutes": 121.3,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "540",
+      "title": "540: Samsung Galaxy Z Fold7 i Z Flip7, road trip po Skandynawii i Nvidia RTX 5090",
+      "date": "2025-07-11",
+      "duration": "2:08:18",
+      "minutes": 128.3,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "541",
+      "title": "541: Nowy fotel do kokpitu i więcej o Z Fold7",
+      "date": "2025-07-17",
+      "duration": "1:40:49",
+      "minutes": 100.82,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "542",
+      "title": "542: Apple nie ma żadnych planów wprowadzenia polskiej Siri",
+      "date": "2025-07-25",
+      "duration": "1:31:33",
+      "minutes": 91.55,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "543",
+      "title": "543: iPhone 17 Pro z 8x zoomem optycznym",
+      "date": "2025-08-01",
+      "duration": "1:58:18",
+      "minutes": 118.3,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "544",
+      "title": "544: Nowe kolory iPhone 17 Pro i kamperem przez Skandynawię",
+      "date": "2025-08-08",
+      "duration": "2:03:16",
+      "minutes": 123.27,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "545",
+      "title": "545: Wyciek Apple zdradza siedem niezapowiedzianych produktów",
+      "date": "2025-08-15",
+      "duration": "1:34:19",
+      "minutes": 94.32,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "546",
+      "title": "546: Mamy Google Pixel 10 Pro",
+      "date": "2025-08-22",
+      "duration": "2:15:11",
+      "minutes": 135.18,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "547",
+      "title": "547: Vibe Coding",
+      "date": "2025-08-29",
+      "duration": "54:43",
+      "minutes": 54.72,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "548",
+      "title": "548: iPhone 17 Air i Pro, AirPods Pro 3 – co jeszcze pokaże Apple?",
+      "date": "2025-09-05",
+      "duration": "2:07:11",
+      "minutes": 127.18,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "549",
+      "title": "549: Nasze pierwsze wrażenia po premierze rodziny iPhone 17",
+      "date": "2025-09-10",
+      "duration": "1:50:26",
+      "minutes": 110.43,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "550",
+      "title": "550: Dominika wrażenia z premiery w USA nowych iPhone 17 Air i Pro",
+      "date": "2025-09-11",
+      "duration": "51:40",
+      "minutes": 51.67,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "551",
+      "title": "551: Wszystkie różnice pomiędzy iPhone 17, iPhone 17 Pro i iPhone Air",
+      "date": "2025-09-12",
+      "duration": "2:23:54",
+      "minutes": 143.9,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "552",
+      "title": "552: Meta Ray-Ban Display i kilka dni z iPhone 17 Pro i iPhone Air",
+      "date": "2025-09-19",
+      "duration": "2:19:51",
+      "minutes": 139.85,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "553",
+      "title": "553: Afera Kuby Klawitera z Apple i nasze zdanie o niej",
+      "date": "2025-09-26",
+      "duration": "2:25:25",
+      "minutes": 145.42,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "554",
+      "title": "554: Legalne piractwo i przesiadka na iPhone Air",
+      "date": "2025-10-03",
+      "duration": "2:38:59",
+      "minutes": 158.98,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "555",
+      "title": "555: Legalne piractwo c.d., iPhone Air c.d. i recenzja AirPods Pro 3",
+      "date": "2025-10-10",
+      "duration": "2:11:11",
+      "minutes": 131.18,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "556",
+      "title": "556: Apple M5, nowy MacBook Pro, iPad Pro i Vision Pro",
+      "date": "2025-10-17",
+      "duration": "1:33:20",
+      "minutes": 93.33,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "557",
+      "title": "557: Zaskakująca wydajność Apple M5 w MacBooku Pro",
+      "date": "2025-10-24",
+      "duration": "2:37:33",
+      "minutes": 157.55,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "558",
+      "title": "558: macOS 26 Tahoe to spektakularna katastrofa designu",
+      "date": "2025-10-31",
+      "duration": "2:22:17",
+      "minutes": 142.28,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "559",
+      "title": "559: (Special) Jak Polak zbudował globalną firmę bez biura? Wywiad z CEO Nozbe",
+      "date": "2025-11-07",
+      "duration": "2:38:58",
+      "minutes": 158.97,
+      "category": "special",
+      "year": 2025
+    },
+    {
+      "episode": "560",
+      "title": "560: (Special) Filmy naszego życia",
+      "date": "2025-11-14",
+      "duration": "3:43:18",
+      "minutes": 223.3,
+      "category": "special",
+      "year": 2025
+    },
+    {
+      "episode": "561",
+      "title": "561: (Special) Seriale naszego życia",
+      "date": "2025-11-21",
+      "duration": "2:31:26",
+      "minutes": 151.43,
+      "category": "special",
+      "year": 2025
+    },
+    {
+      "episode": "562",
+      "title": "562: Czarny Piątek i nowy hardware od Valve – Steam Machine i Steam Frame",
+      "date": "2025-11-28",
+      "duration": "2:07:46",
+      "minutes": 127.77,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "563",
+      "title": "563: Ogromna zmiana w Apple!",
+      "date": "2025-12-05",
+      "duration": "1:58:19",
+      "minutes": 118.32,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "564",
+      "title": "564: O Japonii (feat. Jakub Tepper)",
+      "date": "2025-12-12",
+      "duration": "1:40:59",
+      "minutes": 100.98,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "565",
+      "title": "565: iOS 26.2 i zablokowane Apple ID",
+      "date": "2025-12-19",
+      "duration": "2:27:16",
+      "minutes": 147.27,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "566",
+      "title": "566: iPhone XX i TV, który nie mieści się w drzwiach",
+      "date": "2025-12-26",
+      "duration": "2:00:43",
+      "minutes": 120.72,
+      "category": "main",
+      "year": 2025
+    },
+    {
+      "episode": "567",
+      "title": "567: Wielkie Podsumowanie 2025",
+      "date": "2026-01-02",
+      "duration": "2:49:29",
+      "minutes": 169.48,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "568",
+      "title": "568: CES 2026 i roboty",
+      "date": "2026-01-09",
+      "duration": "2:58:23",
+      "minutes": 178.38,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "569",
+      "title": "569: Grok AI rozbiera nieletnich",
+      "date": "2026-01-16",
+      "duration": "2:36:22",
+      "minutes": 156.37,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "570",
+      "title": "570: Asystent AI Clawdbot kontroluje Maca, Windowsa i Linuxa",
+      "date": "2026-01-23",
+      "duration": "2:38:01",
+      "minutes": 158.02,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "571",
+      "title": "571: (Afterparty) Granie na Apple TV, elektryczne kanapy i mieszkanie w Bangkoku",
+      "date": "2026-01-27",
+      "duration": "1:44:51",
+      "minutes": 104.85,
+      "category": "afterparty",
+      "year": 2026
+    },
+    {
+      "episode": "572",
+      "title": "572: Ruchomy symulator w domu i AirTag 2",
+      "date": "2026-01-30",
+      "duration": "3:04:56",
+      "minutes": 184.93,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "573",
+      "title": "573: Boty mają swoją sieć społecznościową",
+      "date": "2026-02-07",
+      "duration": "2:38:15",
+      "minutes": 158.25,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "574",
+      "title": "574: Znalazł to przypadkiem, teraz nie może przestać o tym mówić!",
+      "date": "2026-02-13",
+      "duration": "2:31:23",
+      "minutes": 151.38,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "575",
+      "title": "575: Najlepsze gamepady dla PC i oczekiwania sprzętowe od Apple",
+      "date": "2026-02-20",
+      "duration": "2:12:04",
+      "minutes": 132.07,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "576",
+      "title": "576: Thomas jest sławny, Galaxy S26 i moje auto zostało skasowane",
+      "date": "2026-02-27",
+      "duration": "2:09:00",
+      "minutes": 129.0,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "577",
+      "title": "577: MacBook Neo, iPhone 17e, Studio Display XDR i pozostałe nowości Apple",
+      "date": "2026-03-06",
+      "duration": "2:12:02",
+      "minutes": 132.03,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "578",
+      "title": "578: (Prawie) Wszystko o smart home",
+      "date": "2026-03-13",
+      "duration": "1:34:33",
+      "minutes": 94.55,
+      "category": "prawie",
+      "year": 2026
+    },
+    {
+      "episode": "579",
+      "title": "579: Testujemy Sony A7R V i 50-150 F2 w Japonii",
+      "date": "2026-03-21",
+      "duration": "3:33:25",
+      "minutes": 213.42,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "580",
+      "title": "580: Oglądaliśmy Project Hail Mary i Studio Display XDR",
+      "date": "2026-03-27",
+      "duration": "2:55:55",
+      "minutes": 175.92,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "581",
+      "title": "581: Neo, Galaxy i Tokio",
+      "date": "2026-04-03",
+      "duration": "2:40:42",
+      "minutes": 160.7,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "582",
+      "title": "582: Artemis II, M5 Pro vs M5 Max i AirPods Max 2",
+      "date": "2026-04-10",
+      "duration": "1:51:02",
+      "minutes": 111.03,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "583",
+      "title": "583: Kupiłem 24-letnie Porsche 911 z 9800 km przebiegu",
+      "date": "2026-04-17",
+      "duration": "1:52:00",
+      "minutes": 112.0,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "584",
+      "title": "584: John Ternus zostaje nowym CEO Apple, Tim Cook prezesem wykonawczym zarządu",
+      "date": "2026-04-24",
+      "duration": "2:27:42",
+      "minutes": 147.7,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "585",
+      "title": "585: Wybieramy robotyczny odkurzacz do domu",
+      "date": "2026-05-01",
+      "duration": "2:10:54",
+      "minutes": 130.9,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "586",
+      "title": "586: Japońskie jest lepsze",
+      "date": "2026-05-08",
+      "duration": "2:48:34",
+      "minutes": 168.57,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "587",
+      "title": "587: Recenzja Diablo IV: Lord of Hatred i Polak vs Bambu Lab",
+      "date": "2026-05-15",
+      "duration": "2:59:58",
+      "minutes": 179.97,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "588",
+      "title": "588: Forza Horizon 6 i rewolucja AI na Google I/O 2026!",
+      "date": "2026-05-22",
+      "duration": "3:00:04",
+      "minutes": 180.07,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "589",
+      "title": "589: Multipla z Maranello i wycieraczki Jony’ego Ive’a",
+      "date": "2026-05-29",
+      "duration": "2:41:48",
+      "minutes": 161.8,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "590",
+      "title": "590: Nasze oczekiwania od WWDC 2026",
+      "date": "2026-06-03",
+      "duration": "1:48:53",
+      "minutes": 108.88,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "591",
+      "title": "591: WWDC 2026 Afterparty",
+      "date": "2026-06-08",
+      "duration": "1:37:40",
+      "minutes": 97.67,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "592",
+      "title": "592: Kto kłamie? Apple czy UE? Wrażenia prosto z Apple Park po WWDC 2026",
+      "date": "2026-06-12",
+      "duration": "3:14:54",
+      "minutes": 194.9,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "593",
+      "title": "593: Nasza pierwsza drukarka 3D – co musimy wiedzieć",
+      "date": "2026-06-18",
+      "duration": "3:06:25",
+      "minutes": 186.42,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "594",
+      "title": "594: Steam Machine i nowy iPhone Air za 3700 PLN",
+      "date": "2026-06-25",
+      "duration": "1:17:19",
+      "minutes": 77.32,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "595",
+      "title": "595: Tanio już było – Apple podnosi ceny, ale czy to tylko początek?",
+      "date": "2026-07-02",
+      "duration": "3:40:38",
+      "minutes": 220.63,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "596",
+      "title": "596: iPhone 18 Pro i Air 2 – nowe informacje",
+      "date": "2026-07-10",
+      "duration": "2:15:40",
+      "minutes": 135.67,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "597",
+      "title": "597: W końcu mamy Patreona!",
+      "date": "2026-07-17",
+      "duration": "1:39:38",
+      "minutes": 99.63,
+      "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "598",
+      "title": "598: Hermes Agent – lokalna sztuczna inteligencja zamiast OpenClaw",
+      "date": "2026-07-23",
+      "duration": "2:38:15",
+      "minutes": 158.25,
+      "category": "main",
+      "year": 2026
+    }
+  ],
+  "stats": {
+    "total_episodes": 564,
+    "total_listening_hours": 970.0,
+    "average_duration": 103.2,
+    "min_duration": 0.18,
+    "max_duration": 288.65
+  },
+  "categories": {
+    "main": {
+      "label": "Główne",
+      "color": "#F43E25"
+    },
+    "live": {
+      "label": "Live",
+      "color": "#cae153"
+    },
+    "po_godzinach": {
+      "label": "Po Godzinach",
+      "color": "#47CFEB"
+    },
+    "sp": {
+      "label": "SP (specjalne)",
+      "color": "#632F53"
+    },
+    "half": {
+      "label": "Półodcinki",
+      "color": "#999"
+    },
+    "special": {
+      "label": "Specjalne",
+      "color": "#9b51e0"
+    },
+    "afterparty": {
+      "label": "Afterparty",
+      "color": "#ff6900"
+    },
+    "prawie": {
+      "label": "Prawie",
+      "color": "#ff6900"
+    },
+    "na_placu_budowy": {
+      "label": "Na Placu Budowy",
+      "color": "#0693e3"
+    },
+    "na_spacerze": {
+      "label": "Na Spacerze",
+      "color": "#00d084"
+    },
+    "video": {
+      "label": "Video",
+      "color": "#8ed1fc"
+    },
+    "w_biegu": {
+      "label": "W Biegu",
+      "color": "#7bdcb5"
+    }
+  },
+  "average_duration": 103.2
+}
