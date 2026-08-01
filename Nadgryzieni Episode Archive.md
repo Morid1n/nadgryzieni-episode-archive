@@ -564,3 +564,4 @@
 | 562 | 596   | 596: iPhone 18 Pro i Air 2 – nowe informacje                                                                 | 2026-07-10   | 2:15:40  |
 | 563 | 597   | 597: W końcu mamy Patreona!                                                                                  | 2026-07-17   | 1:39:38  |
 | 564 | 598   | 598: Hermes Agent – lokalna sztuczna inteligencja zamiast OpenClaw                                           | 2026-07-23   | 2:38:15  |
+| 565 | 599   | 599: Thomas stracił wszystko, nowy Z Fold8 i więcej Hermesa                                                  | 2026-07-31   | 2:47:33  |

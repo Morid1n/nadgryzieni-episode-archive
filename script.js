@@ -3,7 +3,7 @@
 
 // Load and render all data
 function loadData() {
-    fetch('data.json?v=100')
+    fetch('data.json?v=107')
         .then(response => response.json())
         .then(data => {
             renderStats(data);
