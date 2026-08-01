@@ -1160,19 +1160,19 @@ def main():
     log.info("Step 4: Updating archive...")
     all_rows = existing_rows + new_episodes
 
-    # Sort by episode number (numeric, oldest first)
-    # SP episodes (non-numeric) are sorted by publish date and inserted at the end
+    # Sort by publish date (oldest first)
+    # SP episodes (non-numeric) are interleaved by date
+    # For episodes with same date, sort by episode number
     def sort_key(r):
+        date_str = r["date"] if r["date"] else "9999-12-31"
         ep = r["episode"]
-        # Handle "SP" episodes — sort them at the end, by date
-        if ep == "SP":
-            date_str = r["date"] if r["date"] else "9999-12-31"
-            return (1, 0, date_str, r["title"])
+        # Numeric episodes: use episode number as secondary sort
+        # SP episodes: use 0 as secondary sort (sorts first among same date)
         try:
-            return (0, float(ep), "", r["title"])
+            ep_num = float(ep)
         except ValueError:
-            date_str = r["date"] if r["date"] else "9999-12-31"
-            return (1, 0, date_str, r["title"])
+            ep_num = 0
+        return (date_str, ep_num, r["title"])
     all_rows.sort(key=sort_key)
 
     # Reassign counters after sorting

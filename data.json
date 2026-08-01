@@ -982,6 +982,69 @@
       "year": 2012
     },
     {
+      "episode": "SP",
+      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 01 – iPhone i iPad",
+      "date": "2012-12-10",
+      "duration": "30:10",
+      "minutes": 30.17,
+      "category": "sp",
+      "year": 2012
+    },
+    {
+      "episode": "SP",
+      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 02 – Mac i OS X",
+      "date": "2012-12-11",
+      "duration": "16:24",
+      "minutes": 16.4,
+      "category": "sp",
+      "year": 2012
+    },
+    {
+      "episode": "SP",
+      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 03 – Ekosystem Apple",
+      "date": "2012-12-12",
+      "duration": "16:28",
+      "minutes": 16.47,
+      "category": "sp",
+      "year": 2012
+    },
+    {
+      "episode": "SP",
+      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 04 – Rodzina iPadów",
+      "date": "2012-12-13",
+      "duration": "18:23",
+      "minutes": 18.38,
+      "category": "sp",
+      "year": 2012
+    },
+    {
+      "episode": "SP",
+      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 05 – MacBooki",
+      "date": "2012-12-14",
+      "duration": "18:56",
+      "minutes": 18.93,
+      "category": "sp",
+      "year": 2012
+    },
+    {
+      "episode": "SP",
+      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 06 – Windows 8 i RT",
+      "date": "2012-12-15",
+      "duration": "18:14",
+      "minutes": 18.23,
+      "category": "sp",
+      "year": 2012
+    },
+    {
+      "episode": "SP",
+      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 07 – Android",
+      "date": "2012-12-16",
+      "duration": "20:43",
+      "minutes": 20.72,
+      "category": "sp",
+      "year": 2012
+    },
+    {
       "episode": "106",
       "title": "106: Wszystkiego Najlepszego!!!",
       "date": "2012-12-21",
@@ -4987,21 +5050,21 @@
       "year": 2026
     },
     {
-      "episode": "595.5",
-      "title": "595: (Afterparty) Mleko pistacjowe z wolnego wybiegu",
-      "date": "2026-07-13",
-      "duration": "1:41:18",
-      "minutes": 101.3,
-      "category": "afterparty",
-      "year": 2026
-    },
-    {
       "episode": "596",
       "title": "596: iPhone 18 Pro i Air 2 – nowe informacje",
       "date": "2026-07-10",
       "duration": "2:15:40",
       "minutes": 135.67,
       "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "595.5",
+      "title": "595: (Afterparty) Mleko pistacjowe z wolnego wybiegu",
+      "date": "2026-07-13",
+      "duration": "1:41:18",
+      "minutes": 101.3,
+      "category": "afterparty",
       "year": 2026
     },
     {
@@ -5066,69 +5129,6 @@
       "minutes": 79.95,
       "category": "afterparty",
       "year": 2026
-    },
-    {
-      "episode": "SP",
-      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 01 – iPhone i iPad",
-      "date": "2012-12-10",
-      "duration": "30:10",
-      "minutes": 30.17,
-      "category": "sp",
-      "year": 2012
-    },
-    {
-      "episode": "SP",
-      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 02 – Mac i OS X",
-      "date": "2012-12-11",
-      "duration": "16:24",
-      "minutes": 16.4,
-      "category": "sp",
-      "year": 2012
-    },
-    {
-      "episode": "SP",
-      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 03 – Ekosystem Apple",
-      "date": "2012-12-12",
-      "duration": "16:28",
-      "minutes": 16.47,
-      "category": "sp",
-      "year": 2012
-    },
-    {
-      "episode": "SP",
-      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 04 – Rodzina iPadów",
-      "date": "2012-12-13",
-      "duration": "18:23",
-      "minutes": 18.38,
-      "category": "sp",
-      "year": 2012
-    },
-    {
-      "episode": "SP",
-      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 05 – MacBooki",
-      "date": "2012-12-14",
-      "duration": "18:56",
-      "minutes": 18.93,
-      "category": "sp",
-      "year": 2012
-    },
-    {
-      "episode": "SP",
-      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 06 – Windows 8 i RT",
-      "date": "2012-12-15",
-      "duration": "18:14",
-      "minutes": 18.23,
-      "category": "sp",
-      "year": 2012
-    },
-    {
-      "episode": "SP",
-      "title": "Nadgryzieni w RCS2 – Tydzień technologii – 07 – Android",
-      "date": "2012-12-16",
-      "duration": "20:43",
-      "minutes": 20.72,
-      "category": "sp",
-      "year": 2012
     }
   ],
   "stats": {
