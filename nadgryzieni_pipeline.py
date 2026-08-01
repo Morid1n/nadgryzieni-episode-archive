@@ -43,6 +43,7 @@ STATS_PATH = REPO_DIR / "Nadgryzieni Statistics.md"
 DATA_JSON_PATH = REPO_DIR / "data.json"
 INDEX_HTML_PATH = REPO_DIR / "index.html"
 SCRIPT_JS_PATH = REPO_DIR / "script.js"
+README_PATH = REPO_DIR / "README.md"
 
 RSS_URL = "https://retrorocketnetwork.pl/category/nadgryzieni-rss/feed/"
 
@@ -393,6 +394,51 @@ def write_data_json(data: dict, dry: bool = False) -> None:
     )
     target.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     log.info(f"data.json written: {target} ({len(data['episodes'])} episodes)")
+
+
+# ── README Update ──────────────────────────────────────────────────────────────
+
+def update_readme(data: dict, dry: bool = False) -> None:
+    """Update the README.md stats table with current numbers."""
+    if not README_PATH.exists():
+        log.warning(f"README.md not found at {README_PATH}")
+        return
+
+    content = README_PATH.read_text(encoding="utf-8")
+    stats = data["stats"]
+    total = stats["total_episodes"]
+    total_hours = stats["total_listening_hours"]
+    avg_duration = stats["average_duration"]
+    max_duration = round(stats["max_duration"], 1)
+
+    # Update the stats table in README.md
+    # Pattern: | Liczba odcinków | <number> |
+    content = re.sub(
+        r"\| Liczba odcinków \| \d+ \|",
+        f"| Liczba odcinków | {total} |",
+        content,
+    )
+    content = re.sub(
+        r"\| Godziny odsłuchu \| [\d.]+ \|",
+        f"| Godziny odsłuchu | {total_hours} |",
+        content,
+    )
+    content = re.sub(
+        r"\| Średnia długość \| [\d.]+ min \|",
+        f"| Średnia długość | {avg_duration} min |",
+        content,
+    )
+    content = re.sub(
+        r"\| Maksymalna długość \| [\d.]+ min \|",
+        f"| Maksymalna długość | {max_duration} min |",
+        content,
+    )
+
+    target = README_PATH if not dry else README_PATH.with_name(
+        README_PATH.name.replace(".md", ".dry.md")
+    )
+    target.write_text(content, encoding="utf-8")
+    log.info(f"README.md updated: {target} ({total} episodes)")
 
 
 # ── Statistics Generation ────────────────────────────────────────────────────
@@ -819,6 +865,10 @@ def main():
     log.info("Step 5: Generating data.json...")
     data = generate_data_json(all_rows)
     write_data_json(data, dry=dry)
+
+    # Step 5b: Update README.md stats table
+    log.info("Step 5b: Updating README.md...")
+    update_readme(data, dry=dry)
 
     # Step 6: Generate statistics (only when new episodes are found)
     if new_episodes:
