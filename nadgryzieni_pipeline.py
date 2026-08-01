@@ -11,6 +11,7 @@ Runs every Saturday (scheduled via Hermes cronjob). Does the following:
 5. Regenerates `Nadgryzieni Statistics.md` with comprehensive stats.
 6. Bumps cache-busting version (?v=N) in index.html, script.js, data.json references.
 7. Commits and pushes to Git (triggers GitHub Pages rebuild).
+8. Syncs archive and statistics to Obsidian vault directory.
 
 If no new episodes are found, the script exits silently (no output, no commit).
 
@@ -44,6 +45,9 @@ DATA_JSON_PATH = REPO_DIR / "data.json"
 INDEX_HTML_PATH = REPO_DIR / "index.html"
 SCRIPT_JS_PATH = REPO_DIR / "script.js"
 README_PATH = REPO_DIR / "README.md"
+
+# Obsidian vault directory for syncing archive and statistics
+VAULT_DIR = Path("/Users/tarkin/Library/Mobile Documents/com~apple~CloudDocs/! Hermes !/Scarif Vault/20-Podcast")
 
 RSS_URL = "https://retrorocketnetwork.pl/category/nadgryzieni-rss/feed/"
 
@@ -439,6 +443,37 @@ def update_readme(data: dict, dry: bool = False) -> None:
     )
     target.write_text(content, encoding="utf-8")
     log.info(f"README.md updated: {target} ({total} episodes)")
+
+
+# ── Obsidian Vault Sync ────────────────────────────────────────────────────────
+
+def sync_to_obsidian(dry: bool = False) -> None:
+    """Sync archive and statistics files to the Obsidian vault directory."""
+    if not VAULT_DIR.exists():
+        log.warning(f"Vault directory not found: {VAULT_DIR}")
+        return
+
+    synced = 0
+
+    # Sync archive
+    src_archive = ARCHIVE_PATH
+    dst_archive = VAULT_DIR / "Nadgryzieni Episode Archive.md"
+    if src_archive.exists():
+        if not dry:
+            dst_archive.write_bytes(src_archive.read_bytes())
+        log.info(f"Synced archive to vault: {dst_archive}")
+        synced += 1
+
+    # Sync statistics
+    src_stats = STATS_PATH
+    dst_stats = VAULT_DIR / "Nadgryzieni Statistics.md"
+    if src_stats.exists():
+        if not dry:
+            dst_stats.write_bytes(src_stats.read_bytes())
+        log.info(f"Synced statistics to vault: {dst_stats}")
+        synced += 1
+
+    log.info(f"Obsidian vault sync complete: {synced} file(s) synced")
 
 
 # ── Statistics Generation ────────────────────────────────────────────────────
@@ -892,6 +927,13 @@ def main():
         today = date.today().isoformat()
         commit_msg = f"Nadgryzieni archive update – {today} ({len(new_episodes)} new episodes)"
         git_commit_and_push(commit_msg, dry=dry)
+
+    # Step 9: Sync to Obsidian vault (only when new episodes are found)
+    if new_episodes:
+        log.info("Step 9: Syncing to Obsidian vault...")
+        sync_to_obsidian(dry=dry)
+    else:
+        log.info("Step 9: Skipping Obsidian sync (no new episodes).")
 
     log.info("=" * 60)
     log.info(f"Pipeline complete! {len(new_episodes)} new episode(s) added.")
