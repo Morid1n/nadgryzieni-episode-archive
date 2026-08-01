@@ -51,6 +51,9 @@ VAULT_DIR = Path("/Users/tarkin/Library/Mobile Documents/com~apple~CloudDocs/! H
 
 RSS_URL = "https://retrorocketnetwork.pl/category/nadgryzieni-rss/feed/"
 
+# Patreon creator page (public posts are scraped; private RSS requires auth)
+PATREON_URL = "https://www.patreon.com/iMagazinePL/posts"
+
 # Content widths for the padded markdown table (content is left-justified,
 # with 1 space padding on each side between | characters)
 # Derived from the existing archive: field widths between | are 5, 7, 110, 14, 10
@@ -133,6 +136,144 @@ def parse_rss_items(xml_bytes: bytes) -> list[dict]:
             "episode_number": ep_num,
         })
     return items
+
+
+# ── Patreon Scraping ──────────────────────────────────────────────────────────
+
+def fetch_patreon_posts() -> list[dict]:
+    """Scrape Patreon posts page to find Afterparty episodes.
+
+    Patreon's RSS endpoint requires authentication. The public posts page
+    is rendered via Next.js with dynamic data loading, so we extract
+    episode titles from the embedded Next.js data payload.
+
+    To access the private RSS feed, set the PATREON_RSS_URL environment
+    variable to the authenticated RSS URL.
+
+    Returns a list of dicts with keys: title, episode_number.
+    Returns empty list if scraping fails or no afterparty posts found.
+    """
+    # Check for authenticated RSS URL in environment
+    rss_url = os.environ.get("PATREON_RSS_URL")
+    if rss_url:
+        try:
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
+            req = urllib.request.Request(rss_url, headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+                "Accept": "application/xml",
+            })
+            with urllib.request.urlopen(req, timeout=30, context=ctx) as resp:
+                xml_bytes = resp.read()
+            return _parse_patreon_rss(xml_bytes)
+        except Exception as exc:
+            log.warning(f"Patreon RSS fetch failed: {exc}")
+
+    # Fall back to scraping the public posts page
+    try:
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        patreon_url = "https://www.patreon.com/cw/iMagazinePL/posts"
+        req = urllib.request.Request(patreon_url, headers={
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+            "Accept": "text/html",
+        })
+        with urllib.request.urlopen(req, timeout=30, context=ctx) as resp:
+            html = resp.read().decode("utf-8", errors="replace")
+    except Exception as exc:
+        log.warning(f"Patreon page fetch failed: {exc}")
+        return []
+
+    # Extract Next.js data chunks and concatenate
+    all_data = ""
+    for push in re.finditer(r'self\.__next_f\.push\(\[\d+,\s*"((?:[^"\\]|\\.)*)"\]\)', html):
+        try:
+            chunk = json.loads('"' + push.group(1) + '"')
+            all_data += chunk
+        except json.JSONDecodeError:
+            continue
+
+    # Look for Afterparty titles in the data
+    # Pattern matches: NNN: (Afterparty) ... in JSON-escaped strings
+    posts = []
+    title_pattern = re.compile(r'([0-9]{3}): ?\\?\(Afterparty\\?\)([^"\\\n]{5,100})')
+    for match in title_pattern.finditer(all_data):
+        ep_num = match.group(1)
+        subtitle = match.group(2).strip().rstrip('\\')
+        # Unescape common JSON entities
+        subtitle = subtitle.replace('\\u003c', '<').replace('\\u003e', '>')
+        title = f"{ep_num}: (Afterparty) {subtitle}"
+        posts.append({
+            "title": title,
+            "episode_number": ep_num,
+        })
+
+    # Deduplicate by episode number
+    seen = set()
+    unique_posts = []
+    for p in posts:
+        if p["episode_number"] not in seen:
+            seen.add(p["episode_number"])
+            unique_posts.append(p)
+
+    if not unique_posts:
+        log.info("No Patreon Afterparty posts found (page may be JS-rendered).")
+
+    return unique_posts
+
+
+def _parse_patreon_rss(xml_bytes: bytes) -> list[dict]:
+    """Parse Patreon RSS XML to extract afterparty episodes."""
+    try:
+        root = ET.fromstring(xml_bytes)
+    except ET.ParseError:
+        return []
+    posts = []
+    for item in root.findall(".//item"):
+        title_el = item.find("title")
+        if title_el is None or title_el.text is None:
+            continue
+        title = title_el.text.strip()
+        if "(Afterparty)" not in title:
+            continue
+        ep_match = re.match(r"^(\d+):\s*\(Afterparty\)", title)
+        if ep_match:
+            posts.append({
+                "title": title,
+                "episode_number": ep_match.group(1),
+            })
+    return posts
+
+
+def merge_patreon_episodes(existing_ep_numbers: set, new_episodes: list) -> list:
+    """Check Patreon for afterparty episodes not in the regular feed.
+
+    Only adds episodes that are not already in the archive or new_episodes list.
+    Returns a list of new Patreon episode dicts.
+    """
+    patreon_posts = fetch_patreon_posts()
+    if not patreon_posts:
+        return []
+
+    all_known_numbers = existing_ep_numbers | {e["episode"] for e in new_episodes}
+    patreon_new = []
+
+    for post in patreon_posts:
+        ep_num = post["episode_number"]
+        if ep_num in all_known_numbers:
+            continue
+        patreon_new.append({
+            "counter": "",  # Will be assigned after sorting
+            "episode": ep_num,
+            "title": post["title"],
+            "date": "",  # Unknown without auth or JS rendering
+            "duration": "?",  # Unknown without auth or JS rendering
+        })
+        all_known_numbers.add(ep_num)
+
+    return patreon_new
 
 
 def extract_episode_number(title: str) -> str:
@@ -870,6 +1011,16 @@ def main():
             "duration": duration,
         })
         existing_ep_numbers.add(ep_num)
+
+    # Step 3b: Check Patreon for afterparty episodes
+    log.info("Step 3b: Checking Patreon for afterparty episodes...")
+    patreon_new = merge_patreon_episodes(existing_ep_numbers, new_episodes)
+    if patreon_new:
+        log.info(f"  Found {len(patreon_new)} Patreon afterparty episode(s):")
+        for ep in patreon_new:
+            log.info(f"    #{ep['episode']}: {ep['title'][:60]}...")
+        new_episodes.extend(patreon_new)
+        existing_ep_numbers.update(ep["episode"] for ep in patreon_new)
 
     if not new_episodes and not force:
         log.info("No new episodes found. Exiting silently.")
