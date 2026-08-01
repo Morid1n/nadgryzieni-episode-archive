@@ -562,6 +562,11 @@
 | 560 | 594   | 594: Steam Machine i nowy iPhone Air za 3700 PLN                                                             | 2026-06-25   | 1:17:19  |
 | 561 | 595   | 595: Tanio już było – Apple podnosi ceny, ale czy to tylko początek?                                         | 2026-07-02   | 3:40:38  |
 | 562 | 596   | 596: iPhone 18 Pro i Air 2 – nowe informacje                                                                 | 2026-07-10   | 2:15:40  |
-| 563 | 597   | 597: W końcu mamy Patreona!                                                                                  | 2026-07-17   | 1:39:38  |
-| 564 | 598   | 598: Hermes Agent – lokalna sztuczna inteligencja zamiast OpenClaw                                           | 2026-07-23   | 2:38:15  |
-| 565 | 599   | 599: Thomas stracił wszystko, nowy Z Fold8 i więcej Hermesa                                                  | 2026-07-31   | 2:47:33  |
+| 563 | 595.5 | 595: (Afterparty) Mleko pistacjowe z wolnego wybiegu                                                         | 2026-07-13   | 1:41:18  |
+| 564 | 596.5 | 596: (Afterparty) Batmobile z homologacją na publiczne drogi                                                 | 2026-07-17   | 0:46:40  |
+| 565 | 597.5 | 597: (Afterparty) Prawdziwy latający motocykl, wyglądający jak speeder bike ze Star Wars                     | 2026-07-17   | 1:05:03  |
+| 566 | 597   | 597: W końcu mamy Patreona!                                                                                  | 2026-07-17   | 1:39:38  |
+| 567 | 598.5 | 598: (Afterparty) Latający skuter – dwie godziny na jednym tankowaniu                                        | 2026-07-23   | 0:29:17  |
+| 568 | 598   | 598: Hermes Agent – lokalna sztuczna inteligencja zamiast OpenClaw                                           | 2026-07-23   | 2:38:15  |
+| 569 | 599.5 | 599: (Afterparty) Wojtek leci do iMax 70 mm, a Michał od roku koduje z AI                                    | 2026-07-31   | 1:19:57  |
+| 570 | 599   | 599: Thomas stracił wszystko, nowy Z Fold8 i więcej Hermesa                                                  | 2026-07-31   | 2:47:33  |

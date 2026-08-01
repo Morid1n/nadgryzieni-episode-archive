@@ -9,9 +9,9 @@
 
 | Metric | Value |
 |---|---|
-| **Total episodes** | 565 |
+| **Total episodes** | 570 |
 | **Date range** | 2010-01-28 — 2026-07-31 |
-| **Episodes with duration** | 565 |
+| **Episodes with duration** | 570 |
 | **Episodes without duration** | 0 |
 
 ---
@@ -20,13 +20,13 @@
 
 | Metric | Value |
 |---|---|
-| **Total listening time** | 972h 46m (972.8 hours) |
-| **Average duration** | 103.3 min (1.7h) |
-| **Median duration** | 98.5 min (1.6h) |
+| **Total listening time** | 978h 8m (978.1 hours) |
+| **Average duration** | 103.0 min (1.7h) |
+| **Median duration** | 98.4 min (1.6h) |
 | **Longest episode** | 288.6 min |
 | **Shortest episode** | 0.2 min |
 | **Episodes over 2 hours** | 200 |
-| **Episodes under 30 minutes** | 43 |
+| **Episodes under 30 minutes** | 44 |
 
 ---
 
@@ -50,7 +50,7 @@
 | 2023 | 56 | 144.4 min |
 | 2024 | 58 | 133.3 min |
 | 2025 | 57 | 128.3 min |
-| 2026 | 33 | 149.6 min |
+| 2026 | 38 | 138.4 min |
 
 ---
 
@@ -58,10 +58,10 @@
 
 | Bracket | Count | % |
 |---|---|---|
-| Under 30 min | 43 | 7.6% |
-| 30 min – 1 hour | 79 | 14.0% |
-| 1 hour – 2 hours | 243 | 43.0% |
-| 2 hours – 3 hours | 151 | 26.7% |
+| Under 30 min | 44 | 7.7% |
+| 30 min – 1 hour | 80 | 14.0% |
+| 1 hour – 2 hours | 246 | 43.2% |
+| 2 hours – 3 hours | 151 | 26.5% |
 | 3 hours – 4 hours | 46 | 8.1% |
 | Over 4 hours | 3 | 0.5% |
 
@@ -71,7 +71,7 @@
 
 | Year | Count |
 |---|---|
-| 2026 | 33 |
+| 2026 | 38 |
 | 2025 | 57 |
 | 2024 | 58 |
 | 2023 | 56 |
@@ -95,18 +95,18 @@
 
 | Month | Count | % |
 |---|---|---|
-| January | 56 | 9.9% |
+| January | 56 | 9.8% |
 | February | 42 | 7.4% |
-| March | 51 | 9.0% |
+| March | 51 | 8.9% |
 | April | 46 | 8.1% |
-| May | 48 | 8.5% |
-| June | 52 | 9.2% |
-| July | 52 | 9.2% |
-| August | 36 | 6.4% |
-| September | 41 | 7.3% |
-| October | 40 | 7.1% |
-| November | 40 | 7.1% |
-| December | 61 | 10.8% |
+| May | 48 | 8.4% |
+| June | 52 | 9.1% |
+| July | 57 | 10.0% |
+| August | 36 | 6.3% |
+| September | 41 | 7.2% |
+| October | 40 | 7.0% |
+| November | 40 | 7.0% |
+| December | 61 | 10.7% |
 
 ---
 
@@ -114,11 +114,11 @@
 
 | Day | Count | % |
 |---|---|---|
-| Monday | 56 | 9.9% |
-| Tuesday | 41 | 7.3% |
-| Wednesday | 53 | 9.4% |
-| Thursday | 86 | 15.2% |
-| Friday | 289 | 51.2% |
+| Monday | 57 | 10.0% |
+| Tuesday | 41 | 7.2% |
+| Wednesday | 53 | 9.3% |
+| Thursday | 87 | 15.3% |
+| Friday | 292 | 51.2% |
 | Saturday | 22 | 3.9% |
 | Sunday | 18 | 3.2% |
 
@@ -131,10 +131,10 @@
 | Main episodes | 517 |
 | (Live) | 11 |
 | (Po Godzinach) | 10 |
+| (Afterparty) | 8 |
 | SP (special) | 7 |
 | (Prawie) | 5 |
 | (Na Placu Budowy) | 5 |
-| (Afterparty) | 3 |
 | (Special) | 3 |
 | Half/decimal episodes | 2 |
 | (Na Spacerze) | 1 |
@@ -154,8 +154,8 @@
 | 1:24:24 | 2 |
 | 2:36:22 | 2 |
 | 1:43:35 | 2 |
+| 1:05:03 | 2 |
 | 1:50:38 | 2 |
-| 15:53 | 2 |
 
 ---
 
@@ -172,8 +172,8 @@
 | mac | 22 |
 | wwdc | 21 |
 | air | 21 |
+| jak | 19 |
 | nowy | 18 |
-| jak | 18 |
 | wszystko | 17 |
 | jest | 16 |
 | wrażenia | 14 |
@@ -188,10 +188,10 @@
 
 ## Summary
 
-- **Total episodes:** 565
-- **Total listening time:** 972h 46m
-- **Average duration:** 103.3 min
-- **Median duration:** 98.5 min
+- **Total episodes:** 570
+- **Total listening time:** 978h 8m
+- **Average duration:** 103.0 min
+- **Median duration:** 98.4 min
 - **Date range:** 2010-01-28 — 2026-07-31
 
 ---

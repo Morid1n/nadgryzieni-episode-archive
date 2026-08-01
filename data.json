@@ -5059,6 +5059,33 @@
       "year": 2026
     },
     {
+      "episode": "595.5",
+      "title": "595: (Afterparty) Mleko pistacjowe z wolnego wybiegu",
+      "date": "2026-07-13",
+      "duration": "1:41:18",
+      "minutes": 101.3,
+      "category": "afterparty",
+      "year": 2026
+    },
+    {
+      "episode": "596.5",
+      "title": "596: (Afterparty) Batmobile z homologacją na publiczne drogi",
+      "date": "2026-07-17",
+      "duration": "0:46:40",
+      "minutes": 46.67,
+      "category": "afterparty",
+      "year": 2026
+    },
+    {
+      "episode": "597.5",
+      "title": "597: (Afterparty) Prawdziwy latający motocykl, wyglądający jak speeder bike ze Star Wars",
+      "date": "2026-07-17",
+      "duration": "1:05:03",
+      "minutes": 65.05,
+      "category": "afterparty",
+      "year": 2026
+    },
+    {
       "episode": "597",
       "title": "597: W końcu mamy Patreona!",
       "date": "2026-07-17",
@@ -5068,12 +5095,30 @@
       "year": 2026
     },
     {
+      "episode": "598.5",
+      "title": "598: (Afterparty) Latający skuter – dwie godziny na jednym tankowaniu",
+      "date": "2026-07-23",
+      "duration": "0:29:17",
+      "minutes": 29.28,
+      "category": "afterparty",
+      "year": 2026
+    },
+    {
       "episode": "598",
       "title": "598: Hermes Agent – lokalna sztuczna inteligencja zamiast OpenClaw",
       "date": "2026-07-23",
       "duration": "2:38:15",
       "minutes": 158.25,
       "category": "main",
+      "year": 2026
+    },
+    {
+      "episode": "599.5",
+      "title": "599: (Afterparty) Wojtek leci do iMax 70 mm, a Michał od roku koduje z AI",
+      "date": "2026-07-31",
+      "duration": "1:19:57",
+      "minutes": 79.95,
+      "category": "afterparty",
       "year": 2026
     },
     {
@@ -5087,9 +5132,9 @@
     }
   ],
   "stats": {
-    "total_episodes": 565,
-    "total_listening_hours": 972.8,
-    "average_duration": 103.3,
+    "total_episodes": 570,
+    "total_listening_hours": 978.1,
+    "average_duration": 103.0,
     "min_duration": 0.18,
     "max_duration": 288.65
   },
@@ -5143,5 +5188,5 @@
       "color": "#7bdcb5"
     }
   },
-  "average_duration": 103.3
+  "average_duration": 103.0
 }

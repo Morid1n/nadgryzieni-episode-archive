@@ -140,20 +140,99 @@ def parse_rss_items(xml_bytes: bytes) -> list[dict]:
 
 # ── Patreon Scraping ──────────────────────────────────────────────────────────
 
+# Known Patreon post slugs for Afterparty episodes
+# These are discovered by visiting the Patreon posts page in a browser
+# (posts page is JS-rendered, so Python can't extract them directly)
+# Format: (episode_number, slug) — update this list as new posts are published
+PATREON_KNOWN_POSTS = [
+    (595, "595-afterparty-z-163700509"),
+    (596, "596-afterparty-z-164064600"),
+    (597, "597-afterparty-164068251"),
+    (598, "598-afterparty-164626802"),
+    (599, "599-afterparty-z-165363196"),
+]
+
+
+def _fetch_patreon_post_page(slug: str) -> str | None:
+    """Fetch a single Patreon post page and return its HTML."""
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    url = f"https://www.patreon.com/iMagazinePL/posts/{slug}"
+    req = urllib.request.Request(url, headers={
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+        "Accept": "text/html",
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=15, context=ctx) as resp:
+            return resp.read().decode("utf-8", errors="replace")
+    except Exception:
+        return None
+
+
+def _parse_patreon_post(html: str) -> dict | None:
+    """Extract title, duration, and date from a Patreon post page HTML."""
+    # Extract title from og:title meta tag
+    title_match = re.search(r'og:title" content="([^"]+)"', html)
+    if not title_match:
+        return None
+    title = title_match.group(1)
+    # Strip the " | iMagazinePL x Nadgryzieni" suffix (and any other " | ..." suffixes)
+    if " | " in title:
+        title = title.split(" | ")[0].strip()
+
+    # Extract duration
+    duration = None
+    # Try: "duration":"HH:MM:SS" format
+    dur_match = re.search(r'"duration":"(\d{1,2}:\d{2}:\d{2})"', html)
+    if dur_match:
+        duration = dur_match.group(1)
+    else:
+        # Try: duration in seconds (integer)
+        dur_sec = re.search(r'"duration":(\d+)', html)
+        if dur_sec:
+            secs = int(dur_sec.group(1))
+            h = secs // 3600
+            m = (secs % 3600) // 60
+            s = secs % 60
+            duration = f"{h}:{m:02d}:{s:02d}"
+
+    # Extract published date
+    date_match = re.search(r'"published_at":"([^"]+)"', html)
+    pub_date = date_match.group(1)[:10] if date_match else ""
+
+    return {
+        "title": title,
+        "duration": duration,
+        "date": pub_date,
+    }
+
+
+def _fetch_patreon_posts_from_list() -> list[dict]:
+    """Fetch known Patreon Afterparty post pages and extract episode data."""
+    posts = []
+    for ep_num, slug in PATREON_KNOWN_POSTS:
+        html = _fetch_patreon_post_page(slug)
+        if not html:
+            continue
+        parsed = _parse_patreon_post(html)
+        if not parsed:
+            continue
+        parsed["episode_number"] = ep_num
+        posts.append(parsed)
+    return posts
+
+
 def fetch_patreon_posts() -> list[dict]:
-    """Scrape Patreon posts page to find Afterparty episodes.
+    """Fetch Patreon Afterparty episodes from multiple sources.
 
-    Patreon's RSS endpoint requires authentication. The public posts page
-    is rendered via Next.js with dynamic data loading, so we extract
-    episode titles from the embedded Next.js data payload.
+    1. If PATREON_RSS_URL env var is set, fetch authenticated RSS XML.
+    2. Otherwise, try scraping the public posts page for post slugs (JS-rendered, may fail).
+    3. Fall back to fetching known post pages directly (hardcoded list).
 
-    To access the private RSS feed, set the PATREON_RSS_URL environment
-    variable to the authenticated RSS URL.
-
-    Returns a list of dicts with keys: title, episode_number.
-    Returns empty list if scraping fails or no afterparty posts found.
+    Returns a list of dicts with keys: title, episode_number, duration, date.
     """
-    # Check for authenticated RSS URL in environment
+    # 1. Try authenticated RSS
     rss_url = os.environ.get("PATREON_RSS_URL")
     if rss_url:
         try:
@@ -170,7 +249,28 @@ def fetch_patreon_posts() -> list[dict]:
         except Exception as exc:
             log.warning(f"Patreon RSS fetch failed: {exc}")
 
-    # Fall back to scraping the public posts page
+    # 2. Try scraping the public posts page
+    posts = _scrape_patreon_posts_page()
+    if posts:
+        return posts
+
+    # 3. Fall back to known post list
+    log.info("Falling back to known Patreon post list.")
+    posts = _fetch_patreon_posts_from_list()
+    if posts:
+        log.info(f"Found {len(posts)} Patreon Afterparty posts from known list.")
+    else:
+        log.info("No Patreon Afterparty posts found.")
+
+    return posts
+
+
+def _scrape_patreon_posts_page() -> list[dict]:
+    """Scrape the Patreon posts page to find Afterparty episode links.
+
+    The page is JS-rendered, so this may not find any posts.
+    Returns empty list if posts are not in the HTML.
+    """
     try:
         ctx = ssl.create_default_context()
         ctx.check_hostname = False
@@ -195,33 +295,34 @@ def fetch_patreon_posts() -> list[dict]:
         except json.JSONDecodeError:
             continue
 
-    # Look for Afterparty titles in the data
-    # Pattern matches: NNN: (Afterparty) ... in JSON-escaped strings
-    posts = []
-    title_pattern = re.compile(r'([0-9]{3}): ?\\?\(Afterparty\\?\)([^"\\\n]{5,100})')
-    for match in title_pattern.finditer(all_data):
-        ep_num = match.group(1)
-        subtitle = match.group(2).strip().rstrip('\\')
-        # Unescape common JSON entities
-        subtitle = subtitle.replace('\\u003c', '<').replace('\\u003e', '>')
-        title = f"{ep_num}: (Afterparty) {subtitle}"
-        posts.append({
-            "title": title,
-            "episode_number": ep_num,
-        })
+    # Look for post URL slugs in the data
+        # Pattern: /iMagazinePL/posts/NNN-afterparty-SLUG
+        slug_pattern = re.compile(r'/iMagazinePL/posts/(\d+)-afterparty-[a-z]+-(\d{6,12})')
+        slugs_found = slug_pattern.findall(all_data)
 
-    # Deduplicate by episode number
+        # Also try the raw HTML
+        slugs_html = slug_pattern.findall(html)
+
+    all_slugs = slugs_found + slugs_html
+
+    # Deduplicate and convert to int
     seen = set()
-    unique_posts = []
-    for p in posts:
-        if p["episode_number"] not in seen:
-            seen.add(p["episode_number"])
-            unique_posts.append(p)
+    posts = []
+    for ep_num, post_id in all_slugs:
+        ep_num = int(ep_num)
+        if ep_num in seen:
+            continue
+        seen.add(ep_num)
+        # Construct a slug to fetch
+        slug = f"{ep_num}-afterparty-{post_id}"
+        page_html = _fetch_patreon_post_page(slug)
+        if page_html:
+            parsed = _parse_patreon_post(page_html)
+            if parsed:
+                parsed["episode_number"] = str(ep_num)
+                posts.append(parsed)
 
-    if not unique_posts:
-        log.info("No Patreon Afterparty posts found (page may be JS-rendered).")
-
-    return unique_posts
+    return posts
 
 
 def _parse_patreon_rss(xml_bytes: bytes) -> list[dict]:
@@ -240,15 +341,38 @@ def _parse_patreon_rss(xml_bytes: bytes) -> list[dict]:
             continue
         ep_match = re.match(r"^(\d+):\s*\(Afterparty\)", title)
         if ep_match:
+            # Try to get duration from itunes:duration
+            duration = None
+            itunes_dur = item.find(".//{http://www.itunes.com/dtds/rss-2.0.dtd}duration")
+            if itunes_dur is not None and itunes_dur.text:
+                try:
+                    secs = int(itunes_dur.text)
+                    h = secs // 3600
+                    m = (secs % 3600) // 60
+                    s = secs % 60
+                    duration = f"{h}:{m:02d}:{s:02d}"
+                except (ValueError, TypeError):
+                    duration = itunes_dur.text
+            # Try to get pubDate
+            date_str = ""
+            pub_date = item.find("pubDate")
+            if pub_date is not None and pub_date.text:
+                date_str = pub_date.text[:10]
             posts.append({
                 "title": title,
                 "episode_number": ep_match.group(1),
+                "duration": duration,
+                "date": date_str,
             })
     return posts
 
 
 def merge_patreon_episodes(existing_ep_numbers: set, new_episodes: list) -> list:
     """Check Patreon for afterparty episodes not in the regular feed.
+
+    Patreon Afterparty episodes share episode numbers with main episodes
+    (e.g., Afterparty 595 accompanies main episode 595). To avoid collisions,
+    we use fractional numbering: Afterparty 595 → 595.5, 596 → 596.5, etc.
 
     Only adds episodes that are not already in the archive or new_episodes list.
     Returns a list of new Patreon episode dicts.
@@ -262,16 +386,17 @@ def merge_patreon_episodes(existing_ep_numbers: set, new_episodes: list) -> list
 
     for post in patreon_posts:
         ep_num = post["episode_number"]
-        if ep_num in all_known_numbers:
+        patreon_ep_id = f"{ep_num}.5"  # Fractional to avoid collision with main episode
+        if patreon_ep_id in all_known_numbers:
             continue
         patreon_new.append({
             "counter": "",  # Will be assigned after sorting
-            "episode": ep_num,
+            "episode": patreon_ep_id,
             "title": post["title"],
-            "date": "",  # Unknown without auth or JS rendering
-            "duration": "?",  # Unknown without auth or JS rendering
+            "date": post.get("date", ""),
+            "duration": post.get("duration") or "?",
         })
-        all_known_numbers.add(ep_num)
+        all_known_numbers.add(patreon_ep_id)
 
     return patreon_new
 

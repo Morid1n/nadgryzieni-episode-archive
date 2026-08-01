@@ -17,9 +17,9 @@ Strona prezentuje interaktywny wykres punktowy pokazujący długość każdego o
 
 | Statystyka | Wartość |
 |------------|---------|
-| Liczba odcinków | 565 |
-| Godziny odsłuchu | 972.8 |
-| Średnia długość | 103.3 min |
+| Liczba odcinków | 570 |
+| Godziny odsłuchu | 978.1 |
+| Średnia długość | 103.0 min |
 | Maksymalna długość | 288.6 min |
 
 ## 🗂️ Struktura repozytorium
