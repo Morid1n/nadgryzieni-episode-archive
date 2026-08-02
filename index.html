@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Nadgryzieni - Statystyki odcinków</title>
-    <link rel="stylesheet" href="style.css?v=110">
+    <link rel="stylesheet" href="style.css?v=111">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -40,10 +40,17 @@
         </div>
 
         <section class="chart-container">
-            <div class="chart-wrapper" id="chart-wrapper">
-                <canvas id="episode-chart"></canvas>
+            <div class="chart-controls" role="group" aria-label="Typ wykresu">
+                <span class="chart-controls-label">Widok:</span>
+                <button type="button" class="chart-mode-button is-active" data-chart-mode="scatter" aria-pressed="true">Punkty</button>
+                <button type="button" class="chart-mode-button" data-chart-mode="line" aria-pressed="false">Linia</button>
             </div>
-            <p class="chart-hint">Przewijaj w poziomie, aby zobaczyć wszystkie odcinki. Najedź na punkt, aby zobaczyć szczegóły.</p>
+            <div class="chart-scroll" id="chart-scroll">
+                <div class="chart-wrapper" id="chart-wrapper">
+                    <canvas id="episode-chart" aria-label="Wykres długości odcinków Nadgryzieni"></canvas>
+                </div>
+            </div>
+            <p class="chart-hint" id="chart-hint" aria-live="polite">Wykres punktowy: najedź na punkt, aby zobaczyć szczegóły. Identyfikatory odcinków zachowują także wartości ułamkowe.</p>
         </section>
 
         <div class="container">
@@ -60,6 +67,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=110"></script>
+    <script src="script.js?v=111"></script>
 </body>
 </html>

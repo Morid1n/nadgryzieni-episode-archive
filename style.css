@@ -106,9 +106,52 @@ header .subtitle {
     margin-right: auto;
 }
 
-.chart-wrapper {
+.chart-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.chart-controls-label {
+    color: var(--rrn-dark-teal);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.chart-mode-button {
+    appearance: none;
+    border: 1px solid var(--rrn-dark-teal);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--rrn-dark-teal);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 6px 16px;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.chart-mode-button:hover,
+.chart-mode-button:focus-visible,
+.chart-mode-button.is-active {
+    background: var(--rrn-dark-teal);
+    color: var(--rrn-light-text);
+}
+
+.chart-mode-button:focus-visible,
+.github-link:focus-visible,
+.rrn-link:focus-visible {
+    outline: 3px solid var(--rrn-accent-green);
+    outline-offset: 3px;
+}
+
+.chart-scroll {
     width: 100%;
-    aspect-ratio: 2 / 1;
     overflow-x: auto;
     overflow-y: hidden;
     position: relative;
@@ -116,7 +159,22 @@ header .subtitle {
     scrollbar-color: var(--rrn-dark-teal) var(--rrn-light-gray);
 }
 
+.chart-wrapper {
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    min-height: 320px;
+    max-height: 560px;
+    position: relative;
+}
+
+.chart-wrapper.line-mode {
+    aspect-ratio: auto;
+    height: 560px;
+    max-height: none;
+}
+
 #episode-chart {
+    display: block;
     width: 100%;
     height: 100%;
 }
@@ -191,22 +249,28 @@ header .subtitle {
     text-decoration: underline;
 }
 
+.chart-error {
+    color: var(--rrn-red);
+    text-align: center;
+    padding: 40px;
+}
+
 /* ===== Custom Scrollbar ===== */
-.chart-wrapper::-webkit-scrollbar {
+.chart-scroll::-webkit-scrollbar {
     height: 10px;
 }
 
-.chart-wrapper::-webkit-scrollbar-track {
+.chart-scroll::-webkit-scrollbar-track {
     background: var(--rrn-light-gray);
     border-radius: 5px;
 }
 
-.chart-wrapper::-webkit-scrollbar-thumb {
+.chart-scroll::-webkit-scrollbar-thumb {
     background: var(--rrn-dark-teal);
     border-radius: 5px;
 }
 
-.chart-wrapper::-webkit-scrollbar-thumb:hover {
+.chart-scroll::-webkit-scrollbar-thumb:hover {
     background: var(--rrn-red);
 }
 footer {

@@ -1,18 +1,35 @@
 // ===== Nadgryzieni Statistics Script =====
-// Uses Chart.js v4 to render episode duration data
+// Uses Chart.js v4 to render episode duration data.
 
-// Load and render all data
+const DATA_VERSION = 110;
+let chartInstance = null;
+let chartData = null;
+let normalizedEpisodes = [];
+let chartMode = 'scatter';
+
 function loadData() {
-    fetch('data.json?v=110')
-        .then(response => response.json())
+    fetch(`data.json?v=${DATA_VERSION}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Data request failed: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            chartData = data;
+            normalizedEpisodes = normalizeEpisodes(data.episodes);
             renderStats(data);
-            renderChart(data);
+            updateModeControls();
+            renderChart();
         })
         .catch(error => {
             console.error('Error loading data:', error);
-            document.getElementById('chart-wrapper').innerHTML =
-                '<p style="color: #F43E25; text-align: center; padding: 40px;">Błąd ładowania danych. Spróbuj odświeżyć stronę.</p>';
+            ['total-episodes', 'total-hours', 'avg-duration', 'max-duration']
+                .forEach(id => {
+                    document.getElementById(id).textContent = '—';
+                });
+            document.getElementById('chart-scroll').innerHTML =
+                '<p class="chart-error" role="alert">Błąd ładowania danych. Spróbuj odświeżyć stronę.</p>';
         });
 }
 
@@ -24,48 +41,132 @@ function renderStats(data) {
 }
 
 function minutesToTime(minutes) {
-    const h = Math.floor(minutes / 60);
-    const m = Math.floor(minutes % 60);
-    const s = Math.round((minutes % 1) * 60);
-    return h.toString().padStart(2, '0') + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0');
+    const totalSeconds = Math.max(0, Math.round(Number(minutes) * 60));
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+    return h.toString().padStart(2, '0') + ':' +
+        m.toString().padStart(2, '0') + ':' +
+        s.toString().padStart(2, '0');
 }
 
-function renderChart(data) {
-    const ctx = document.getElementById('episode-chart').getContext('2d');
+function formatDate(date) {
+    if (!date) {
+        return '';
+    }
 
-    const episodes = data.episodes.map(ep => ({
-        x: parseInt(ep.episode) || 0,
-        y: ep.minutes,
-        title: ep.title,
-        date: ep.date,
-        duration: ep.duration,
-        episode: ep.episode,
-    }));
+    const parsedDate = new Date(`${date}T00:00:00`);
+    if (Number.isNaN(parsedDate.getTime())) {
+        return date;
+    }
 
-    // Sort by episode number
-    episodes.sort((a, b) => a.x - b.x);
+    return new Intl.DateTimeFormat('pl-PL', {
+        dateStyle: 'medium',
+    }).format(parsedDate);
+}
 
-    const chart = new Chart(ctx, {
-        type: 'scatter',
+function normalizeEpisodes(episodes) {
+    return episodes
+        .map((ep, sourceIndex) => ({
+            sourceIndex,
+            episodeId: String(ep.episode ?? ''),
+            numericEpisode: Number.isFinite(Number(ep.episode)) ? Number(ep.episode) : null,
+            y: Number(ep.minutes),
+            title: ep.title || 'Brak tytułu',
+            date: ep.date || '',
+            duration: ep.duration || '',
+        }))
+        .sort((a, b) => {
+            const dateOrder = a.date.localeCompare(b.date);
+            return dateOrder || a.sourceIndex - b.sourceIndex;
+        })
+        .map((episode, plotIndex) => ({
+            ...episode,
+            plotIndex,
+        }));
+}
+
+function setChartLayout(isLineMode) {
+    const scrollContainer = document.getElementById('chart-scroll');
+    const chartWrapper = document.getElementById('chart-wrapper');
+
+    chartWrapper.classList.toggle('line-mode', isLineMode);
+
+    if (isLineMode) {
+        // Ten pixels per episode keeps the line readable while ensuring that
+        // the complete line chart is wider than the viewport.
+        const minimumWidth = normalizedEpisodes.length * 10;
+        chartWrapper.style.width = `${Math.max(scrollContainer.clientWidth, minimumWidth)}px`;
+    } else {
+        chartWrapper.style.width = '';
+    }
+}
+
+function updateModeControls() {
+    document.querySelectorAll('.chart-mode-button').forEach(button => {
+        const isActive = button.dataset.chartMode === chartMode;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-pressed', String(isActive));
+    });
+
+    const hint = document.getElementById('chart-hint');
+    if (chartMode === 'line') {
+        hint.textContent = 'Wykres liniowy pokazuje kolejność wszystkich odcinków. Przewijaj w poziomie, aby zobaczyć pełną linię; najedź na punkt, aby zobaczyć szczegóły.';
+    } else {
+        hint.textContent = 'Wykres punktowy: najedź na punkt, aby zobaczyć szczegóły. Identyfikatory odcinków zachowują także wartości ułamkowe.';
+    }
+}
+
+function episodeTickLabel(value) {
+    const plotIndex = Math.round(Number(value));
+    return normalizedEpisodes[plotIndex]?.episodeId || '';
+}
+
+function renderChart() {
+    if (!chartData || !normalizedEpisodes.length) {
+        return;
+    }
+
+    const isLineMode = chartMode === 'line';
+    const canvas = document.getElementById('episode-chart');
+    const ctx = canvas.getContext('2d');
+
+    setChartLayout(isLineMode);
+
+    if (chartInstance) {
+        chartInstance.destroy();
+    }
+
+    chartInstance = new Chart(ctx, {
+        type: isLineMode ? 'line' : 'scatter',
         data: {
             datasets: [{
-                label: '',
-                data: episodes,
+                label: 'Długość odcinka',
+                data: normalizedEpisodes.map(episode => ({
+                    x: episode.plotIndex,
+                    y: episode.y,
+                    episodeId: episode.episodeId,
+                    title: episode.title,
+                    date: episode.date,
+                    duration: episode.duration,
+                })),
                 backgroundColor: 'rgba(99, 47, 83, 0.7)',
                 borderColor: '#632F53',
-                borderWidth: 1,
-                pointRadius: 4,
+                borderWidth: isLineMode ? 2 : 1,
+                tension: 0,
+                pointRadius: isLineMode ? 2.5 : 4,
                 pointHoverRadius: 7,
                 pointHoverBorderWidth: 2,
                 pointHoverBorderColor: '#fff',
-            }]
+                fill: false,
+            }],
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             interaction: {
                 intersect: false,
-                mode: 'point',
+                mode: 'nearest',
             },
             plugins: {
                 legend: {
@@ -84,12 +185,17 @@ function renderChart(data) {
                     displayColors: false,
                     callbacks: {
                         title: function(context) {
-                            const ep = context[0].raw;
-                            return 'Ep: ' + ep.episode;
+                            return 'Odcinek: ' + context[0].raw.episodeId;
+                        },
+                        afterTitle: function(context) {
+                            return context[0].raw.title;
                         },
                         label: function(context) {
-                            const ep = context.raw;
-                            return 'T: ' + minutesToTime(ep.y);
+                            return 'Czas: ' + minutesToTime(context.raw.y);
+                        },
+                        afterLabel: function(context) {
+                            const date = formatDate(context.raw.date);
+                            return date ? 'Data: ' + date : '';
                         },
                     },
                 },
@@ -98,6 +204,8 @@ function renderChart(data) {
                 x: {
                     type: 'linear',
                     position: 'bottom',
+                    min: 0,
+                    max: Math.max(0, normalizedEpisodes.length - 1),
                     grid: {
                         color: '#f0f0f0',
                         drawBorder: false,
@@ -105,17 +213,16 @@ function renderChart(data) {
                     ticks: {
                         color: '#29505F',
                         font: { size: 10 },
-                        max: 600,
-                        min: 0,
+                        autoSkip: true,
+                        maxTicksLimit: isLineMode ? 60 : 12,
+                        callback: episodeTickLabel,
                     },
                     title: {
                         display: true,
-                        text: 'Numer odcinka',
+                        text: 'Kolejność odcinków',
                         color: '#29505F',
                         font: { size: 13, weight: 600 },
                     },
-                    suggestedMin: 0,
-                    suggestedMax: 600,
                 },
                 y: {
                     grid: {
@@ -140,28 +247,43 @@ function renderChart(data) {
             {
                 id: 'avgLine',
                 afterDraw: function(chart) {
-                    const ctx = chart.ctx;
+                    const chartContext = chart.ctx;
                     const yScale = chart.scales.y;
-                    const avgY = yScale.getPixelForValue(data.average_duration);
-                    ctx.save();
-                    ctx.strokeStyle = '#29505F';
-                    ctx.lineWidth = 2;
-                    ctx.setLineDash([5, 5]);
-                    ctx.beginPath();
-                    ctx.moveTo(chart.scales.x.left, avgY);
-                    ctx.lineTo(chart.scales.x.right, avgY);
-                    ctx.stroke();
-                    ctx.setLineDash([]);
-                    ctx.fillStyle = '#29505F';
-                    ctx.font = 'italic 10px sans-serif';
-                    ctx.textAlign = 'left';
-                    ctx.fillText('Średnia: ' + data.average_duration + ' min', chart.scales.x.left + 5, avgY - 5);
-                    ctx.restore();
+                    const avgY = yScale.getPixelForValue(chartData.average_duration);
+                    chartContext.save();
+                    chartContext.strokeStyle = '#29505F';
+                    chartContext.lineWidth = 2;
+                    chartContext.setLineDash([5, 5]);
+                    chartContext.beginPath();
+                    chartContext.moveTo(chart.scales.x.left, avgY);
+                    chartContext.lineTo(chart.scales.x.right, avgY);
+                    chartContext.stroke();
+                    chartContext.setLineDash([]);
+                    chartContext.fillStyle = '#29505F';
+                    chartContext.font = 'italic 10px sans-serif';
+                    chartContext.textAlign = 'left';
+                    chartContext.fillText('Średnia: ' + chartData.average_duration + ' min', chart.scales.x.left + 5, avgY - 5);
+                    chartContext.restore();
                 },
             },
         ],
     });
 }
 
-// Initialize (script is at bottom of body, DOM is already ready)
+document.querySelectorAll('.chart-mode-button').forEach(button => {
+    button.addEventListener('click', () => {
+        chartMode = button.dataset.chartMode;
+        updateModeControls();
+        renderChart();
+    });
+});
+
+window.addEventListener('resize', () => {
+    if (chartMode === 'line' && normalizedEpisodes.length) {
+        setChartLayout(true);
+        chartInstance?.resize();
+    }
+});
+
+updateModeControls();
 loadData();
