@@ -1,72 +1,260 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f4f6f3">
+    <meta name="description" content="Nadgryzieni — interaktywne archiwum statystyk odcinków podcastu od 2010 roku.">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Nadgryzieni - Statystyki odcinków</title>
-    <link rel="stylesheet" href="style.css?v=111">
+    <title>Nadgryzieni — Archiwum statystyk</title>
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('nadgryzieni-theme');
+                var preferred = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                document.documentElement.dataset.theme = preferred;
+            } catch (error) {
+                document.documentElement.dataset.theme = 'light';
+            }
+        }());
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=113">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Nadgryzieni — Archiwum Statystyk</h1>
-        </div>
-    </header>
-
-    <main>
-        <div class="container">
-            <section class="stats-overview">
-                <div class="stat-card">
-                    <span class="stat-value" id="total-episodes">564</span>
-                    <span class="stat-label">Odcinków</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="total-hours">970.0</span>
-                    <span class="stat-label">Godzin odsłuchu</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="avg-duration">103.2</span>
-                    <span class="stat-label">Średnio min</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="max-duration">288.7</span>
-                    <span class="stat-label">Max min</span>
-                </div>
-            </section>
-        </div>
-
-        <section class="chart-container">
-            <div class="chart-controls" role="group" aria-label="Typ wykresu">
-                <span class="chart-controls-label">Widok:</span>
-                <button type="button" class="chart-mode-button is-active" data-chart-mode="scatter" aria-pressed="true">Punkty</button>
-                <button type="button" class="chart-mode-button" data-chart-mode="line" aria-pressed="false">Linia</button>
-            </div>
-            <div class="chart-scroll" id="chart-scroll">
-                <div class="chart-wrapper" id="chart-wrapper">
-                    <canvas id="episode-chart" aria-label="Wykres długości odcinków Nadgryzieni"></canvas>
+    <a class="skip-link" href="#main-content">Przejdź do treści</a>
+    <div class="site-shell">
+        <header class="site-header">
+            <div class="container nav-inner">
+                <a class="brand" href="#top" aria-label="Nadgryzieni — początek archiwum">
+                    <span class="brand-mark" aria-hidden="true"><span></span></span>
+                    <span class="brand-copy">
+                        <strong>Nadgryzieni</strong>
+                        <small>archiwum statystyk</small>
+                    </span>
+                </a>
+                <nav class="nav-links" aria-label="Główna nawigacja">
+                    <a href="#overview">Przegląd</a>
+                    <a href="#timeline">Oś czasu</a>
+                    <a href="#episodes">Archiwum</a>
+                </nav>
+                <div class="header-actions">
+                    <span class="update-status"><span class="status-dot" aria-hidden="true"></span> Dane online</span>
+                    <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Włącz tryb ciemny">
+                        <span class="theme-icon" aria-hidden="true"></span>
+                        <span id="theme-label">Tryb ciemny</span>
+                    </button>
                 </div>
             </div>
-            <p class="chart-hint" id="chart-hint" aria-live="polite">Wykres punktowy: najedź na punkt, aby zobaczyć szczegóły. Identyfikatory odcinków zachowują także wartości ułamkowe.</p>
-        </section>
+        </header>
 
-        <div class="container">
-            <section class="footer-links">
-                <a href="https://github.com/Morid1n/nadgryzieni-episode-archive" class="github-link" target="_blank">Zobacz na GitHub →</a>
-                <a href="https://retrorocketnetwork.pl/category/nadgryzieni-rss/" class="rrn-link" target="_blank">Retro Rocket Network →</a>
+        <main id="main-content">
+            <section class="hero container" id="top" aria-labelledby="hero-title">
+                <div class="hero-copy">
+                    <p class="eyebrow"><span class="eyebrow-line" aria-hidden="true"></span> NADGRYZIENI / ARCHIWUM 2010—2026</p>
+                    <h1 id="hero-title">Podcast, który <em>zostawia ślad.</em></h1>
+                    <p class="hero-lede">570 odcinków, setki rozmów i ponad szesnaście lat historii zebranych w jednym, żywym archiwum.</p>
+                    <div class="hero-actions">
+                        <a class="button button-primary" href="#timeline">Zobacz oś czasu <span aria-hidden="true">↗</span></a>
+                        <a class="button button-quiet" href="#episodes">Przeglądaj odcinki</a>
+                    </div>
+                    <div class="hero-meta" aria-label="Informacje o archiwum">
+                        <span><strong id="hero-episode-count">570</strong> odcinków</span>
+                        <span class="meta-divider" aria-hidden="true"></span>
+                        <span>ostatnia publikacja <strong id="hero-last-date">—</strong></span>
+                    </div>
+                </div>
+
+                <aside class="latest-card" aria-labelledby="latest-title">
+                    <div class="latest-card-top">
+                        <span class="card-eyebrow">OSTATNI WPIS</span>
+                        <span class="latest-id" id="latest-episode-id">—</span>
+                    </div>
+                    <div class="latest-rule" aria-hidden="true"></div>
+                    <h2 id="latest-title">Ładowanie danych…</h2>
+                    <div class="latest-meta">
+                        <span id="latest-date">—</span>
+                        <span class="meta-divider" aria-hidden="true"></span>
+                        <span id="latest-duration">—</span>
+                    </div>
+                    <div class="mini-sparkline" id="latest-sparkline" aria-label="Długości ostatnich odcinków" role="img"></div>
+                    <p class="latest-foot">Najnowszy punkt na osi czasu</p>
+                </aside>
             </section>
-        </div>
-    </main>
 
-    <footer>
-        <div class="container">
-            <p>Stworzone z ❤️ przez C-3PO | Dane z archiwum Nadgryzieni</p>
-        </div>
-    </footer>
+            <section class="metric-grid container" id="overview" aria-label="Najważniejsze statystyki">
+                <article class="metric-card metric-card-accent">
+                    <span class="metric-label">ARCHIWUM</span>
+                    <strong class="metric-value" id="total-episodes">—</strong>
+                    <span class="metric-caption">opublikowanych odcinków</span>
+                    <span class="metric-mark" aria-hidden="true">01</span>
+                </article>
+                <article class="metric-card">
+                    <span class="metric-label">CZAS SŁUCHANIA</span>
+                    <strong class="metric-value" id="total-hours">—</strong>
+                    <span class="metric-caption">godzin nagrań</span>
+                    <span class="metric-mark" aria-hidden="true">02</span>
+                </article>
+                <article class="metric-card">
+                    <span class="metric-label">ŚREDNIA</span>
+                    <strong class="metric-value" id="avg-duration">—</strong>
+                    <span class="metric-caption">minut na odcinek</span>
+                    <span class="metric-mark" aria-hidden="true">03</span>
+                </article>
+                <article class="metric-card">
+                    <span class="metric-label">REKORD</span>
+                    <strong class="metric-value" id="max-duration">—</strong>
+                    <span class="metric-caption">minut w najdłuższym odcinku</span>
+                    <span class="metric-mark" aria-hidden="true">04</span>
+                </article>
+            </section>
 
-    <script src="script.js?v=112"></script>
+            <section class="section container" aria-labelledby="signals-title">
+                <div class="section-heading section-heading-inline">
+                    <div>
+                        <p class="eyebrow">TRZY SYGNAŁY</p>
+                        <h2 id="signals-title">Archiwum w skrócie</h2>
+                    </div>
+                    <p class="section-summary">Kilka punktów odniesienia, zanim wejdziesz głębiej w dane.</p>
+                </div>
+                <div class="signal-grid">
+                    <article class="signal-card signal-card-featured">
+                        <div class="signal-topline"><span class="signal-index">01</span><span>NAJDŁUŻSZY ODCINEK</span></div>
+                        <strong class="signal-value" id="longest-duration">—</strong>
+                        <h3 id="longest-title">—</h3>
+                        <p id="longest-meta">—</p>
+                    </article>
+                    <article class="signal-card">
+                        <div class="signal-topline"><span class="signal-index">02</span><span>NAJKRÓTSZY ODCINEK</span></div>
+                        <strong class="signal-value signal-value-small" id="shortest-duration">—</strong>
+                        <h3 id="shortest-title">—</h3>
+                        <p id="shortest-meta">—</p>
+                    </article>
+                    <article class="signal-card">
+                        <div class="signal-topline"><span class="signal-index">03</span><span>NAJAKTYWNIEJSZY ROK</span></div>
+                        <strong class="signal-value signal-value-small" id="busiest-year">—</strong>
+                        <h3 id="busiest-year-count">—</h3>
+                        <p>najwięcej nowych wpisów w jednym roku</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section container" id="timeline" aria-labelledby="timeline-title">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <p class="eyebrow">OŚ CZASU / 01</p>
+                            <h2 id="timeline-title">Długość każdego odcinka</h2>
+                            <p class="chart-description">Każdy punkt to jeden odcinek. Oś układa dane chronologicznie, dzięki czemu zachowuje także odcinki ułamkowe i specjalne.</p>
+                        </div>
+                        <div class="chart-controls" role="group" aria-label="Typ wykresu">
+                            <span class="chart-controls-label">Widok</span>
+                            <button type="button" class="mode-button is-active" data-chart-mode="scatter" aria-pressed="true">Punkty</button>
+                            <button type="button" class="mode-button" data-chart-mode="line" aria-pressed="false">Linia</button>
+                        </div>
+                    </div>
+                    <div class="chart-meta-row">
+                        <span class="chart-average"><span class="legend-rule" aria-hidden="true"></span> średnia <strong id="chart-average">—</strong></span>
+                        <span id="chart-range">—</span>
+                    </div>
+                    <div class="chart-scroll" id="chart-scroll">
+                        <div class="chart-wrapper" id="chart-wrapper">
+                            <canvas id="episode-chart" aria-label="Wykres długości odcinków Nadgryzieni" role="img"></canvas>
+                        </div>
+                    </div>
+                    <p class="chart-hint" id="chart-hint" aria-live="polite">Najedź na punkt, aby zobaczyć szczegóły odcinka.</p>
+                </div>
+            </section>
+
+            <section class="section container" id="patterns" aria-labelledby="patterns-title">
+                <div class="section-heading section-heading-inline">
+                    <div>
+                        <p class="eyebrow">RYTM ARCHIWUM</p>
+                        <h2 id="patterns-title">Lata i długości</h2>
+                    </div>
+                    <p class="section-summary">Historia podcastu widziana z dwóch spokojniejszych perspektyw.</p>
+                </div>
+                <div class="pattern-grid">
+                    <article class="pattern-card">
+                        <div class="pattern-card-header">
+                            <div>
+                                <span class="card-eyebrow">PUBLIKACJE W CZASIE</span>
+                                <h3>Rok po roku</h3>
+                            </div>
+                            <span class="pattern-note" id="year-range">—</span>
+                        </div>
+                        <div class="year-bars" id="year-bars" aria-label="Liczba odcinków w każdym roku"></div>
+                        <div class="bar-axis"><span>2010</span><span id="year-axis-end">2026</span></div>
+                    </article>
+                    <article class="pattern-card duration-card">
+                        <div class="pattern-card-header">
+                            <div>
+                                <span class="card-eyebrow">ROZKŁAD CZASU</span>
+                                <h3>Jak długie są rozmowy?</h3>
+                            </div>
+                            <span class="pattern-note">minuty</span>
+                        </div>
+                        <div class="duration-bars" id="duration-bars"></div>
+                        <div class="duration-footer"><span>krótsze</span><span>dłuższe</span></div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section container" id="episodes" aria-labelledby="episodes-title">
+                <div class="section-heading section-heading-inline archive-heading">
+                    <div>
+                        <p class="eyebrow">ARCHIWUM / 02</p>
+                        <h2 id="episodes-title">Znajdź odcinek</h2>
+                    </div>
+                    <p class="section-summary">Przeszukaj tytuły, identyfikatory i lata publikacji.</p>
+                </div>
+                <div class="archive-card">
+                    <div class="archive-toolbar">
+                        <label class="search-field">
+                            <span class="sr-only">Szukaj odcinka</span>
+                            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg>
+                            <input id="episode-search" type="search" placeholder="Szukaj po tytule lub numerze…" autocomplete="off">
+                        </label>
+                        <label class="select-field">
+                            <span class="sr-only">Filtruj po roku</span>
+                            <select id="year-filter" aria-label="Filtruj po roku">
+                                <option value="all">Wszystkie lata</option>
+                            </select>
+                        </label>
+                        <button class="button button-quiet button-small" id="clear-filters" type="button" hidden>Wyczyść</button>
+                    </div>
+                    <div class="archive-status">
+                        <p id="archive-result-count" aria-live="polite">Ładowanie archiwum…</p>
+                        <span>najnowsze na górze</span>
+                    </div>
+                    <div class="episode-grid" id="episode-grid"></div>
+                    <div class="archive-empty" id="archive-empty" hidden>
+                        <strong>Brak pasujących odcinków.</strong>
+                        <span>Spróbuj innego numeru, tytułu lub roku.</span>
+                    </div>
+                    <div class="archive-footer">
+                        <button class="button button-secondary" id="load-more" type="button">Pokaż więcej</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <div class="container footer-inner">
+                <div class="footer-brand"><span class="brand-mark" aria-hidden="true"><span></span></span><span><strong>Nadgryzieni</strong><small>archiwum statystyk</small></span></div>
+                <p>Dane z archiwum podcastu · ostatnia aktualizacja <span id="footer-update">—</span></p>
+                <div class="footer-links">
+                    <a href="https://github.com/Morid1n/nadgryzieni-episode-archive" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+                    <a href="https://retrorocketnetwork.pl/category/nadgryzieni-rss/" target="_blank" rel="noreferrer">Retro Rocket Network <span aria-hidden="true">↗</span></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="script.js?v=113"></script>
 </body>
 </html>
