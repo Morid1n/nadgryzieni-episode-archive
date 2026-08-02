@@ -1057,12 +1057,12 @@ def update_cache_busting(version: int, dry: bool = False) -> None:
         INDEX_HTML_PATH.write_text(html, encoding="utf-8")
         log.info(f"index.html cache-busting updated to v={version}")
 
-    # Update script.js data.json reference
+    # Update script.js data version constant
     if SCRIPT_JS_PATH.exists():
         js = SCRIPT_JS_PATH.read_text(encoding="utf-8")
-        js = re.sub(r"data\.json\?v=\d+", f"data.json?v={version}", js)
+        js = re.sub(r"const DATA_VERSION = \d+;", f"const DATA_VERSION = {version};", js)
         SCRIPT_JS_PATH.write_text(js, encoding="utf-8")
-        log.info(f"script.js data.json cache-busting updated to v={version}")
+        log.info(f"script.js DATA_VERSION cache-busting updated to v={version}")
 
 
 # ── Git Operations ───────────────────────────────────────────────────────────
