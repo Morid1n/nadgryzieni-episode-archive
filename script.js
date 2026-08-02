@@ -93,9 +93,9 @@ function setChartLayout(isLineMode) {
     chartWrapper.classList.toggle('line-mode', isLineMode);
 
     if (isLineMode) {
-        // Ten pixels per episode keeps the line readable while ensuring that
-        // the complete line chart is wider than the viewport.
-        const minimumWidth = normalizedEpisodes.length * 10;
+        // Fifteen pixels per episode gives the line chart more breathing room
+        // while keeping the complete series horizontally scrollable.
+        const minimumWidth = normalizedEpisodes.length * 15;
         chartWrapper.style.width = `${Math.max(scrollContainer.clientWidth, minimumWidth)}px`;
     } else {
         chartWrapper.style.width = '';
