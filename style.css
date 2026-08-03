@@ -1,66 +1,71 @@
 /* ===== Nadgryzieni / editorial data interface ===== */
 :root {
     color-scheme: light;
-    --bg: #f4f6f3;
-    --bg-deep: #e9efeb;
-    --surface: #ffffff;
-    --surface-soft: #eef3ef;
-    --surface-strong: #e1ebe6;
-    --ink: #102a2d;
-    --ink-soft: #26464a;
-    --muted: #6c8282;
-    --muted-strong: #4d686a;
-    --border: rgba(16, 42, 45, 0.12);
-    --border-strong: rgba(16, 42, 45, 0.2);
-    --accent: #f25a44;
-    --accent-strong: #d94734;
-    --accent-soft: #ffe2da;
-    --teal: #2c6265;
-    --teal-soft: #dcebe5;
-    --lime: #dbe989;
-    --shadow-sm: 0 8px 24px rgba(21, 49, 51, 0.06);
-    --shadow-lg: 0 24px 70px rgba(21, 49, 51, 0.1);
+    --brand-cream: #fde6bd;
+    --brand-red: #d11e48;
+    --brand-purple: #632f53;
+    --brand-mint: #a1c5ab;
+    --brand-ink: #1f1f2c;
+    --bg: var(--brand-cream);
+    --bg-deep: color-mix(in srgb, var(--brand-purple) 10%, var(--brand-cream));
+    --surface: color-mix(in srgb, white 58%, var(--brand-cream));
+    --surface-soft: color-mix(in srgb, white 34%, var(--brand-cream));
+    --surface-strong: color-mix(in srgb, var(--brand-purple) 12%, var(--brand-cream));
+    --ink: var(--brand-ink);
+    --ink-soft: color-mix(in srgb, var(--brand-ink) 78%, var(--brand-cream));
+    --muted: color-mix(in srgb, var(--brand-purple) 62%, var(--brand-cream));
+    --muted-strong: var(--brand-purple);
+    --border: rgba(99, 47, 83, 0.16);
+    --border-strong: rgba(99, 47, 83, 0.28);
+    --accent: var(--brand-red);
+    --accent-strong: var(--brand-purple);
+    --accent-soft: rgba(209, 30, 72, 0.14);
+    --teal: var(--brand-purple);
+    --teal-soft: rgba(161, 197, 171, 0.28);
+    --lime: var(--brand-mint);
+    --shadow-sm: 0 8px 24px rgba(99, 47, 83, 0.08);
+    --shadow-lg: 0 24px 70px rgba(99, 47, 83, 0.14);
     --radius-sm: 10px;
     --radius-md: 16px;
     --radius-lg: 24px;
     --radius-xl: 32px;
     --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-    --chart-grid: rgba(16, 42, 45, 0.08);
-    --chart-axis: #5f7779;
-    --chart-line: #f25a44;
-    --chart-point: #d94734;
-    --chart-tooltip-bg: #102a2d;
-    --chart-tooltip-text: #ffffff;
+    --chart-grid: rgba(31, 31, 44, 0.12);
+    --chart-axis: var(--brand-purple);
+    --chart-line: var(--brand-red);
+    --chart-point: var(--brand-red);
+    --chart-tooltip-bg: var(--brand-ink);
+    --chart-tooltip-text: var(--brand-cream);
 }
 
 html[data-theme="dark"] {
     color-scheme: dark;
-    --bg: #101a1c;
-    --bg-deep: #0b1315;
-    --surface: #172426;
-    --surface-soft: #1c2c2e;
-    --surface-strong: #24383a;
-    --ink: #edf4ef;
-    --ink-soft: #c8d8d1;
-    --muted: #8ca3a1;
-    --muted-strong: #a9bfba;
-    --border: rgba(229, 244, 237, 0.12);
-    --border-strong: rgba(229, 244, 237, 0.22);
-    --accent: #ff7259;
-    --accent-strong: #ff8a73;
-    --accent-soft: rgba(255, 114, 89, 0.14);
-    --teal: #9ad1c6;
-    --teal-soft: rgba(154, 209, 198, 0.14);
-    --lime: #dce98a;
+    --bg: var(--brand-ink);
+    --bg-deep: color-mix(in srgb, var(--brand-ink) 86%, black);
+    --surface: color-mix(in srgb, var(--brand-purple) 50%, var(--brand-ink));
+    --surface-soft: color-mix(in srgb, var(--brand-purple) 62%, var(--brand-ink));
+    --surface-strong: color-mix(in srgb, var(--brand-purple) 80%, var(--brand-ink));
+    --ink: var(--brand-cream);
+    --ink-soft: color-mix(in srgb, var(--brand-cream) 78%, var(--brand-mint));
+    --muted: var(--brand-mint);
+    --muted-strong: color-mix(in srgb, var(--brand-mint) 82%, var(--brand-cream));
+    --border: rgba(253, 230, 189, 0.16);
+    --border-strong: rgba(253, 230, 189, 0.28);
+    --accent: var(--brand-red);
+    --accent-strong: var(--brand-purple);
+    --accent-soft: rgba(209, 30, 72, 0.2);
+    --teal: var(--brand-mint);
+    --teal-soft: rgba(161, 197, 171, 0.16);
+    --lime: var(--brand-cream);
     --shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.16);
     --shadow-lg: 0 30px 90px rgba(0, 0, 0, 0.28);
-    --chart-grid: rgba(237, 244, 239, 0.11);
-    --chart-axis: #9db4b1;
-    --chart-line: #ff7259;
-    --chart-point: #ff9b86;
-    --chart-tooltip-bg: #edf4ef;
-    --chart-tooltip-text: #102a2d;
+    --chart-grid: rgba(253, 230, 189, 0.14);
+    --chart-axis: var(--brand-mint);
+    --chart-line: var(--brand-red);
+    --chart-point: var(--brand-red);
+    --chart-tooltip-bg: var(--brand-cream);
+    --chart-tooltip-text: var(--brand-ink);
 }
 
 * {
@@ -280,8 +285,8 @@ button {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #5cbf86;
-    box-shadow: 0 0 0 4px color-mix(in srgb, #5cbf86 16%, transparent);
+    background: var(--brand-mint);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand-mint) 16%, transparent);
 }
 
 .theme-toggle {
@@ -430,7 +435,7 @@ html[data-theme="dark"] .theme-icon::after {
 
 .button-primary {
     background: var(--accent);
-    color: #fff;
+    color: var(--brand-cream);
     box-shadow: 0 12px 24px color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
@@ -630,12 +635,12 @@ html[data-theme="dark"] .theme-icon::after {
 .metric-card-accent {
     border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
     background: var(--accent);
-    color: #fff;
+    color: var(--brand-cream);
 }
 
 .metric-card-accent .metric-label,
 .metric-card-accent .metric-caption {
-    color: rgba(255, 255, 255, 0.76);
+    color: color-mix(in srgb, var(--brand-cream) 76%, transparent);
 }
 
 .metric-value {
@@ -666,7 +671,7 @@ html[data-theme="dark"] .theme-icon::after {
 }
 
 .metric-card-accent .metric-mark {
-    color: rgba(255, 255, 255, 0.58);
+    color: color-mix(in srgb, var(--brand-cream) 58%, transparent);
 }
 
 .section {

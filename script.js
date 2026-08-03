@@ -88,7 +88,7 @@ function applyTheme(theme, persist = true) {
     if (label) {
         label.textContent = theme === 'dark' ? 'Tryb jasny' : 'Tryb ciemny';
     }
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#101a1c' : '#f4f6f3');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#1f1f2c' : '#fde6bd');
     if (persist) {
         try {
             localStorage.setItem(THEME_STORAGE_KEY, theme);
