@@ -803,20 +803,25 @@ html[data-theme="dark"] .theme-icon::after {
     display: flex;
     min-width: max-content;
     align-items: center;
+    gap: 10px;
+}
+
+.chart-controls-label {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.chart-mode-buttons {
+    display: flex;
     gap: 5px;
     padding: 4px;
     border: 1px solid var(--border);
     border-radius: 999px;
     background: var(--surface-soft);
-}
-
-.chart-controls-label {
-    padding: 0 10px 0 12px;
-    color: var(--muted);
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
 }
 
 .mode-button {
@@ -1188,6 +1193,24 @@ html[data-theme="dark"] .theme-icon::after {
     display: block;
     padding-top: 11px;
     border-top: 1px solid var(--border);
+}
+
+.episode-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 13px;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.episode-link:hover,
+.episode-link:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .archive-empty {

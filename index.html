@@ -8,8 +8,8 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <link rel="icon" type="image/png" sizes="512x512" href="assets/nadgryzieni-logo-rounded.png?v=114">
-    <link rel="apple-touch-icon" sizes="512x512" href="assets/nadgryzieni-logo-rounded.png?v=114">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/nadgryzieni-logo-rounded.png?v=118">
+    <link rel="apple-touch-icon" sizes="512x512" href="assets/nadgryzieni-logo-rounded.png?v=118">
     <title>Nadgryzieni — Archiwum statystyk</title>
     <script>
         (function () {
@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=115">
+    <link rel="stylesheet" href="style.css?v=118">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -58,7 +58,7 @@
             <section class="hero container" id="top" aria-labelledby="hero-title">
                 <div class="hero-copy">
                     <p class="eyebrow"><span class="eyebrow-line" aria-hidden="true"></span> NADGRYZIENI / ARCHIWUM 2010—2026</p>
-                    <h1 id="hero-title">Podcast, który <em>zostawia ślad.</em></h1>
+                    <h1 id="hero-title">Raz w tygodniu, <em>czasami dwa.</em></h1>
                     <p class="hero-lede">570 odcinków, setki rozmów i ponad szesnaście lat historii zebranych w jednym, żywym archiwum.</p>
                     <div class="hero-actions">
                         <a class="button button-primary" href="#timeline">Zobacz oś czasu <span aria-hidden="true">↗</span></a>
@@ -73,7 +73,7 @@
 
                 <aside class="latest-card" aria-labelledby="latest-title">
                     <div class="latest-card-top">
-                        <span class="card-eyebrow">OSTATNI WPIS</span>
+                        <span class="card-eyebrow">OSTATNI ODCINEK</span>
                         <span class="latest-id" id="latest-episode-id">—</span>
                     </div>
                     <div class="latest-rule" aria-hidden="true"></div>
@@ -155,8 +155,10 @@
                         </div>
                         <div class="chart-controls" role="group" aria-label="Typ wykresu">
                             <span class="chart-controls-label">Widok</span>
-                            <button type="button" class="mode-button is-active" data-chart-mode="scatter" aria-pressed="true">Punkty</button>
-                            <button type="button" class="mode-button" data-chart-mode="line" aria-pressed="false">Linia</button>
+                            <div class="chart-mode-buttons">
+                                <button type="button" class="mode-button is-active" data-chart-mode="scatter" aria-pressed="true">Punkty</button>
+                                <button type="button" class="mode-button" data-chart-mode="line" aria-pressed="false">Linia</button>
+                            </div>
                         </div>
                     </div>
                     <div class="chart-meta-row">
@@ -247,7 +249,7 @@
 
         <footer class="site-footer">
             <div class="container footer-inner">
-                <div class="footer-brand"><span class="brand-mark" aria-hidden="true"><img src="assets/nadgryzieni-logo-rounded.png?v=114" alt=""></span><span><strong>Nadgryzieni</strong><small>archiwum statystyk</small></span></div>
+                <div class="footer-brand"><span class="brand-mark" aria-hidden="true"><img src="assets/nadgryzieni-logo-rounded.png?v=118" alt=""></span><span><strong>Nadgryzieni</strong><small>archiwum statystyk</small></span></div>
                 <p>Dane z archiwum podcastu · ostatnia aktualizacja <span id="footer-update">—</span></p>
                 <div class="footer-links">
                     <a href="https://github.com/Morid1n/nadgryzieni-episode-archive" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
@@ -256,6 +258,6 @@
             </div>
         </footer>
     </div>
-    <script src="script.js?v=117"></script>
+    <script src="script.js?v=118"></script>
 </body>
 </html>

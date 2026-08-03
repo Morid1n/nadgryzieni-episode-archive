@@ -1,7 +1,7 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 110;
+const DATA_VERSION = 118;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 
@@ -110,6 +110,7 @@ function normalizeEpisodes(episodes) {
             title: episode.title || 'Brak tytułu',
             date: episode.date || '',
             duration: episode.duration || '',
+            url: episode.url || '',
         }))
         .filter((episode) => Number.isFinite(episode.y))
         .sort((a, b) => {
@@ -419,7 +420,15 @@ function createEpisodeCard(episode) {
     const date = document.createElement('span');
     date.className = 'episode-date';
     date.textContent = formatDate(episode.date);
-    card.append(top, title, date);
+    const sourceLink = document.createElement('a');
+    sourceLink.className = 'episode-link';
+    sourceLink.href = episode.url;
+    sourceLink.target = '_blank';
+    sourceLink.rel = 'noreferrer';
+    sourceLink.textContent = episode.url.includes('patreon.com') ? 'Patreon' : 'Retro Rocket Network';
+    sourceLink.setAttribute('aria-label', `Otwórz odcinek ${episode.episodeId} w ${sourceLink.textContent}`);
+    sourceLink.insertAdjacentText('beforeend', ' ↗');
+    card.append(top, title, date, sourceLink);
     return card;
 }
 

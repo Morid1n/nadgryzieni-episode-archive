@@ -108,6 +108,7 @@ def parse_rss_items(xml_bytes: bytes) -> list[dict]:
         pubdate_el = entry.find("pubDate")
         duration_el = entry.find(".//itunes:duration", RSS_NS)
         guid_el = entry.find("guid")
+        link_el = entry.find("link")
 
         if title_el is None or pubdate_el is None:
             continue
@@ -116,6 +117,9 @@ def parse_rss_items(xml_bytes: bytes) -> list[dict]:
         pubdate = pubdate_el.text.strip() if pubdate_el.text else ""
         duration = duration_el.text.strip() if duration_el is not None and duration_el.text else ""
         guid = guid_el.text.strip() if guid_el is not None and guid_el.text else ""
+        link = link_el.text.strip() if link_el is not None and link_el.text else ""
+        if not link and guid.startswith("http"):
+            link = guid
 
         # Parse pubDate (RFC 822)
         try:
@@ -133,6 +137,7 @@ def parse_rss_items(xml_bytes: bytes) -> list[dict]:
             "date": iso_date,
             "duration": duration,
             "guid": guid,
+            "url": link,
             "episode_number": ep_num,
         })
     return items
@@ -151,6 +156,11 @@ PATREON_KNOWN_POSTS = [
     (598, "598-afterparty-164626802"),
     (599, "599-afterparty-z-165363196"),
 ]
+
+PATREON_POST_URLS = {
+    f"{episode}.5": f"https://www.patreon.com/iMagazinePL/posts/{slug}"
+    for episode, slug in PATREON_KNOWN_POSTS
+}
 
 
 def _fetch_patreon_post_page(slug: str) -> str | None:
@@ -588,11 +598,18 @@ def minutes_to_duration_str(minutes: float) -> str:
         return f"{m}:{s:02d}"
 
 
-def generate_data_json(rows: list[dict]) -> dict:
+def normalize_lookup_title(title: str) -> str:
+    """Normalize title whitespace for matching RSS and archive records."""
+    import unicodedata
+    return " ".join(unicodedata.normalize("NFKC", title).replace("\u00a0", " ").split()).strip()
+
+
+def generate_data_json(rows: list[dict], url_by_title: dict[str, str] | None = None) -> dict:
     """Generate the data.json structure for Chart.js."""
     episodes = []
     durations_min = []
     year_counts = Counter()
+    url_by_title = url_by_title or {}
 
     for r in rows:
         minutes = duration_to_minutes(r["duration"])
@@ -609,6 +626,7 @@ def generate_data_json(rows: list[dict]) -> dict:
 
         category = detect_category(r["title"], r["episode"])
         dur_str = r["duration"] if r["duration"] else "?"
+        source_url = url_by_title.get(normalize_lookup_title(r["title"])) or PATREON_POST_URLS.get(r["episode"], "")
 
         episodes.append({
             "episode": r["episode"],
@@ -618,6 +636,7 @@ def generate_data_json(rows: list[dict]) -> dict:
             "minutes": round(minutes, 2) if minutes is not None else None,
             "category": category,
             "year": int(year) if year else None,
+            "url": source_url,
         })
 
     # Stats
@@ -1107,6 +1126,24 @@ def main():
     items = parse_rss_items(xml_bytes)
     log.info(f"  Parsed {len(items)} episodes from RSS")
 
+    # Preserve known URLs and refresh them from the current RSS feed.
+    url_by_title = {}
+    if DATA_JSON_PATH.exists():
+        try:
+            current_data = json.loads(DATA_JSON_PATH.read_text(encoding="utf-8"))
+            url_by_title.update({
+                normalize_lookup_title(e.get("title", "")): e["url"]
+                for e in current_data.get("episodes", [])
+                if e.get("title") and e.get("url")
+            })
+        except (OSError, json.JSONDecodeError):
+            log.warning("Could not read existing episode URLs; rebuilding from RSS")
+    url_by_title.update({
+        normalize_lookup_title(item["title"]): item["url"]
+        for item in items
+        if item.get("title") and item.get("url")
+    })
+
     # Step 2: Load existing archive
     log.info("Step 2: Loading existing archive...")
     existing_rows, _ = parse_archive(ARCHIVE_PATH)
@@ -1183,7 +1220,7 @@ def main():
 
     # Step 5: Generate data.json
     log.info("Step 5: Generating data.json...")
-    data = generate_data_json(all_rows)
+    data = generate_data_json(all_rows, url_by_title)
     write_data_json(data, dry=dry)
 
     # Step 5b: Update README.md stats table
