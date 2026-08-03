@@ -3,6 +3,7 @@
 
 const DATA_VERSION = 110;
 const THEME_STORAGE_KEY = 'nadgryzieni-theme';
+const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 
 let chartInstance = null;
@@ -65,7 +66,11 @@ function getAverageDuration(data) {
     return Number(data.stats?.average_duration ?? data.average_duration ?? 0);
 }
 
-function getTheme() {
+function getSystemTheme() {
+    return window.matchMedia(SYSTEM_THEME_QUERY).matches ? 'dark' : 'light';
+}
+
+function getSavedTheme() {
     try {
         const saved = localStorage.getItem(THEME_STORAGE_KEY);
         if (saved === 'dark' || saved === 'light') {
@@ -74,7 +79,25 @@ function getTheme() {
     } catch (error) {
         // Private browsing can disable localStorage; system preference still works.
     }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return null;
+}
+
+function getTheme() {
+    return getSavedTheme() || getSystemTheme();
+}
+
+function watchSystemTheme() {
+    const mediaQuery = window.matchMedia(SYSTEM_THEME_QUERY);
+    const handleChange = () => {
+        if (!getSavedTheme()) {
+            applyTheme(getSystemTheme(), false);
+        }
+    };
+    if (typeof mediaQuery.addEventListener === 'function') {
+        mediaQuery.addEventListener('change', handleChange);
+    } else if (typeof mediaQuery.addListener === 'function') {
+        mediaQuery.addListener(handleChange);
+    }
 }
 
 function applyTheme(theme, persist = true) {
@@ -470,6 +493,8 @@ function renderArchive() {
 }
 
 function bindInteractions() {
+    watchSystemTheme();
+
     $('#theme-toggle')?.addEventListener('click', () => {
         const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
         applyTheme(nextTheme);
