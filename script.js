@@ -2,7 +2,6 @@
 // The data file remains the source of truth; presentation is layered on top.
 
 const DATA_VERSION = 110;
-const THEME_STORAGE_KEY = 'nadgryzieni-theme';
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 
@@ -70,29 +69,13 @@ function getSystemTheme() {
     return window.matchMedia(SYSTEM_THEME_QUERY).matches ? 'dark' : 'light';
 }
 
-function getSavedTheme() {
-    try {
-        const saved = localStorage.getItem(THEME_STORAGE_KEY);
-        if (saved === 'dark' || saved === 'light') {
-            return saved;
-        }
-    } catch (error) {
-        // Private browsing can disable localStorage; system preference still works.
-    }
-    return null;
-}
-
 function getTheme() {
-    return getSavedTheme() || getSystemTheme();
+    return getSystemTheme();
 }
 
 function watchSystemTheme() {
     const mediaQuery = window.matchMedia(SYSTEM_THEME_QUERY);
-    const handleChange = () => {
-        if (!getSavedTheme()) {
-            applyTheme(getSystemTheme(), false);
-        }
-    };
+    const handleChange = () => applyTheme(getSystemTheme());
     if (typeof mediaQuery.addEventListener === 'function') {
         mediaQuery.addEventListener('change', handleChange);
     } else if (typeof mediaQuery.addListener === 'function') {
@@ -100,7 +83,7 @@ function watchSystemTheme() {
     }
 }
 
-function applyTheme(theme, persist = true) {
+function applyTheme(theme) {
     document.documentElement.dataset.theme = theme;
     const toggle = $('#theme-toggle');
     const label = $('#theme-label');
@@ -112,13 +95,6 @@ function applyTheme(theme, persist = true) {
         label.textContent = theme === 'dark' ? 'Tryb jasny' : 'Tryb ciemny';
     }
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#1f1f2c' : '#fde6bd');
-    if (persist) {
-        try {
-            localStorage.setItem(THEME_STORAGE_KEY, theme);
-        } catch (error) {
-            // Theme still applies for this visit when persistence is unavailable.
-        }
-    }
     if (chartInstance) {
         renderChart();
     }
@@ -570,6 +546,6 @@ async function loadData() {
     }
 }
 
-applyTheme(getTheme(), false);
+applyTheme(getTheme());
 bindInteractions();
 loadData();

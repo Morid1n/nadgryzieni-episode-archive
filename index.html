@@ -14,10 +14,8 @@
     <script>
         (function () {
             try {
-                var saved = localStorage.getItem('nadgryzieni-theme');
                 var systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                var preferred = saved === 'dark' || saved === 'light' ? saved : systemTheme;
-                document.documentElement.dataset.theme = preferred;
+                document.documentElement.dataset.theme = systemTheme;
             } catch (error) {
                 document.documentElement.dataset.theme = 'light';
             }
@@ -258,6 +256,6 @@
             </div>
         </footer>
     </div>
-    <script src="script.js?v=116"></script>
+    <script src="script.js?v=117"></script>
 </body>
 </html>
