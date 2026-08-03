@@ -193,43 +193,15 @@ button {
     flex: 0 0 34px;
     overflow: hidden;
     border: 1px solid var(--border-strong);
-    border-radius: 50%;
+    border-radius: 24%;
     background: var(--surface);
 }
 
-.brand-mark::before,
-.brand-mark::after,
-.brand-mark span::before {
-    position: absolute;
+.brand-mark img {
     display: block;
-    content: "";
-    background: var(--accent);
-}
-
-.brand-mark::before {
-    top: 7px;
-    left: 7px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-}
-
-.brand-mark::after {
-    right: -3px;
-    bottom: 4px;
-    width: 23px;
-    height: 7px;
-    transform: rotate(-35deg);
-    border-radius: 9px;
-}
-
-.brand-mark span::before {
-    right: 5px;
-    top: 6px;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--teal);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .brand-copy,
