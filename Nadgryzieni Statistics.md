@@ -1,7 +1,7 @@
 # Nadgryzieni — Statistics
 
 > Generated from the episode archive: `Nadgryzieni Episode Archive.md`
-> Last updated: 2026-08-01
+> Last updated: 2026-08-04
 
 ---
 
@@ -196,4 +196,4 @@
 
 ---
 
-*Last updated: 2026-08-01*
+*Last updated: 2026-08-04*
