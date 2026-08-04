@@ -1180,6 +1180,19 @@ html[data-theme="dark"] .theme-icon::after {
     font-size: 0.58rem;
 }
 
+.yearly-stat-explainer {
+    max-width: 56ch;
+    margin: 18px 0 0;
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+    line-height: 1.6;
+}
+
+.yearly-stat-explainer strong {
+    color: var(--accent);
+    font-weight: 800;
+}
+
 .yearly-chart-hint,
 .yearly-table-note {
     margin: 20px 0 0;
