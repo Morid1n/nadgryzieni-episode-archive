@@ -8,8 +8,8 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <link rel="icon" type="image/png" sizes="512x512" href="assets/nadgryzieni-logo-rounded.png?v=118">
-    <link rel="apple-touch-icon" sizes="512x512" href="assets/nadgryzieni-logo-rounded.png?v=118">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/nadgryzieni-logo-rounded.png?v=119">
+    <link rel="apple-touch-icon" sizes="512x512" href="assets/nadgryzieni-logo-rounded.png?v=119">
     <title>Nadgryzieni — Archiwum statystyk</title>
     <script>
         (function () {
@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=118">
+    <link rel="stylesheet" href="style.css?v=119">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -33,7 +33,7 @@
         <header class="site-header">
             <div class="container nav-inner">
                 <a class="brand" href="#top" aria-label="Nadgryzieni — początek archiwum">
-                    <span class="brand-mark" aria-hidden="true"><img src="assets/nadgryzieni-logo-rounded.png?v=118" alt=""></span>
+                    <span class="brand-mark" aria-hidden="true"><img src="assets/nadgryzieni-logo-rounded.png?v=119" alt=""></span>
                     <span class="brand-copy">
                         <strong>Nadgryzieni</strong>
                         <small>archiwum statystyk</small>
@@ -208,6 +208,82 @@
                 </div>
             </section>
 
+            <section class="section container yearly-section" id="yearly-stats" aria-labelledby="yearly-stats-title">
+                <div class="section-heading section-heading-inline">
+                    <div>
+                        <p class="eyebrow">ANALIZA / 03</p>
+                        <h2 id="yearly-stats-title">Ostatnie lata</h2>
+                    </div>
+                    <p class="section-summary">Liczba, długość i rytm publikacji od 2021 roku. Dane pokazują także niepełne okresy, aby nie ukrywać luk w archiwum.</p>
+                </div>
+                <div class="yearly-note" role="note">
+                    <span id="yearly-analysis-range">Zakres szczegółowej analizy: 2021—2026</span>
+                    <span id="yearly-coverage-note">—</span>
+                </div>
+                <div class="yearly-highlights" aria-label="Najważniejsze statystyki roczne">
+                    <article class="yearly-highlight">
+                        <span class="card-eyebrow">NAJWIĘCEJ ODCINKÓW</span>
+                        <strong id="yearly-highlight-count">—</strong>
+                        <p id="yearly-highlight-count-meta">—</p>
+                    </article>
+                    <article class="yearly-highlight">
+                        <span class="card-eyebrow">NAJWIĘCEJ CZASU</span>
+                        <strong id="yearly-highlight-hours">—</strong>
+                        <p id="yearly-highlight-hours-meta">—</p>
+                    </article>
+                    <article class="yearly-highlight">
+                        <span class="card-eyebrow">NAJDŁUŻSZE ROZMOWY</span>
+                        <strong id="yearly-highlight-median">—</strong>
+                        <p id="yearly-highlight-median-meta">—</p>
+                    </article>
+                </div>
+                <div class="yearly-panel-grid">
+                    <article class="yearly-panel">
+                        <div class="pattern-card-header">
+                            <div>
+                                <span class="card-eyebrow">AKTYWNOŚĆ</span>
+                                <h3>Odcinki w roku</h3>
+                            </div>
+                            <span class="pattern-note">2021—2026</span>
+                        </div>
+                        <div class="yearly-episode-chart" id="yearly-episode-chart" role="img" aria-label="Liczba odcinków w latach 2021—2026"></div>
+                        <div class="yearly-axis" aria-hidden="true"><span>2021</span><span>2026 YTD</span></div>
+                        <p class="yearly-chart-hint">2026 jest oznaczony jako rok trwający.</p>
+                    </article>
+                    <article class="yearly-panel">
+                        <div class="pattern-card-header">
+                            <div>
+                                <span class="card-eyebrow">DŁUGOŚĆ</span>
+                                <h3>Typowy odcinek</h3>
+                            </div>
+                            <span class="pattern-note">minuty</span>
+                        </div>
+                        <div class="yearly-duration-chart" id="yearly-duration-chart" role="img" aria-label="Mediana i średnia długość odcinków w latach 2021—2026"></div>
+                        <div class="yearly-legend" aria-hidden="true"><span><i class="yearly-legend-median"></i>mediana</span><span><i class="yearly-legend-mean"></i>średnia</span></div>
+                        <p class="yearly-chart-hint">Mediana pokazuje typowy odcinek; średnia uwzględnia dłuższe rozmowy.</p>
+                    </article>
+                </div>
+                <div class="yearly-table-wrap">
+                    <table class="yearly-table">
+                        <caption class="sr-only">Szczegółowe statystyki roczne od 2021 do 2026</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Rok</th>
+                                <th scope="col">Odcinki</th>
+                                <th scope="col">Czas łączny</th>
+                                <th scope="col">Mediana</th>
+                                <th scope="col">Średnia</th>
+                                <th scope="col">Ponad 2 h</th>
+                                <th scope="col">Przerwa</th>
+                                <th scope="col">Zakres</th>
+                            </tr>
+                        </thead>
+                        <tbody id="yearly-stats-body"></tbody>
+                    </table>
+                </div>
+                <p class="yearly-table-note" id="yearly-table-note">Wartości roczne są obliczane bezpośrednio z danych archiwum.</p>
+            </section>
+
             <section class="section container" id="episodes" aria-labelledby="episodes-title">
                 <div class="section-heading section-heading-inline archive-heading">
                     <div>
@@ -249,7 +325,7 @@
 
         <footer class="site-footer">
             <div class="container footer-inner">
-                <div class="footer-brand"><span class="brand-mark" aria-hidden="true"><img src="assets/nadgryzieni-logo-rounded.png?v=118" alt=""></span><span><strong>Nadgryzieni</strong><small>archiwum statystyk</small></span></div>
+                <div class="footer-brand"><span class="brand-mark" aria-hidden="true"><img src="assets/nadgryzieni-logo-rounded.png?v=119" alt=""></span><span><strong>Nadgryzieni</strong><small>archiwum statystyk</small></span></div>
                 <p>Dane z archiwum podcastu · ostatnia aktualizacja <span id="footer-update">—</span></p>
                 <div class="footer-links">
                     <a href="https://github.com/Morid1n/nadgryzieni-episode-archive" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
@@ -258,6 +334,6 @@
             </div>
         </footer>
     </div>
-    <script src="script.js?v=118"></script>
+    <script src="script.js?v=119"></script>
 </body>
 </html>

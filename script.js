@@ -1,9 +1,10 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 118;
+const DATA_VERSION = 119;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
+const YEARLY_STATS_START = 2021;
 
 let chartInstance = null;
 let chartData = null;
@@ -21,6 +22,7 @@ const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 const formatter = new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 1 });
 const integerFormatter = new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 });
 const dateFormatter = new Intl.DateTimeFormat('pl-PL', { dateStyle: 'medium' });
+const monthFormatter = new Intl.DateTimeFormat('pl-PL', { month: 'short' });
 
 function setText(selector, value) {
     const element = $(selector);
@@ -63,6 +65,24 @@ function getEpisodeYear(episode) {
 
 function getAverageDuration(data) {
     return Number(data.stats?.average_duration ?? data.average_duration ?? 0);
+}
+
+function getMedian(values) {
+    if (!values.length) {
+        return 0;
+    }
+    const sorted = [...values].sort((a, b) => a - b);
+    const middle = Math.floor(sorted.length / 2);
+    return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+}
+
+function getShortMonth(date) {
+    const parsedDate = new Date(`${date}T00:00:00`);
+    return Number.isNaN(parsedDate.getTime()) ? '—' : monthFormatter.format(parsedDate).replace('.', '');
+}
+
+function getYearLabel(row) {
+    return row.isCurrentYear ? `${row.year} YTD` : String(row.year);
 }
 
 function getSystemTheme() {
@@ -243,6 +263,146 @@ function renderDurationBars() {
         row.append(label, track, count);
         container.appendChild(row);
     });
+}
+
+function getYearlyStats() {
+    const currentYear = Number(normalizedEpisodes.at(-1)?.date.slice(0, 4));
+    const grouped = normalizedEpisodes.reduce((result, episode) => {
+        const year = Number(getEpisodeYear(episode));
+        if (!Number.isFinite(year) || year < YEARLY_STATS_START) {
+            return result;
+        }
+        result[year] ||= [];
+        result[year].push(episode);
+        return result;
+    }, {});
+
+    return Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b)).map(([year, episodes]) => {
+        const durations = episodes.map((episode) => episode.y).sort((a, b) => a - b);
+        const dates = episodes.map((episode) => episode.date).sort();
+        const gaps = dates.slice(1).map((date, index) => {
+            const previous = new Date(`${dates[index]}T00:00:00`);
+            const current = new Date(`${date}T00:00:00`);
+            return Math.round((current - previous) / 86400000);
+        });
+        const monthCount = new Set(dates.map((date) => date.slice(0, 7))).size;
+        const isCurrentYear = Number(year) === currentYear;
+        const coverage = isCurrentYear
+            ? `${getShortMonth(dates[0])}—${getShortMonth(dates.at(-1))} · YTD`
+            : monthCount === 12
+                ? 'Pełny rok'
+                : `${getShortMonth(dates[0])}—${getShortMonth(dates.at(-1))} · częściowy`;
+        return {
+            year: Number(year),
+            episodes,
+            count: episodes.length,
+            totalHours: durations.reduce((total, duration) => total + duration, 0) / 60,
+            median: getMedian(durations),
+            average: durations.reduce((total, duration) => total + duration, 0) / durations.length,
+            overTwoHours: durations.filter((duration) => duration >= 120).length,
+            overTwoHoursPercent: (durations.filter((duration) => duration >= 120).length / durations.length) * 100,
+            firstDate: dates[0],
+            lastDate: dates.at(-1),
+            longestGap: Math.max(...gaps, 0),
+            isCurrentYear,
+            coverage,
+        };
+    });
+}
+
+function renderYearlyStats() {
+    const rows = getYearlyStats();
+    const episodeChart = $('#yearly-episode-chart');
+    const durationChart = $('#yearly-duration-chart');
+    const tableBody = $('#yearly-stats-body');
+    if (!rows.length || !episodeChart || !durationChart || !tableBody) {
+        return;
+    }
+
+    const mostEpisodes = rows.reduce((best, row) => row.count > best.count ? row : best, rows[0]);
+    const mostHours = rows.reduce((best, row) => row.totalHours > best.totalHours ? row : best, rows[0]);
+    const longestMedian = rows.reduce((best, row) => row.median > best.median ? row : best, rows[0]);
+    setText('#yearly-highlight-count', integerFormatter.format(mostEpisodes.count));
+    setText('#yearly-highlight-count-meta', `${getYearLabel(mostEpisodes)} · ${mostEpisodes.coverage}`);
+    setText('#yearly-highlight-hours', `${formatNumber(mostHours.totalHours)} h`);
+    setText('#yearly-highlight-hours-meta', `${getYearLabel(mostHours)} · ${mostHours.count} odcinków`);
+    setText('#yearly-highlight-median', `${formatNumber(longestMedian.median)} min`);
+    setText('#yearly-highlight-median-meta', `${getYearLabel(longestMedian)} · mediana`);
+    setText('#yearly-analysis-range', `Zakres szczegółowej analizy: ${rows[0].year}—${rows.at(-1).year}`);
+    const partialPeriods = rows.filter((row) => row.coverage !== 'Pełny rok').map((row) => `${row.year}: ${row.coverage}`).join(' · ');
+    setText('#yearly-coverage-note', partialPeriods || 'Wszystkie lata obejmują pełny zakres danych');
+    const currentRow = rows.find((row) => row.isCurrentYear);
+    setText('#yearly-table-note', currentRow
+        ? `Wartości dla ${currentRow.year} obejmują ${currentRow.coverage.replace(' · YTD', '')} ${currentRow.year} i są oznaczone jako YTD; nie porównuj ich bezpośrednio z pełnym rokiem.`
+        : 'Wartości roczne są obliczane bezpośrednio z danych archiwum.');
+
+    const maxCount = Math.max(...rows.map((row) => row.count), 1);
+    episodeChart.replaceChildren(...rows.map((row) => {
+        const column = document.createElement('div');
+        column.className = `yearly-column${row.isCurrentYear ? ' is-ytd' : ''}`;
+        column.title = `${getYearLabel(row)}: ${row.count} odcinków`;
+        const value = document.createElement('span');
+        value.className = 'yearly-column-value';
+        value.textContent = integerFormatter.format(row.count);
+        const fill = document.createElement('span');
+        fill.className = 'yearly-column-fill';
+        fill.style.height = `${Math.max(6, (row.count / maxCount) * 100)}%`;
+        const label = document.createElement('span');
+        label.className = 'yearly-column-label';
+        label.textContent = row.isCurrentYear ? `${row.year}*` : String(row.year);
+        column.append(value, fill, label);
+        return column;
+    }));
+
+    const durationScale = Math.max(180, Math.ceil(Math.max(...rows.map((row) => Math.max(row.median, row.average))) / 30) * 30);
+    durationChart.replaceChildren(...rows.map((row) => {
+        const item = document.createElement('div');
+        item.className = `yearly-duration-row${row.isCurrentYear ? ' is-ytd' : ''}`;
+        item.title = `${getYearLabel(row)}: mediana ${formatNumber(row.median)} min, średnia ${formatNumber(row.average)} min`;
+        const label = document.createElement('span');
+        label.className = 'yearly-duration-year';
+        label.textContent = row.isCurrentYear ? `${row.year}*` : String(row.year);
+        const track = document.createElement('span');
+        track.className = 'yearly-duration-track';
+        const median = document.createElement('span');
+        median.className = 'yearly-duration-median';
+        median.style.width = `${(row.median / durationScale) * 100}%`;
+        const average = document.createElement('span');
+        average.className = 'yearly-duration-average';
+        average.style.left = `${Math.min(100, (row.average / durationScale) * 100)}%`;
+        track.append(median, average);
+        const value = document.createElement('span');
+        value.className = 'yearly-duration-value';
+        value.textContent = `${formatNumber(row.median)} min`;
+        item.append(label, track, value);
+        return item;
+    }));
+
+    tableBody.replaceChildren(...rows.map((row) => {
+        const tableRow = document.createElement('tr');
+        if (row.isCurrentYear) {
+            tableRow.classList.add('is-ytd');
+        }
+        const values = [
+            getYearLabel(row),
+            integerFormatter.format(row.count),
+            `${formatNumber(row.totalHours)} h`,
+            `${formatNumber(row.median)} min`,
+            `${formatNumber(row.average)} min`,
+            `${integerFormatter.format(row.overTwoHours)} · ${formatNumber(row.overTwoHoursPercent)}%`,
+            row.longestGap ? `${integerFormatter.format(row.longestGap)} dni` : '—',
+            row.coverage,
+        ];
+        values.forEach((value, index) => {
+            const cell = document.createElement(index === 0 ? 'th' : 'td');
+            if (index === 0) {
+                cell.scope = 'row';
+            }
+            cell.textContent = value;
+            tableRow.appendChild(cell);
+        });
+        return tableRow;
+    }));
 }
 
 function chartTokens() {
@@ -540,6 +700,7 @@ async function loadData() {
         renderSignals();
         renderYearBars();
         renderDurationBars();
+        renderYearlyStats();
         populateYearFilter();
         renderArchive();
         updateModeControls();
