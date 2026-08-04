@@ -1,0 +1,153 @@
+---
+title: Nadgryzieni Editorial Profile
+type: profile
+created: 2026-08-04
+updated: 2026-08-04
+source: Nadgryzieni Episode Archive.md; Nadgryzieni Statistics.md; data.json
+tags: [nadgryzieni, podcast, editorial-profile, topic-research]
+---
+
+# Nadgryzieni Editorial Profile
+
+## Purpose
+
+This profile defines what the Nadgryzieni topic finder should look for. It is an editorial rubric, not a rigid list of subjects: a strong item can be worth keeping because of its consequence, personal angle, or discussion potential even when it sits outside the largest topic pillar.
+
+The profile is derived from the current archive of **570 records** published between **2010-01-28 and 2026-07-31**, with **978.1 hours** of total listening time, a **98.4-minute median**, and a **103.0-minute average** episode duration. The archive is maintained in `Nadgryzieni Episode Archive.md` and summarized in `Nadgryzieni Statistics.md`.
+
+## Editorial identity
+
+Nadgryzieni is a Polish, long-form technology conversation with an Apple center of gravity, but not an Apple-only boundary. The show works best when technology is connected to real life: how a product behaves after purchase, how an ecosystem shapes choices, what a platform enables or prevents, and what a new technology changes for ordinary users and creators.
+
+The characteristic voice is:
+
+- conversational, personal, and experience-led;
+- technically literate without requiring academic presentation;
+- opinionated and willing to criticize poor design, pricing, lock-in, or corporate decisions;
+- playful, provocative, and comfortable with surprising digressions;
+- interested in products, projects, and consequences rather than press-release repetition;
+- Polish and European in context, while following global technology, media, and culture.
+
+## Topic pillars
+
+The following pillars are ordered by recurring editorial importance. Counts below are **non-exclusive keyword signals** from episode titles, so one episode may appear in more than one pillar and the numbers are lower-bound indicators rather than a formal classification.
+
+### 1. Apple hardware, software, and ecosystem
+
+This is the anchor: iPhone, iPad, Mac, Apple silicon, iOS/iPadOS/macOS, Apple Watch, AirPods, Apple TV, HomePod, AirTag, iCloud, Siri, Apple Music, App Store, Vision Pro, WWDC, product launches, pricing, and platform policy.
+
+The title pass matched Apple/ecosystem language in **126 of 304 titles from 2021 onward**. Look for launches, leaks with a concrete consequence, first impressions, long-term use, comparisons, repairability, pricing, regional limitations, and changes that affect how Apple products work together.
+
+### 2. AI, agents, local models, and robotics
+
+Nadgryzieni is interested in AI as something people can use, test, distrust, or integrate into a workflow—not merely as a funding story. Strong angles include local inference on Macs and phones, AI agents with real control over devices, practical automation, generative tools, model behavior, robotics, safety, copyright, and the difference between a demo and a dependable product.
+
+The title pass found **26 AI/automation/robotics signals from 2021 onward**, with especially strong recent relevance around local AI, agents, and AI replacing or reshaping familiar software.
+
+### 3. Consumer hardware beyond Apple
+
+Android phones, Samsung Galaxy, Google Pixel, Windows PCs, Sony cameras and audio, NVIDIA/Intel/AMD hardware, displays, keyboards, printers, storage, networking, and other products are welcome when there is a real comparison, trade-off, failure mode, or user experience. The point is not brand coverage for its own sake; it is understanding what the alternative changes.
+
+### 4. Smart home and ambient computing
+
+HomeKit, Home Assistant, smart locks, sensors, robot vacuums, air quality, climate control, energy storage, wearables, health data, and domestic automation fit particularly well when the item explains reliability, interoperability, installation, privacy, or whether the automation is actually worth living with.
+
+### 5. Privacy, security, regulation, and platform power
+
+Include account security, password managers, supply-chain attacks, scams, App Store decisions, moderation, CSAM and safety rules, EU regulation, antitrust, interoperability mandates, digital ownership, surveillance, and corporate control. These topics should be tied to a concrete technology, product, platform, or user consequence rather than presented as generic politics.
+
+### 6. Gaming, VR, AR, and entertainment technology
+
+Games, consoles, handhelds, PC gaming, Steam, Xbox, PlayStation, Nintendo, simulators, VR/AR headsets, streaming, films, television, and interactive media are good fits when they reveal a hardware/platform trade-off, ownership question, cultural shift, or memorable personal experience.
+
+### 7. Photography, video, audio, and creator tools
+
+Cameras, lenses, displays, microphones, headphones, spatial audio, Final Cut Pro, Logic Pro, editing workflows, creative software, and creator hardware belong here. Prefer practical tests, workflows, and decisions over generic product announcements.
+
+### 8. Cars, mobility, travel, and technology-shaped lifestyle
+
+Cars, EVs, Porsche, public transport, aviation, travel in Japan/Thailand/Europe, cycling, watches, bags, and other lifestyle subjects fit when technology, design, engineering, ownership, or personal experience is central. This is an important source of the show's distinctive digressions and human scale.
+
+### 9. Apps, workflows, and developer practice
+
+Apps, automation, coding, terminals, open source, social media, communication tools, password migration, personal setups, remote work, and small projects are useful when they solve a real problem or expose a meaningful trade-off.
+
+## Recurring editorial angles
+
+A candidate is especially strong when it supports one or more of these formats:
+
+- **What changed?** A product, policy, release, or platform decision with a concrete user impact.
+- **Does it work in real life?** A review, first impression, long-term test, setup, failure, or repair story.
+- **Which should you choose?** A comparison with meaningful trade-offs, not a specification table.
+- **What does this do to the ecosystem?** Interoperability, lock-in, pricing, standards, or platform power.
+- **Can a normal person use it?** Local AI, agents, smart home, privacy tools, creative tools, or new hardware translated into practical reality.
+- **What is the human story behind the technology?** A founder, creator, engineer, unusual project, travel experience, or cultural consequence.
+- **Where is the absurdity?** A surprising failure, over-designed product, corporate contradiction, or technology that behaves differently from its marketing.
+
+## Daily topic-selection rubric
+
+Keep a candidate when it scores well on the following questions:
+
+1. **Nadgryzieni fit:** Does it touch a pillar or a recurring angle?
+2. **Discussion potential:** Could the hosts compare experiences, disagree, explain trade-offs, or tell a story about it?
+3. **Concrete consequence:** Does it change what someone can buy, use, create, trust, or afford?
+4. **Freshness or rediscovery value:** Is it new, newly relevant, or a useful follow-up to an ongoing topic?
+5. **Source quality:** Is there a primary source, a reputable report, a hands-on test, or a clearly attributed technical explanation?
+6. **Mix:** Does the daily shortlist avoid six versions of the same story and include more than one editorial lens?
+
+The daily run should normally keep **4–8 items**, favoring recent items while allowing a slightly older evergreen project when it is unusually discussion-worthy. It should prefer a mix of Polish/European and international sources and should deduplicate the same story across feeds.
+
+## Exclusions and caution flags
+
+Do not add an item merely because it is popular or has an AI keyword. Normally exclude:
+
+- sponsor posts, affiliate roundups, deals, coupon pages, and SEO listicles;
+- job listings, hiring announcements, and funding/valuation stories without a product or technology consequence;
+- generic political or celebrity news with no meaningful technology angle;
+- rumor-only claims when there is no attributable reporting or concrete artifact;
+- duplicate coverage of the same announcement;
+- outrage bait whose headline cannot be supported by the page;
+- topics that cannot be verified beyond a broken feed or an empty page.
+
+If a page cannot be extracted, the collector must not invent a summary. It may retain the URL only as an explicitly unverified lead for later review; the normal automated path should skip it.
+
+## Preferred research sources
+
+The daily collector currently checks:
+
+- iMagazine.pl — `https://imagazine.pl/feed/`
+- The Verge — `https://www.theverge.com/rss/index.xml`
+- Daring Fireball — `https://daringfireball.net/feeds/main`
+- Michael Tsai — `https://mjtsai.com/blog/feed/`
+- Hacker News — `https://news.ycombinator.com/rss`
+- Techmeme — `https://www.techmeme.com/feed.xml`
+
+This is a starting roster, not a closed world. New sources should be added when they repeatedly produce primary, technical, Polish, European, or hands-on material that survives the rubric.
+
+## Apple Notes output contract
+
+The daily shortlist is appended to the Apple Notes note **💡 Nadgryzieni Topic Ideas**. Each run uses the local Central European date in this form:
+
+```text
+2026/08/04
+- Title of website / project / link https://example-link.com
+- A different title https://example-link-2.com
+```
+
+In Apple Notes the date is a heading and the items are native bullet points. URLs are written plainly after the title so Notes can link them automatically. URLs are deduplicated across the note, and a repeated run on the same day does not create a second date heading unless genuinely new links are found.
+
+## Maintenance
+
+The profile is intentionally kept in three places:
+
+- the Obsidian note `20-Podcast/Nadgryzieni Editorial Profile.md`, for editorial work and human review;
+- the LLM Wiki's `Nadgryzieni Editorial Profile` concept page, for agent orientation and cross-referencing;
+- this repository-root copy, for versioned, non-secret editorial context alongside the archive and GitHub Pages data.
+
+The Apple Notes collector itself remains profile-local because it controls a personal Notes database and contains no public project value. Changes to the profile should be reflected in the collector's scoring rules and recorded in the project journal.
+
+## Sources
+
+- `Nadgryzieni Episode Archive.md`
+- `Nadgryzieni Statistics.md`
+- `data.json`
