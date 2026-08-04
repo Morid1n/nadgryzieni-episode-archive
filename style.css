@@ -1566,6 +1566,17 @@ html[data-theme="dark"] .theme-icon::after {
     margin: 0;
 }
 
+.footer-credit {
+    flex: 0 0 100%;
+    width: 100%;
+    padding: 2px 0 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.58rem;
+    letter-spacing: 0.04em;
+    text-align: center;
+}
+
 .footer-links {
     display: flex;
     gap: 18px;
