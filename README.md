@@ -21,6 +21,7 @@ Strona prezentuje interaktywny wykres punktowy pokazujący długość każdego o
 | Godziny odsłuchu | 978.1 |
 | Średnia długość | 103.0 min |
 | Maksymalna długość | 288.6 min |
+| Afterparty | 8 |
 
 ## 🗂️ Struktura repozytorium
 
@@ -30,6 +31,11 @@ nadgryzieni-episode-archive/
 ├── style.css           # Style CSS
 ├── script.js           # Logika wykresu (Chart.js)
 ├── data.json           # Dane wszystkich odcinków (JSON)
+├── nadgryzieni_pipeline.py # Bezpieczny pipeline RSS/Patreon → archiwum/site
+├── patreon_posts.json  # Zweryfikowany fallback linków Patreon
+├── cron/                # Wrappery harmonogramu weekendowego i retry
+├── archive/legacy/      # Ręczne narzędzia pełnej odbudowy (nieaktywne)
+├── tests/               # Testy regresyjne pipeline'u
 └── README.md           # Ten plik
 ```
 
@@ -38,7 +44,13 @@ nadgryzieni-episode-archive/
 Dane odcinków są dostępne w formacie JSON:
 - [data.json (surowe dane) →](https://morid1n.github.io/nadgryzieni-episode-archive/data.json)
 
-Każdy odcinek zawiera: numer, tytuł, datę, długość w minutach oraz sformatowaną długość.
+Każdy odcinek zawiera: numer, tytuł, datę, długość w minutach, sformatowaną długość, kategorię i kanoniczny URL źródłowy. Odcinki Patreon Afterparty są pełnoprawnymi rekordami statystyk i zachowują ułamkowe identyfikatory, np. `595.5`.
+
+## ⚙️ Automatyzacja
+
+Aktywny pipeline jest uruchamiany z profilu R2-D2. Główny wrapper działa w sobotę o 04:00 czasu lokalnego, czyli w noc z piątku na sobotę. Drugi wrapper działa we wtorek o tej samej porze, ale wykonuje pipeline wyłącznie wtedy, gdy sobotni przebieg nie znalazł nowych odcinków. Stan retry jest przechowywany poza repozytorium w chronionym pliku profilu.
+
+Pipeline wymaga zweryfikowanego wygenerowanego outputu przed synchronizacją Obsidian i publikacją GitHub Pages. Gdy nie ma nowych odcinków, nie tworzy commita ani nie wykonuje pushu.
 
 ## 🛠️ Technologie
 
@@ -55,7 +67,7 @@ Dane pobierane są z feedu RSS podcastu Nadgryzieni:
 
 ## 🤝 Wkład
 
-Repozytorium jest prowadzone przez C-3PO (AI assistant) dla potrzeb podcastu Nadgryzieni i iMagazine.
+Repozytorium jest prowadzone przez R2-D2 (AI assistant) dla potrzeb podcastu Nadgryzieni i iMagazine.
 
 Jeśli chcesz zaproponować zmiany lub zgłosić błąd, otwórz issue na GitHubie.
 
@@ -65,4 +77,4 @@ Dane i kod udostępnione na licencji MIT.
 
 ---
 
-Stworzone z ❤️ przez C-3PO | Dane z archiwum Nadgryzieni
+Stworzone z ❤️ przez R2-D2 | Dane z archiwum Nadgryzieni

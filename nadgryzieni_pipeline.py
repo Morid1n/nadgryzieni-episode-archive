@@ -28,17 +28,20 @@ import os
 import re
 import shutil
 import ssl
+import subprocess
 import sys
 import time
 import urllib.request
 import xml.etree.ElementTree as ET
 from collections import Counter, defaultdict
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
+from email.utils import parsedate_to_datetime
 from pathlib import Path
+from urllib.parse import urlparse
 
 # ── Configuration ────────────────────────────────────────────────────────────
-# Use current working directory as repo dir (cron job sets workdir to repo)
-REPO_DIR = Path.cwd()
+# Resolve from the script location so manual and cron invocations use the same checkout.
+REPO_DIR = Path(os.environ.get("NADGRYZIENI_REPO_DIR", Path(__file__).resolve().parent))
 ARCHIVE_PATH = REPO_DIR / "Nadgryzieni Episode Archive.md"
 STATS_PATH = REPO_DIR / "Nadgryzieni Statistics.md"
 DATA_JSON_PATH = REPO_DIR / "data.json"
@@ -53,6 +56,7 @@ RSS_URL = "https://retrorocketnetwork.pl/category/nadgryzieni-rss/feed/"
 
 # Patreon creator page (public posts are scraped; private RSS requires auth)
 PATREON_URL = "https://www.patreon.com/iMagazinePL/posts"
+PATREON_MANIFEST_PATH = REPO_DIR / "patreon_posts.json"
 
 # Content widths for the padded markdown table (content is left-justified,
 # with 1 space padding on each side between | characters)
@@ -60,8 +64,28 @@ PATREON_URL = "https://www.patreon.com/iMagazinePL/posts"
 # which gives content widths of 3, 5, 108, 12, 8
 COL_CONTENT_WIDTHS = [3, 5, 108, 12, 8]  # counter, episode, title, date, duration
 
-# Cache-busting version — incremented each time the pipeline makes changes
-CACHE_VERSION_FILE = Path("/tmp/nadgryzieni_cache_version.txt")
+# Durable operational state. These files are deliberately outside the Git checkout.
+STATE_DIR = Path(os.environ.get(
+    "NADGRYZIENI_STATE_DIR",
+    str(Path.home() / ".hermes" / "profiles" / "r2-d2" / "state"),
+))
+RETRY_STATE_PATH = STATE_DIR / "nadgryzieni-retry-state.json"
+LOCK_PATH = STATE_DIR / "nadgryzieni-pipeline.lock"
+_LOCK_HANDLE = None
+
+# Cache-busting version is committed with the generated site, not kept in /tmp.
+CACHE_VERSION_FILE = REPO_DIR / ".cache-version"
+
+# Only generated/published files may be staged by an automated run.
+PUBLISH_PATHS = [
+    "Nadgryzieni Episode Archive.md",
+    "Nadgryzieni Statistics.md",
+    "README.md",
+    "data.json",
+    "index.html",
+    "script.js",
+    ".cache-version",
+]
 
 # Logging
 import logging
@@ -76,13 +100,26 @@ log = logging.getLogger("nadgryzieni-pipeline")
 RSS_NS = {"itunes": "http://www.itunes.com/dtds/podcast-1.0.dtd"}
 
 
+def create_ssl_context() -> ssl.SSLContext:
+    """Return a certificate-validating HTTPS context."""
+    return ssl.create_default_context()
+
+
+def parse_publish_date(value: str) -> str:
+    """Normalize an RSS/Patreon date to ISO YYYY-MM-DD where possible."""
+    if not value:
+        return ""
+    try:
+        return parsedate_to_datetime(value).date().isoformat()
+    except (TypeError, ValueError, IndexError, OverflowError):
+        return value[:10] if len(value) >= 10 else ""
+
+
 # ── RSS Fetching ─────────────────────────────────────────────────────────────
 
 def fetch_rss(max_retries: int = 3) -> bytes:
     """Fetch the RSS feed with retries. Returns raw XML bytes."""
-    ctx = ssl.create_default_context()
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
+    ctx = create_ssl_context()
     for attempt in range(1, max_retries + 1):
         try:
             req = urllib.request.Request(RSS_URL, headers={
@@ -122,12 +159,7 @@ def parse_rss_items(xml_bytes: bytes) -> list[dict]:
             link = guid
 
         # Parse pubDate (RFC 822)
-        try:
-            from email.utils import parsedate_to_datetime
-            dt = parsedate_to_datetime(pubdate)
-            iso_date = dt.strftime("%Y-%m-%d")
-        except Exception:
-            iso_date = pubdate[:10] if len(pubdate) >= 10 else ""
+        iso_date = parse_publish_date(pubdate)
 
         # Extract episode number from title
         ep_num = extract_episode_number(title)
@@ -145,29 +177,38 @@ def parse_rss_items(xml_bytes: bytes) -> list[dict]:
 
 # ── Patreon Scraping ──────────────────────────────────────────────────────────
 
-# Known Patreon post slugs for Afterparty episodes
-# These are discovered by visiting the Patreon posts page in a browser
-# (posts page is JS-rendered, so Python can't extract them directly)
-# Format: (episode_number, slug) — update this list as new posts are published
-PATREON_KNOWN_POSTS = [
-    (595, "595-afterparty-z-163700509"),
-    (596, "596-afterparty-z-164064600"),
-    (597, "597-afterparty-164068251"),
-    (598, "598-afterparty-164626802"),
-    (599, "599-afterparty-z-165363196"),
-]
+def load_patreon_manifest(path: Path = PATREON_MANIFEST_PATH) -> list[dict]:
+    """Load the tracked Patreon fallback manifest without exposing credentials."""
+    if not path.exists():
+        return []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        log.warning("Could not read Patreon manifest: %s", type(exc).__name__)
+        return []
 
-PATREON_POST_URLS = {
-    f"{episode}.5": f"https://www.patreon.com/iMagazinePL/posts/{slug}"
-    for episode, slug in PATREON_KNOWN_POSTS
-}
+    posts = []
+    for post in payload.get("posts", []):
+        try:
+            episode = int(post["episode"])
+            slug = str(post["slug"])
+            url = str(post["url"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        if urlparse(url).scheme != "https" or urlparse(url).netloc != "www.patreon.com":
+            continue
+        posts.append({"episode": episode, "slug": slug, "url": url})
+    return posts
+
+
+PATREON_MANIFEST = load_patreon_manifest()
+PATREON_KNOWN_POSTS = [(post["episode"], post["slug"]) for post in PATREON_MANIFEST]
+PATREON_POST_URLS = {f"{post['episode']}.5": post["url"] for post in PATREON_MANIFEST}
 
 
 def _fetch_patreon_post_page(slug: str) -> str | None:
     """Fetch a single Patreon post page and return its HTML."""
-    ctx = ssl.create_default_context()
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
+    ctx = create_ssl_context()
     url = f"https://www.patreon.com/iMagazinePL/posts/{slug}"
     req = urllib.request.Request(url, headers={
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
@@ -180,7 +221,7 @@ def _fetch_patreon_post_page(slug: str) -> str | None:
         return None
 
 
-def _parse_patreon_post(html: str) -> dict | None:
+def _parse_patreon_post(html: str, source_url: str = "") -> dict | None:
     """Extract title, duration, and date from a Patreon post page HTML."""
     # Extract title from og:title meta tag
     title_match = re.search(r'og:title" content="([^"]+)"', html)
@@ -209,12 +250,13 @@ def _parse_patreon_post(html: str) -> dict | None:
 
     # Extract published date
     date_match = re.search(r'"published_at":"([^"]+)"', html)
-    pub_date = date_match.group(1)[:10] if date_match else ""
+    pub_date = parse_publish_date(date_match.group(1)) if date_match else ""
 
     return {
         "title": title,
         "duration": duration,
         "date": pub_date,
+        "url": source_url,
     }
 
 
@@ -225,7 +267,7 @@ def _fetch_patreon_posts_from_list() -> list[dict]:
         html = _fetch_patreon_post_page(slug)
         if not html:
             continue
-        parsed = _parse_patreon_post(html)
+        parsed = _parse_patreon_post(html, PATREON_POST_URLS.get(f"{ep_num}.5", ""))
         if not parsed:
             continue
         parsed["episode_number"] = ep_num
@@ -238,7 +280,7 @@ def fetch_patreon_posts() -> list[dict]:
 
     1. If PATREON_RSS_URL env var is set, fetch authenticated RSS XML.
     2. Otherwise, try scraping the public posts page for post slugs (JS-rendered, may fail).
-    3. Fall back to fetching known post pages directly (hardcoded list).
+    3. Fall back to the tracked verified post manifest.
 
     Returns a list of dicts with keys: title, episode_number, duration, date.
     """
@@ -246,18 +288,22 @@ def fetch_patreon_posts() -> list[dict]:
     rss_url = os.environ.get("PATREON_RSS_URL")
     if rss_url:
         try:
-            ctx = ssl.create_default_context()
-            ctx.check_hostname = False
-            ctx.verify_mode = ssl.CERT_NONE
+            parsed = urlparse(rss_url)
+            if parsed.scheme != "https" or not parsed.netloc:
+                raise ValueError("PATREON_RSS_URL must use HTTPS")
+            ctx = create_ssl_context()
             req = urllib.request.Request(rss_url, headers={
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
                 "Accept": "application/xml",
             })
             with urllib.request.urlopen(req, timeout=30, context=ctx) as resp:
                 xml_bytes = resp.read()
-            return _parse_patreon_rss(xml_bytes)
+            posts = _parse_patreon_rss(xml_bytes)
+            if posts:
+                return posts
+            log.warning("Patreon RSS returned no Afterparty records")
         except Exception as exc:
-            log.warning(f"Patreon RSS fetch failed: {exc}")
+            log.warning("Patreon RSS fetch failed: %s", type(exc).__name__)
 
     # 2. Try scraping the public posts page
     posts = _scrape_patreon_posts_page()
@@ -265,10 +311,10 @@ def fetch_patreon_posts() -> list[dict]:
         return posts
 
     # 3. Fall back to known post list
-    log.info("Falling back to known Patreon post list.")
+    log.info("Falling back to the verified Patreon post manifest.")
     posts = _fetch_patreon_posts_from_list()
     if posts:
-        log.info(f"Found {len(posts)} Patreon Afterparty posts from known list.")
+        log.info(f"Found {len(posts)} Patreon Afterparty posts from manifest.")
     else:
         log.info("No Patreon Afterparty posts found.")
 
@@ -282,10 +328,8 @@ def _scrape_patreon_posts_page() -> list[dict]:
     Returns empty list if posts are not in the HTML.
     """
     try:
-        ctx = ssl.create_default_context()
-        ctx.check_hostname = False
-        ctx.verify_mode = ssl.CERT_NONE
-        patreon_url = "https://www.patreon.com/cw/iMagazinePL/posts"
+        ctx = create_ssl_context()
+        patreon_url = PATREON_URL
         req = urllib.request.Request(patreon_url, headers={
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
             "Accept": "text/html",
@@ -293,7 +337,7 @@ def _scrape_patreon_posts_page() -> list[dict]:
         with urllib.request.urlopen(req, timeout=30, context=ctx) as resp:
             html = resp.read().decode("utf-8", errors="replace")
     except Exception as exc:
-        log.warning(f"Patreon page fetch failed: {exc}")
+        log.warning("Patreon page fetch failed: %s", type(exc).__name__)
         return []
 
     # Extract Next.js data chunks and concatenate
@@ -305,29 +349,23 @@ def _scrape_patreon_posts_page() -> list[dict]:
         except json.JSONDecodeError:
             continue
 
-    # Look for post URL slugs in the data
-        # Pattern: /iMagazinePL/posts/NNN-afterparty-SLUG
-        slug_pattern = re.compile(r'/iMagazinePL/posts/(\d+)-afterparty-[a-z]+-(\d{6,12})')
-        slugs_found = slug_pattern.findall(all_data)
-
-        # Also try the raw HTML
-        slugs_html = slug_pattern.findall(html)
-
-    all_slugs = slugs_found + slugs_html
+    # Look for post URL slugs in the data. Both `afterparty-ID` and
+    # `afterparty-z-ID` forms occur in Patreon URLs.
+    slug_pattern = re.compile(r'/iMagazinePL/posts/(\d+-afterparty(?:-[a-z]+)?-\d{6,12})')
+    all_slugs = slug_pattern.findall(all_data) + slug_pattern.findall(html)
 
     # Deduplicate and convert to int
     seen = set()
     posts = []
-    for ep_num, post_id in all_slugs:
-        ep_num = int(ep_num)
+    for slug in all_slugs:
+        ep_num = int(slug.split("-", 1)[0])
         if ep_num in seen:
             continue
         seen.add(ep_num)
-        # Construct a slug to fetch
-        slug = f"{ep_num}-afterparty-{post_id}"
         page_html = _fetch_patreon_post_page(slug)
         if page_html:
-            parsed = _parse_patreon_post(page_html)
+            source_url = f"https://www.patreon.com/iMagazinePL/posts/{slug}"
+            parsed = _parse_patreon_post(page_html, source_url)
             if parsed:
                 parsed["episode_number"] = str(ep_num)
                 posts.append(parsed)
@@ -351,9 +389,11 @@ def _parse_patreon_rss(xml_bytes: bytes) -> list[dict]:
             continue
         ep_match = re.match(r"^(\d+):\s*\(Afterparty\)", title)
         if ep_match:
-            # Try to get duration from itunes:duration
+            # Try to get duration from either common iTunes namespace.
             duration = None
             itunes_dur = item.find(".//{http://www.itunes.com/dtds/rss-2.0.dtd}duration")
+            if itunes_dur is None:
+                itunes_dur = item.find(".//{http://www.itunes.com/dtds/podcast-1.0.dtd}duration")
             if itunes_dur is not None and itunes_dur.text:
                 try:
                     secs = int(itunes_dur.text)
@@ -363,16 +403,22 @@ def _parse_patreon_rss(xml_bytes: bytes) -> list[dict]:
                     duration = f"{h}:{m:02d}:{s:02d}"
                 except (ValueError, TypeError):
                     duration = itunes_dur.text
-            # Try to get pubDate
+            # Try to get pubDate and canonical source URL.
             date_str = ""
             pub_date = item.find("pubDate")
             if pub_date is not None and pub_date.text:
-                date_str = pub_date.text[:10]
+                date_str = parse_publish_date(pub_date.text.strip())
+            link_el = item.find("link")
+            guid_el = item.find("guid")
+            source_url = link_el.text.strip() if link_el is not None and link_el.text else ""
+            if not source_url and guid_el is not None and guid_el.text:
+                source_url = guid_el.text.strip()
             posts.append({
                 "title": title,
                 "episode_number": ep_match.group(1),
                 "duration": duration,
                 "date": date_str,
+                "url": source_url,
             })
     return posts
 
@@ -405,6 +451,7 @@ def merge_patreon_episodes(existing_ep_numbers: set, new_episodes: list) -> list
             "title": post["title"],
             "date": post.get("date", ""),
             "duration": post.get("duration") or "?",
+            "url": post.get("url") or PATREON_POST_URLS.get(patreon_ep_id, ""),
         })
         all_known_numbers.add(patreon_ep_id)
 
@@ -626,7 +673,11 @@ def generate_data_json(rows: list[dict], url_by_title: dict[str, str] | None = N
 
         category = detect_category(r["title"], r["episode"])
         dur_str = r["duration"] if r["duration"] else "?"
-        source_url = url_by_title.get(normalize_lookup_title(r["title"])) or PATREON_POST_URLS.get(r["episode"], "")
+        source_url = (
+            r.get("url")
+            or url_by_title.get(normalize_lookup_title(r["title"]))
+            or PATREON_POST_URLS.get(r["episode"], "")
+        )
 
         episodes.append({
             "episode": r["episode"],
@@ -677,6 +728,37 @@ def generate_data_json(rows: list[dict], url_by_title: dict[str, str] | None = N
     return data
 
 
+def validate_generated_data(data: dict, rows: list[dict]) -> None:
+    """Reject incomplete or inconsistent generated output before publishing."""
+    episodes = data.get("episodes")
+    if not isinstance(episodes, list) or len(episodes) != len(rows):
+        raise ValueError("Generated episode count does not match the archive")
+
+    identifiers = [str(episode.get("episode", "")) for episode in episodes]
+    if any(not identifier for identifier in identifiers):
+        raise ValueError("Generated data contains an empty episode identifier")
+
+    expected_ids = [str(row.get("episode", "")) for row in rows]
+    if identifiers != expected_ids:
+        raise ValueError("Generated data order or identifiers do not match the archive")
+
+    for episode in episodes:
+        url = episode.get("url", "")
+        parsed = urlparse(url)
+        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+            raise ValueError(f"Episode {episode.get('episode')} has no canonical source URL")
+        if not episode.get("title") or not episode.get("date"):
+            raise ValueError(f"Episode {episode.get('episode')} is missing title or date")
+
+    stats = data.get("stats", {})
+    if stats.get("total_episodes") != len(episodes):
+        raise ValueError("Generated statistics exclude one or more episodes")
+    category_count = sum(1 for episode in episodes if episode.get("category") == "afterparty")
+    expected_afterparty = sum(1 for row in rows if detect_category(row["title"], row["episode"]) == "afterparty")
+    if category_count != expected_afterparty:
+        raise ValueError("Afterparty category count does not match the archive")
+
+
 def write_data_json(data: dict, dry: bool = False) -> None:
     target = DATA_JSON_PATH if not dry else DATA_JSON_PATH.with_name(
         DATA_JSON_PATH.name.replace(".json", ".dry.json")
@@ -698,7 +780,8 @@ def update_readme(data: dict, dry: bool = False) -> None:
     total = stats["total_episodes"]
     total_hours = stats["total_listening_hours"]
     avg_duration = stats["average_duration"]
-    max_duration = round(stats["max_duration"], 1)
+    max_duration = stats["max_duration"]
+    afterparty_count = sum(1 for episode in data.get("episodes", []) if episode.get("category") == "afterparty")
 
     # Update the stats table in README.md
     # Pattern: | Liczba odcinków | <number> |
@@ -722,6 +805,11 @@ def update_readme(data: dict, dry: bool = False) -> None:
         f"| Maksymalna długość | {max_duration} min |",
         content,
     )
+    content = re.sub(
+        r"\| Afterparty \| \d+ \|",
+        f"| Afterparty | {afterparty_count} |",
+        content,
+    )
 
     target = README_PATH if not dry else README_PATH.with_name(
         README_PATH.name.replace(".md", ".dry.md")
@@ -735,28 +823,36 @@ def update_readme(data: dict, dry: bool = False) -> None:
 def sync_to_obsidian(dry: bool = False) -> None:
     """Sync archive and statistics files to the Obsidian vault directory."""
     if not VAULT_DIR.exists():
-        log.warning(f"Vault directory not found: {VAULT_DIR}")
-        return
+        if dry:
+            log.info(f"[DRY RUN] Vault directory not found: {VAULT_DIR}")
+            return
+        raise RuntimeError(f"Vault directory not found: {VAULT_DIR}")
 
     synced = 0
 
     # Sync archive
     src_archive = ARCHIVE_PATH
     dst_archive = VAULT_DIR / "Nadgryzieni Episode Archive.md"
-    if src_archive.exists():
-        if not dry:
-            dst_archive.write_bytes(src_archive.read_bytes())
-        log.info(f"Synced archive to vault: {dst_archive}")
-        synced += 1
+    if not src_archive.exists():
+        raise RuntimeError(f"Archive source not found: {src_archive}")
+    if not dry:
+        dst_archive.write_bytes(src_archive.read_bytes())
+        if dst_archive.read_bytes() != src_archive.read_bytes():
+            raise RuntimeError("Obsidian archive verification failed")
+    log.info(f"{'[DRY RUN] Would sync' if dry else 'Synced'} archive to vault: {dst_archive}")
+    synced += 1
 
     # Sync statistics
     src_stats = STATS_PATH
     dst_stats = VAULT_DIR / "Nadgryzieni Statistics.md"
-    if src_stats.exists():
-        if not dry:
-            dst_stats.write_bytes(src_stats.read_bytes())
-        log.info(f"Synced statistics to vault: {dst_stats}")
-        synced += 1
+    if not src_stats.exists():
+        raise RuntimeError(f"Statistics source not found: {src_stats}")
+    if not dry:
+        dst_stats.write_bytes(src_stats.read_bytes())
+        if dst_stats.read_bytes() != src_stats.read_bytes():
+            raise RuntimeError("Obsidian statistics verification failed")
+    log.info(f"{'[DRY RUN] Would sync' if dry else 'Synced'} statistics to vault: {dst_stats}")
+    synced += 1
 
     log.info(f"Obsidian vault sync complete: {synced} file(s) synced")
 
@@ -1043,6 +1139,63 @@ def write_stats(content: str, dry: bool = False) -> None:
     log.info(f"Statistics written: {target}")
 
 
+# ── Conditional Retry State ──────────────────────────────────────────────────
+
+def write_retry_state(path: Path, primary_date: date, pending: bool) -> None:
+    """Atomically persist whether the next Tuesday retry should run."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        path.parent.chmod(0o700)
+    except OSError:
+        pass
+    payload = {
+        "primary_date": primary_date.isoformat(),
+        "pending": bool(pending),
+        "updated_at": datetime.now().isoformat(timespec="seconds"),
+    }
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    try:
+        temporary.chmod(0o600)
+    except OSError:
+        pass
+    temporary.replace(path)
+
+
+def retry_is_due(path: Path, today: date | None = None) -> bool:
+    """Return true only for the Tuesday window immediately after a no-new Saturday run."""
+    if not path.exists():
+        return False
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        primary_date = date.fromisoformat(payload["primary_date"])
+    except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+        return False
+    today = today or date.today()
+    return bool(payload.get("pending")) and today - primary_date == timedelta(days=3)
+
+
+def acquire_pipeline_lock() -> bool:
+    """Acquire a process lock that is automatically released if the process exits."""
+    global _LOCK_HANDLE
+    import fcntl
+
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    try:
+        STATE_DIR.chmod(0o700)
+    except OSError:
+        pass
+    _LOCK_HANDLE = LOCK_PATH.open("a+", encoding="utf-8")
+    try:
+        fcntl.flock(_LOCK_HANDLE.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        _LOCK_HANDLE.close()
+        _LOCK_HANDLE = None
+        log.info("Another Nadgryzieni pipeline run is active; skipping this invocation.")
+        return False
+    return True
+
+
 # ── Cache-Busting ────────────────────────────────────────────────────────────
 
 def get_cache_version() -> int:
@@ -1050,15 +1203,25 @@ def get_cache_version() -> int:
     if CACHE_VERSION_FILE.exists():
         try:
             return int(CACHE_VERSION_FILE.read_text().strip())
-        except ValueError:
+        except (OSError, ValueError):
             pass
-    return 100  # Default starting version
+    versions = []
+    for path, pattern in (
+        (INDEX_HTML_PATH, r"\?v=(\d+)"),
+        (SCRIPT_JS_PATH, r"DATA_VERSION\s*=\s*(\d+)")
+    ):
+        try:
+            versions.extend(int(value) for value in re.findall(pattern, path.read_text(encoding="utf-8")))
+        except (OSError, ValueError):
+            continue
+    return max(versions, default=100)
 
 
-def bump_cache_version() -> int:
+def bump_cache_version(dry: bool = False) -> int:
     """Increment and save the cache-busting version number."""
     v = get_cache_version() + 1
-    CACHE_VERSION_FILE.write_text(str(v), encoding="utf-8")
+    if not dry:
+        CACHE_VERSION_FILE.write_text(str(v) + "\n", encoding="utf-8")
     return v
 
 
@@ -1086,35 +1249,57 @@ def update_cache_busting(version: int, dry: bool = False) -> None:
 
 # ── Git Operations ───────────────────────────────────────────────────────────
 
-def git_commit_and_push(message: str, dry: bool = False) -> None:
-    """Commit and push changes to Git."""
+def git_commit_and_push(message: str, dry: bool = False) -> bool:
+    """Stage only generated files, commit if needed, and retry the push safely."""
     if dry:
         log.info(f"[DRY RUN] Would commit: {message}")
-        return
+        return False
 
-    import subprocess
     repo = str(REPO_DIR)
-    cmds = [
-        ["git", "add", "-A"],
+    status_cmd = ["git", "status", "--porcelain", "--untracked-files=all", "--", *PUBLISH_PATHS]
+    status = subprocess.run(status_cmd, cwd=repo, capture_output=True, text=True)
+    if status.returncode != 0:
+        raise RuntimeError(f"Git status failed: {status.stderr.strip()}")
+    if not status.stdout.strip():
+        log.info("No generated file changes to commit.")
+        return False
+
+    add_cmd = ["git", "add", "--", *PUBLISH_PATHS]
+    added = subprocess.run(add_cmd, cwd=repo, capture_output=True, text=True)
+    if added.returncode != 0:
+        raise RuntimeError(f"Git staging failed: {added.stderr.strip()}")
+
+    staged = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=repo)
+    if staged.returncode == 0:
+        log.info("Generated files produced no staged diff.")
+        return False
+    if staged.returncode != 1:
+        raise RuntimeError("Could not inspect the staged Git diff")
+
+    commit = subprocess.run(
         ["git", "commit", "-m", message],
-        ["git", "push", "origin", "main"],
-    ]
-    for cmd in cmds:
-        log.info(f"Running: {' '.join(cmd)}")
-        result = subprocess.run(cmd, cwd=repo, capture_output=True, text=True)
-        if result.returncode != 0:
-            log.error(f"Git command failed: {' '.join(cmd)}")
-            log.error(f"stderr: {result.stderr}")
-            raise RuntimeError(f"Git command failed: {result.stderr}")
-    log.info("Git commit and push complete")
+        cwd=repo,
+        capture_output=True,
+        text=True,
+    )
+    if commit.returncode != 0:
+        raise RuntimeError(f"Git commit failed: {commit.stderr.strip()}")
+
+    push_cmd = ["git", "push", "origin", "HEAD:main"]
+    for attempt in range(1, 4):
+        pushed = subprocess.run(push_cmd, cwd=repo, capture_output=True, text=True)
+        if pushed.returncode == 0:
+            log.info("Git commit and push complete")
+            return True
+        log.warning("Git push attempt %d/3 failed: %s", attempt, pushed.stderr.strip())
+        if attempt < 3:
+            time.sleep(2 ** attempt)
+    raise RuntimeError("Git push failed after 3 attempts")
 
 
 # ── Main Pipeline ────────────────────────────────────────────────────────────
 
-def main():
-    dry = "--dry" in sys.argv
-    force = "--force" in sys.argv
-
+def run_pipeline(dry: bool = False, force: bool = False) -> int:
     log.info("=" * 60)
     log.info("Nadgryzieni Pipeline — starting")
     log.info(f"Mode: {'DRY RUN' if dry else 'LIVE'}")
@@ -1171,6 +1356,7 @@ def main():
             "title": item["title"],
             "date": item["date"],
             "duration": duration,
+            "url": item.get("url", ""),
         })
         existing_ep_numbers.add(ep_num)
 
@@ -1183,10 +1369,15 @@ def main():
             log.info(f"    #{ep['episode']}: {ep['title'][:60]}...")
         new_episodes.extend(patreon_new)
         existing_ep_numbers.update(ep["episode"] for ep in patreon_new)
+        url_by_title.update({
+            normalize_lookup_title(ep["title"]): ep.get("url", "")
+            for ep in patreon_new
+            if ep.get("title") and ep.get("url")
+        })
 
     if not new_episodes and not force:
         log.info("No new episodes found. Exiting silently.")
-        return
+        return 0
 
     if new_episodes:
         log.info(f"  Found {len(new_episodes)} new episode(s):")
@@ -1221,47 +1412,75 @@ def main():
     # Step 5: Generate data.json
     log.info("Step 5: Generating data.json...")
     data = generate_data_json(all_rows, url_by_title)
+    validate_generated_data(data, all_rows)
     write_data_json(data, dry=dry)
 
     # Step 5b: Update README.md stats table
     log.info("Step 5b: Updating README.md...")
     update_readme(data, dry=dry)
 
-    # Step 6: Generate statistics (only when new episodes are found)
-    if new_episodes:
+    # Step 6: Generate statistics when publishing or explicitly forced.
+    if new_episodes or force:
         log.info("Step 6: Generating statistics...")
         stats_md = generate_statistics(all_rows)
         write_stats(stats_md, dry=dry)
     else:
         log.info("Step 6: Skipping statistics (no new episodes).")
 
-    # Step 7: Bump cache-busting (only when new episodes are found)
-    if new_episodes:
+    # Step 7: Bump cache-busting when publishing or explicitly forced.
+    if new_episodes or force:
         log.info("Step 7: Bumping cache-busting version...")
-        new_version = bump_cache_version()
+        new_version = bump_cache_version(dry=dry)
         update_cache_busting(new_version, dry=dry)
     else:
         log.info("Step 7: Skipping cache-busting bump (no new episodes).")
 
-    # Step 8: Git commit and push
-    if new_episodes:
-        log.info("Step 8: Committing and pushing to Git...")
-        today = date.today().isoformat()
-        commit_msg = f"Nadgryzieni archive update – {today} ({len(new_episodes)} new episodes)"
-        git_commit_and_push(commit_msg, dry=dry)
-
-    # Step 9: Sync to Obsidian vault (only when new episodes are found)
-    if new_episodes:
-        log.info("Step 9: Syncing to Obsidian vault...")
+    # Step 8: Sync to Obsidian before publishing, then verify Git changes.
+    if new_episodes or force:
+        log.info("Step 8: Syncing to Obsidian vault...")
         sync_to_obsidian(dry=dry)
-    else:
-        log.info("Step 9: Skipping Obsidian sync (no new episodes).")
+        log.info("Step 9: Committing and pushing to Git...")
+        today = date.today().isoformat()
+        action = "regeneration" if force and not new_episodes else "archive update"
+        commit_msg = f"Nadgryzieni {action} – {today} ({len(new_episodes)} new episodes)"
+        git_commit_and_push(commit_msg, dry=dry)
 
     log.info("=" * 60)
     log.info(f"Pipeline complete! {len(new_episodes)} new episode(s) added.")
     if not new_episodes:
         log.info("No new episodes — archive and data.json regenerated (force mode).")
     log.info("=" * 60)
+    return len(new_episodes)
+
+
+def main() -> int:
+    dry = "--dry" in sys.argv
+    force = "--force" in sys.argv
+    run_kind = os.environ.get("NADGRYZIENI_RUN_KIND", "manual").lower()
+    today = date.today()
+
+    if run_kind == "retry" and not dry and not retry_is_due(RETRY_STATE_PATH, today):
+        log.info("No pending Saturday run; skipping conditional retry.")
+        return 0
+
+    if not acquire_pipeline_lock():
+        return 0
+
+    if run_kind == "primary" and not dry:
+        write_retry_state(RETRY_STATE_PATH, today, pending=False)
+
+    try:
+        new_count = run_pipeline(dry=dry, force=force)
+    except Exception:
+        if run_kind in {"primary", "retry"} and not dry:
+            write_retry_state(RETRY_STATE_PATH, today, pending=False)
+        raise
+
+    if run_kind == "primary" and not dry:
+        write_retry_state(RETRY_STATE_PATH, today, pending=new_count == 0)
+    elif run_kind == "retry" and not dry:
+        write_retry_state(RETRY_STATE_PATH, today, pending=False)
+    return new_count
 
 
 if __name__ == "__main__":

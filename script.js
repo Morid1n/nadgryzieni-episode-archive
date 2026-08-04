@@ -143,13 +143,21 @@ function normalizeEpisodes(episodes) {
 function renderStats(data) {
     const stats = data.stats || {};
     const maxDuration = normalizedEpisodes.reduce((max, episode) => Math.max(max, episode.y), 0);
+    const firstDate = normalizedEpisodes[0]?.date || '';
+    const lastDate = normalizedEpisodes.at(-1)?.date || '';
+    const firstYear = firstDate.slice(0, 4);
+    const lastYear = lastDate.slice(0, 4);
+    const yearRange = firstYear && lastYear ? `${firstYear}—${lastYear}` : '—';
+    const totalEpisodes = stats.total_episodes ?? normalizedEpisodes.length;
     setText('#total-episodes', formatNumber(stats.total_episodes ?? normalizedEpisodes.length, 0));
     setText('#total-hours', formatNumber(stats.total_listening_hours));
     setText('#avg-duration', formatNumber(stats.average_duration));
     setText('#max-duration', formatNumber(stats.max_duration ?? maxDuration, 0));
     setText('#chart-average', `${formatNumber(getAverageDuration(data))} min`);
-    setText('#hero-episode-count', formatNumber(stats.total_episodes ?? normalizedEpisodes.length, 0));
-    setText('#hero-last-date', formatDate(normalizedEpisodes.at(-1)?.date));
+    setText('#hero-episode-count', formatNumber(totalEpisodes, 0));
+    setText('#hero-last-date', formatDate(lastDate));
+    setText('#archive-year-range', yearRange);
+    setText('#hero-lede', `${formatNumber(totalEpisodes, 0)} odcinków zebranych w jednym, żywym archiwum.`);
     setText('#footer-update', formatDate(normalizedEpisodes.at(-1)?.date));
 }
 
@@ -215,6 +223,7 @@ function renderYearBars() {
     const years = Object.keys(counts).sort();
     const max = Math.max(...Object.values(counts), 1);
     setText('#year-range', years.length ? `${years[0]}—${years.at(-1)}` : '—');
+    setText('#year-axis-start', years[0] || '—');
     setText('#year-axis-end', years.at(-1) || '—');
     container.replaceChildren();
     years.forEach((year) => {
@@ -329,6 +338,7 @@ function renderYearlyStats() {
     setText('#yearly-highlight-median', `${formatNumber(longestMedian.median)} min`);
     setText('#yearly-highlight-median-meta', `${getYearLabel(longestMedian)} · mediana`);
     setText('#yearly-analysis-range', `Zakres szczegółowej analizy: ${rows[0].year}—${rows.at(-1).year}`);
+    setText('#yearly-analysis-summary', `Liczba, długość i rytm publikacji od ${rows[0].year} do ${rows.at(-1).year}. Dane pokazują także niepełne okresy.`);
     const partialPeriods = rows.filter((row) => row.coverage !== 'Pełny rok').map((row) => `${row.year}: ${row.coverage}`).join(' · ');
     setText('#yearly-coverage-note', partialPeriods || 'Wszystkie lata obejmują pełny zakres danych');
     const currentRow = rows.find((row) => row.isCurrentYear);

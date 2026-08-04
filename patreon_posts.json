@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "description": "Verified public Patreon Afterparty posts used when authenticated RSS and public discovery are unavailable.",
+  "posts": [
+    {
+      "episode": 595,
+      "slug": "595-afterparty-z-163700509",
+      "url": "https://www.patreon.com/iMagazinePL/posts/595-afterparty-z-163700509"
+    },
+    {
+      "episode": 596,
+      "slug": "596-afterparty-z-164064600",
+      "url": "https://www.patreon.com/iMagazinePL/posts/596-afterparty-z-164064600"
+    },
+    {
+      "episode": 597,
+      "slug": "597-afterparty-164068251",
+      "url": "https://www.patreon.com/iMagazinePL/posts/597-afterparty-164068251"
+    },
+    {
+      "episode": 598,
+      "slug": "598-afterparty-164626802",
+      "url": "https://www.patreon.com/iMagazinePL/posts/598-afterparty-164626802"
+    },
+    {
+      "episode": 599,
+      "slug": "599-afterparty-z-165363196",
+      "url": "https://www.patreon.com/iMagazinePL/posts/599-afterparty-z-165363196"
+    }
+  ]
+}

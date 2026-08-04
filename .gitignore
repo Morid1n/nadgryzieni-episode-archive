@@ -1,0 +1,5 @@
+__pycache__/
+*.py[cod]
+*.dry.json
+*.dry.md
+.DS_Store
