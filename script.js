@@ -1,7 +1,7 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 123;
+const DATA_VERSION = 124;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 const YEARLY_STATS_START = 2021;
@@ -9,7 +9,7 @@ const YEARLY_STATS_START = 2021;
 let chartInstance = null;
 let chartData = null;
 let normalizedEpisodes = [];
-let chartMode = 'scatter';
+let chartMode = 'line';
 const archiveState = {
     query: '',
     year: 'all',
