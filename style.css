@@ -1566,15 +1566,46 @@ html[data-theme="dark"] .theme-icon::after {
     margin: 0;
 }
 
-.footer-credit {
+.footer-credit-row {
     flex: 0 0 100%;
+    display: flex;
+    justify-content: center;
     width: 100%;
     padding: 2px 0 20px;
-    border-top: 1px solid var(--border);
-    color: var(--muted);
+}
+
+.footer-credit {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 8px 14px;
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface) 88%, var(--accent) 12%);
+    color: var(--ink-soft);
     font-size: 0.58rem;
-    letter-spacing: 0.04em;
-    text-align: center;
+    letter-spacing: 0.03em;
+    line-height: 1;
+}
+
+.footer-credit-mark {
+    width: 7px;
+    height: 7px;
+    flex: 0 0 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.footer-credit strong {
+    color: var(--ink);
+    font-weight: 800;
+}
+
+.footer-credit-ai {
+    color: var(--accent);
+    font-weight: 700;
 }
 
 .footer-links {
@@ -1796,6 +1827,11 @@ html[data-theme="dark"] .theme-icon::after {
         justify-content: center;
         gap: 16px;
         padding-block: 27px;
+    }
+
+    .footer-credit-row {
+        flex: 0 0 auto;
+        align-self: stretch;
     }
 
     .footer-links {
