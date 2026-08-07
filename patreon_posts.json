@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "description": "Verified public Patreon Afterparty posts used when authenticated RSS and public discovery are unavailable.",
+  "version": 2,
+  "description": "Verified Patreon Afterparty posts. Browser-assisted entries may include title, date, and duration metadata when Patreon blocks non-browser page fetches.",
   "posts": [
     {
       "episode": 595,
@@ -26,6 +26,14 @@
       "episode": 599,
       "slug": "599-afterparty-z-165363196",
       "url": "https://www.patreon.com/iMagazinePL/posts/599-afterparty-z-165363196"
+    },
+    {
+      "episode": 600,
+      "slug": "600-afterparty-166017605",
+      "url": "https://www.patreon.com/iMagazinePL/posts/600-afterparty-166017605",
+      "title": "600: (Afterparty) Wojtek kupuje elektryczny skuter, hulajnogę albo nic",
+      "date": "2026-08-07",
+      "duration": "0:53:55"
     }
   ]
 }

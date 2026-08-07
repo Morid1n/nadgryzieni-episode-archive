@@ -5709,11 +5709,21 @@
       "category": "main",
       "year": 2026,
       "url": "https://retrorocketnetwork.pl/600-pierwsze-smart-okulary-samsunga/"
+    },
+    {
+      "episode": "600.5",
+      "title": "600: (Afterparty) Wojtek kupuje elektryczny skuter, hulajnogę albo nic",
+      "date": "2026-08-07",
+      "duration": "0:53:55",
+      "minutes": 53.92,
+      "category": "afterparty",
+      "year": 2026,
+      "url": "https://www.patreon.com/iMagazinePL/posts/600-afterparty-166017605"
     }
   ],
   "stats": {
-    "total_episodes": 571,
-    "total_listening_hours": 980.7,
+    "total_episodes": 572,
+    "total_listening_hours": 981.6,
     "average_duration": 103.0,
     "min_duration": 0.18,
     "max_duration": 288.65
