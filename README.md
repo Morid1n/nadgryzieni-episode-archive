@@ -48,7 +48,9 @@ Każdy odcinek zawiera: numer, tytuł, datę, długość w minutach, sformatowan
 
 ## ⚙️ Automatyzacja
 
-Aktywny pipeline jest uruchamiany z profilu R2-D2. Główny wrapper działa w sobotę o 04:00 czasu lokalnego, czyli w noc z piątku na sobotę. Drugi wrapper działa we wtorek o tej samej porze, ale wykonuje pipeline wyłącznie wtedy, gdy sobotni przebieg nie znalazł nowych odcinków. Stan retry jest przechowywany poza repozytorium w chronionym pliku profilu.
+Aktywny pipeline jest uruchamiany z profilu R2-D2. Główny job Hermesa działa w sobotę o 04:00 czasu lokalnego, czyli w noc z piątku na sobotę. Przed uruchomieniem deterministycznego wrappera korzysta z narzędzi przeglądarki Hermesa do odczytu wyrenderowanych wpisów Patreon i rejestruje nowe metadane przez `cron/register-patreon-post.py`. Drugi wrapper działa we wtorek o tej samej porze, ale wykonuje pipeline wyłącznie wtedy, gdy sobotni przebieg nie znalazł nowych odcinków. Stan retry jest przechowywany poza repozytorium w chronionym pliku profilu.
+
+`patreon_posts.json` jest śledzonym manifestem zweryfikowanych wpisów Afterparty. Może zawierać tytuł, datę i długość zebrane przez przeglądarkę, ponieważ Patreon blokuje zwykłe żądania HTTP. Dane uwierzytelniające nie są zapisywane w repozytorium.
 
 Pipeline wymaga zweryfikowanego wygenerowanego outputu przed synchronizacją Obsidian i publikacją GitHub Pages. Gdy nie ma nowych odcinków, nie tworzy commita ani nie wykonuje pushu.
 

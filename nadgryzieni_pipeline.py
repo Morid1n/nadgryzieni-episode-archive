@@ -82,6 +82,7 @@ PUBLISH_PATHS = [
     "Nadgryzieni Statistics.md",
     "README.md",
     "data.json",
+    "patreon_posts.json",
     "index.html",
     "script.js",
     ".cache-version",
@@ -178,7 +179,12 @@ def parse_rss_items(xml_bytes: bytes) -> list[dict]:
 # ── Patreon Scraping ──────────────────────────────────────────────────────────
 
 def load_patreon_manifest(path: Path = PATREON_MANIFEST_PATH) -> list[dict]:
-    """Load the tracked Patreon fallback manifest without exposing credentials."""
+    """Load the tracked Patreon fallback manifest without exposing credentials.
+
+    Browser-assisted cron runs may include verified title/date/duration metadata
+    because Patreon can block the pipeline's non-browser post-page fetch. Those
+    fields are optional for backwards compatibility with older manifest entries.
+    """
     if not path.exists():
         return []
     try:
@@ -191,13 +197,44 @@ def load_patreon_manifest(path: Path = PATREON_MANIFEST_PATH) -> list[dict]:
     for post in payload.get("posts", []):
         try:
             episode = int(post["episode"])
-            slug = str(post["slug"])
-            url = str(post["url"])
+            slug = str(post["slug"]).strip()
+            url = str(post["url"]).strip()
         except (KeyError, TypeError, ValueError):
             continue
-        if urlparse(url).scheme != "https" or urlparse(url).netloc != "www.patreon.com":
+        parsed_url = urlparse(url)
+        if (
+            parsed_url.scheme != "https"
+            or parsed_url.netloc != "www.patreon.com"
+            or not re.fullmatch(rf"{episode}-afterparty(?:-[a-z0-9]+)*-\d{{6,12}}", slug)
+        ):
             continue
-        posts.append({"episode": episode, "slug": slug, "url": url})
+
+        entry = {"episode": episode, "slug": slug, "url": url}
+        title = post.get("title")
+        if title is not None:
+            title = str(title).strip()
+            if not title or "(Afterparty)" not in title:
+                continue
+            entry["title"] = title
+
+        pub_date = post.get("date")
+        if pub_date is not None:
+            pub_date = str(pub_date).strip()
+            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", pub_date):
+                continue
+            entry["date"] = pub_date
+
+        duration = post.get("duration")
+        if duration is not None:
+            duration = str(duration).strip()
+            duration_parts = duration.split(":")
+            if len(duration_parts) not in (2, 3) or any(
+                not part.isdigit() for part in duration_parts
+            ):
+                continue
+            entry["duration"] = duration
+
+        posts.append(entry)
     return posts
 
 
@@ -261,29 +298,57 @@ def _parse_patreon_post(html: str, source_url: str = "") -> dict | None:
 
 
 def _fetch_patreon_posts_from_list() -> list[dict]:
-    """Fetch known Patreon Afterparty post pages and extract episode data."""
+    """Fetch known Patreon posts, using browser-verified manifest metadata when present."""
     posts = []
-    for ep_num, slug in PATREON_KNOWN_POSTS:
-        html = _fetch_patreon_post_page(slug)
-        if not html:
-            continue
-        parsed = _parse_patreon_post(html, PATREON_POST_URLS.get(f"{ep_num}.5", ""))
-        if not parsed:
-            continue
+    for post in PATREON_MANIFEST:
+        ep_num = post["episode"]
+        slug = post["slug"]
+        if post.get("title"):
+            parsed = {
+                "title": post["title"],
+                "duration": post.get("duration"),
+                "date": post.get("date", ""),
+                "url": post["url"],
+            }
+        else:
+            html = _fetch_patreon_post_page(slug)
+            if not html:
+                continue
+            parsed = _parse_patreon_post(html, post["url"])
+            if not parsed:
+                continue
         parsed["episode_number"] = ep_num
         posts.append(parsed)
     return posts
 
 
+def _merge_patreon_posts(*sources: list[dict]) -> list[dict]:
+    """Merge Patreon source results by episode, preferring verified metadata."""
+    merged: dict[str, dict] = {}
+    for source in sources:
+        for post in source:
+            key = str(post.get("episode_number") or post.get("episode") or post.get("url") or "").strip()
+            if not key:
+                continue
+            current = merged.setdefault(key, {})
+            for field, value in post.items():
+                if value not in (None, ""):
+                    current[field] = value
+    return list(merged.values())
+
+
 def fetch_patreon_posts() -> list[dict]:
-    """Fetch Patreon Afterparty episodes from multiple sources.
+    """Fetch and merge Patreon Afterparty episodes from all available sources.
 
     1. If PATREON_RSS_URL env var is set, fetch authenticated RSS XML.
-    2. Otherwise, try scraping the public posts page for post slugs (JS-rendered, may fail).
-    3. Fall back to the tracked verified post manifest.
+    2. Try scraping the public posts page for post slugs (JS-rendered, may fail).
+    3. Merge the tracked verified post manifest, including browser-verified metadata.
 
-    Returns a list of dicts with keys: title, episode_number, duration, date.
+    Returns a deduplicated list of dicts with keys: title, episode_number,
+    duration, date, and url where available.
     """
+    source_results: list[list[dict]] = []
+
     # 1. Try authenticated RSS
     rss_url = os.environ.get("PATREON_RSS_URL")
     if rss_url:
@@ -298,26 +363,32 @@ def fetch_patreon_posts() -> list[dict]:
             })
             with urllib.request.urlopen(req, timeout=30, context=ctx) as resp:
                 xml_bytes = resp.read()
-            posts = _parse_patreon_rss(xml_bytes)
-            if posts:
-                return posts
-            log.warning("Patreon RSS returned no Afterparty records")
+            rss_posts = _parse_patreon_rss(xml_bytes)
+            if rss_posts:
+                source_results.append(rss_posts)
+            else:
+                log.warning("Patreon RSS returned no Afterparty records")
         except Exception as exc:
             log.warning("Patreon RSS fetch failed: %s", type(exc).__name__)
 
     # 2. Try scraping the public posts page
-    posts = _scrape_patreon_posts_page()
-    if posts:
-        return posts
+    public_posts = _scrape_patreon_posts_page()
+    if public_posts:
+        source_results.append(public_posts)
 
-    # 3. Fall back to known post list
-    log.info("Falling back to the verified Patreon post manifest.")
-    posts = _fetch_patreon_posts_from_list()
+    # 3. Merge the verified post manifest. This is intentionally consulted even
+    # when another source returned records so browser-discovered posts cannot be
+    # lost when authenticated RSS is incomplete.
+    log.info("Loading the verified Patreon post manifest.")
+    manifest_posts = _fetch_patreon_posts_from_list()
+    if manifest_posts:
+        source_results.append(manifest_posts)
+
+    posts = _merge_patreon_posts(*source_results)
     if posts:
-        log.info(f"Found {len(posts)} Patreon Afterparty posts from manifest.")
+        log.info("Found %d Patreon Afterparty record(s) across configured sources.", len(posts))
     else:
         log.info("No Patreon Afterparty posts found.")
-
     return posts
 
 

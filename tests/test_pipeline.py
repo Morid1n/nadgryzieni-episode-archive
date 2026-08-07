@@ -43,6 +43,41 @@ class PipelineHardeningTests(unittest.TestCase):
         self.assertEqual(posts[0]["duration"], "1:01:01")
         self.assertEqual(posts[0]["url"], "https://www.patreon.com/iMagazinePL/posts/600-afterparty-123456")
 
+    def test_browser_manifest_metadata_bypasses_blocked_patreon_page_fetch(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "patreon_posts.json"
+            manifest_path.write_text(json.dumps({
+                "version": 2,
+                "posts": [{
+                    "episode": 600,
+                    "slug": "600-afterparty-166017605",
+                    "url": "https://www.patreon.com/iMagazinePL/posts/600-afterparty-166017605",
+                    "title": "600: (Afterparty) Browser verified",
+                    "date": "2026-08-07",
+                    "duration": "0:53:55",
+                }],
+            }), encoding="utf-8")
+            manifest = pipeline.load_patreon_manifest(manifest_path)
+            self.assertEqual(manifest[0]["duration"], "0:53:55")
+            with patch.object(pipeline, "PATREON_MANIFEST", manifest):
+                with patch.object(
+                    pipeline,
+                    "_fetch_patreon_post_page",
+                    side_effect=AssertionError("browser metadata should avoid HTTP page fetch"),
+                ):
+                    posts = pipeline._fetch_patreon_posts_from_list()
+            self.assertEqual(posts[0]["episode_number"], 600)
+            self.assertEqual(posts[0]["date"], "2026-08-07")
+
+    def test_patreon_sources_merge_browser_manifest_with_rss(self):
+        merged = pipeline._merge_patreon_posts(
+            [{"episode_number": 600, "title": "RSS title", "date": "2026-08-07"}],
+            [{"episode_number": 600, "title": "600: (Afterparty) Browser title", "duration": "0:53:55", "url": "https://www.patreon.com/iMagazinePL/posts/600-afterparty-166017605"}],
+        )
+        self.assertEqual(len(merged), 1)
+        self.assertEqual(merged[0]["title"], "600: (Afterparty) Browser title")
+        self.assertEqual(merged[0]["duration"], "0:53:55")
+
     def test_patreon_merge_retains_source_url(self):
         with patch.object(
             pipeline,
@@ -73,11 +108,11 @@ class PipelineHardeningTests(unittest.TestCase):
     def test_generated_data_validation_requires_unique_ids_and_urls(self):
         rows = [{
             "counter": "1",
-            "episode": "600.5",
-            "title": "600: (Afterparty) Test",
+            "episode": "601.5",
+            "title": "601: (Afterparty) Test",
             "date": "2026-08-03",
             "duration": "1:01:01",
-            "url": "https://www.patreon.com/iMagazinePL/posts/600-afterparty-123456",
+            "url": "https://www.patreon.com/iMagazinePL/posts/601-afterparty-123456",
         }]
         data = pipeline.generate_data_json(rows)
         pipeline.validate_generated_data(data, rows)
