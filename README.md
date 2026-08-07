@@ -17,8 +17,8 @@ Strona prezentuje interaktywny wykres punktowy pokazujący długość każdego o
 
 | Statystyka | Wartość |
 |------------|---------|
-| Liczba odcinków | 570 |
-| Godziny odsłuchu | 978.1 |
+| Liczba odcinków | 571 |
+| Godziny odsłuchu | 980.7 |
 | Średnia długość | 103.0 min |
 | Maksymalna długość | 288.65 min |
 | Afterparty | 8 |

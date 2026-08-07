@@ -570,3 +570,4 @@
 | 568 | 598.5 | 598: (Afterparty) Latający skuter – dwie godziny na jednym tankowaniu                                        | 2026-07-23   | 0:29:17  |
 | 569 | 599   | 599: Thomas stracił wszystko, nowy Z Fold8 i więcej Hermesa                                                  | 2026-07-31   | 2:47:33  |
 | 570 | 599.5 | 599: (Afterparty) Wojtek leci do iMax 70 mm, a Michał od roku koduje z AI                                    | 2026-07-31   | 1:19:57  |
+| 571 | 600   | 600: Pierwsze smart okulary Samsunga                                                                         | 2026-08-07   | 2:32:24  |
