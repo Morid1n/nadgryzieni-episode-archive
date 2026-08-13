@@ -2,7 +2,7 @@
 title: Nadgryzieni Editorial Profile
 type: profile
 created: 2026-08-04
-updated: 2026-08-04
+updated: 2026-08-13
 source: Nadgryzieni Episode Archive.md; Nadgryzieni Statistics.md; data.json
 tags: [nadgryzieni, podcast, editorial-profile, topic-research]
 ---
@@ -111,18 +111,34 @@ Do not add an item merely because it is popular or has an AI keyword. Normally e
 
 If a page cannot be extracted, the collector must not invent a summary. It may retain the URL only as an explicitly unverified lead for later review; the normal automated path should skip it.
 
-## Preferred research sources
+## Exceptional-topic discovery lanes
 
-The daily collector currently checks:
+The Volonaut Airbike is an example of the desired **editorial quality**, not a literal search category: a tangible, unusual product or project with credible evidence, clear real-world status, a strong visual or human story, and enough engineering, design, safety, ownership, or practical trade-offs to sustain a conversation.
 
-- iMagazine.pl — `https://imagazine.pl/feed/`
-- The Verge — `https://www.theverge.com/rss/index.xml`
-- Daring Fireball — `https://daringfireball.net/feeds/main`
-- Michael Tsai — `https://mjtsai.com/blog/feed/`
+The discovery workflow should deliberately search five adjacent lanes:
+
+- **technology:** robotics, unusual interfaces, local/on-device systems, smart home, creator and accessibility tools, advanced materials, energy systems, spatial computing, privacy tools, and distinctive consumer hardware;
+- **mobility:** personal mobility, EVs, aviation/aerospace, bicycles, marine technology, infrastructure, travel technology, and unusual engineering;
+- **health:** wearables, diagnostics, rehabilitation, prosthetics, assistive devices, sleep/exercise technology, home health, medical robotics, and human-performance tools;
+- **lifestyle:** design, craft, materials, sustainability, food, clothing, audio, photography, home life, and technology-shaped routines or consumer culture;
+- **science:** space, climate, energy, food systems, materials, biology, and public-interest technology with a concrete artifact, experiment, prototype, or consequence.
+
+Novelty alone is insufficient. Label each item as `research`, `prototype`, `demonstration`, `available`, `limited-release`, or `unclear`. Health candidates require regulator, clinical, peer-reviewed, university/research-institution, or genuinely independent specialist evidence and must never be presented as medical advice.
+
+## Evidence and source strategy
+
+Use three evidence tiers:
+
+1. **Primary/authoritative:** official technical documentation, project and research-lab pages, regulators, standards bodies, papers, trials, and original demonstrations.
+2. **Independent specialist:** substantive hands-on, engineering, design, mobility, health, or science reporting.
+3. **Discovery-only:** broad aggregators, social/video discovery, crowdfunding, Product Hunt, and similar lead sources. A tier-3 lead must be promoted to reachable tier-1 or tier-2 evidence before selection.
+
+The deterministic feed registry currently enables only:
+
 - Hacker News — `https://news.ycombinator.com/rss`
 - Techmeme — `https://www.techmeme.com/feed.xml`
 
-This is a starting roster, not a closed world. New sources should be added when they repeatedly produce primary, technical, Polish, European, or hands-on material that survives the rubric.
+A separate web-assisted pilot stages validated exceptional leads before the 06:00 collector. During the pilot, those leads participate only in explicit dry runs; they cannot reach Apple Notes until live selection is deliberately enabled after quality review. The 06:00 deterministic collector remains the only Apple Notes writer.
 
 ## Apple Notes output contract
 
