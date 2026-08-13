@@ -131,7 +131,7 @@ Use three evidence tiers:
 
 1. **Primary/authoritative:** official technical documentation, project and research-lab pages, regulators, standards bodies, papers, trials, and original demonstrations.
 2. **Independent specialist:** substantive hands-on, engineering, design, mobility, health, or science reporting.
-3. **Discovery-only:** broad aggregators, social/video discovery, crowdfunding, Product Hunt, and similar lead sources. A tier-3 lead must be promoted to reachable tier-1 or tier-2 evidence before selection.
+3. **Discovery-only:** broad aggregators, social/video discovery, crowdfunding, Product Hunt, and similar lead sources. Every exceptional lead requires reachable corroborating evidence on a different hostname from its canonical page; a tier-3 lead must be promoted to tier-1 or tier-2 evidence before selection.
 
 The deterministic feed registry currently enables only:
 
