@@ -5719,12 +5719,32 @@
       "category": "afterparty",
       "year": 2026,
       "url": "https://www.patreon.com/iMagazinePL/posts/600-afterparty-166017605"
+    },
+    {
+      "episode": "601",
+      "title": "601: Biurko podnoszone sterowane z MacBooka",
+      "date": "2026-08-14",
+      "duration": "50:42",
+      "minutes": 50.7,
+      "category": "main",
+      "year": 2026,
+      "url": "https://retrorocketnetwork.pl/601-biurko-podnoszone-sterowane-z-macbooka/"
+    },
+    {
+      "episode": "601.5",
+      "title": "601: (Afterparty) Podcasty z kotami opanowują YT, MacBook Air i ChatGPT Business",
+      "date": "2026-08-14",
+      "duration": "0:46:23",
+      "minutes": 46.38,
+      "category": "afterparty",
+      "year": 2026,
+      "url": "https://www.patreon.com/iMagazinePL/posts/601-afterparty-z-166650927"
     }
   ],
   "stats": {
-    "total_episodes": 572,
-    "total_listening_hours": 981.6,
-    "average_duration": 103.0,
+    "total_episodes": 574,
+    "total_listening_hours": 983.2,
+    "average_duration": 102.8,
     "min_duration": 0.18,
     "max_duration": 288.65
   },
@@ -5778,5 +5798,5 @@
       "color": "#7bdcb5"
     }
   },
-  "average_duration": 103.0
+  "average_duration": 102.8
 }

@@ -572,3 +572,5 @@
 | 570 | 599.5 | 599: (Afterparty) Wojtek leci do iMax 70 mm, a Michał od roku koduje z AI                                    | 2026-07-31   | 1:19:57  |
 | 571 | 600   | 600: Pierwsze smart okulary Samsunga                                                                         | 2026-08-07   | 2:32:24  |
 | 572 | 600.5 | 600: (Afterparty) Wojtek kupuje elektryczny skuter, hulajnogę albo nic                                       | 2026-08-07   | 0:53:55  |
+| 573 | 601   | 601: Biurko podnoszone sterowane z MacBooka                                                                  | 2026-08-14   | 50:42    |
+| 574 | 601.5 | 601: (Afterparty) Podcasty z kotami opanowują YT, MacBook Air i ChatGPT Business                             | 2026-08-14   | 0:46:23  |
