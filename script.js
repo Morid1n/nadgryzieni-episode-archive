@@ -131,6 +131,7 @@ function normalizeEpisodes(episodes) {
             date: episode.date || '',
             duration: episode.duration || '',
             url: episode.url || '',
+            category: episode.category || '',
         }))
         .filter((episode) => Number.isFinite(episode.y))
         .sort((a, b) => {
@@ -161,15 +162,93 @@ function renderStats(data) {
     setText('#footer-update', formatDate(normalizedEpisodes.at(-1)?.date));
 }
 
-function renderLatestEpisode() {
+function isAfterparty(episode) {
+    return episode?.category === 'afterparty';
+}
+
+function getReleaseBaseId(episode) {
+    const number = Number(episode?.episodeId);
+    return Number.isFinite(number) ? String(Math.floor(number)) : episode?.episodeId || '';
+}
+
+function getLatestRelease() {
     const latest = normalizedEpisodes.at(-1);
+    const previous = normalizedEpisodes.at(-2);
     if (!latest) {
+        return { episodes: [], paired: false };
+    }
+
+    const paired = Boolean(
+        previous
+        && latest.date
+        && latest.date === previous.date
+        && getReleaseBaseId(latest) === getReleaseBaseId(previous)
+        && [latest, previous].some(isAfterparty)
+        && [latest, previous].some((episode) => !isAfterparty(episode)),
+    );
+    const episodes = paired ? [previous, latest].sort((a, b) => Number(isAfterparty(a)) - Number(isAfterparty(b))) : [latest];
+    return { episodes, paired };
+}
+
+function releaseSourceLabel(episode) {
+    return episode.url.includes('patreon.com') ? 'Patreon' : 'Retro Rocket Network';
+}
+
+function createLatestReleaseItem(episode) {
+    const item = document.createElement('li');
+    item.className = `latest-release-item${isAfterparty(episode) ? ' is-afterparty' : ''}`;
+
+    const link = document.createElement('a');
+    link.className = 'latest-release-link';
+    link.href = episode.url || '#episodes';
+    if (episode.url) {
+        link.target = '_blank';
+        link.rel = 'noreferrer';
+    }
+    link.setAttribute('aria-label', episode.url
+        ? `Otwórz odcinek ${episode.episodeId} w ${releaseSourceLabel(episode)}`
+        : `Przejdź do odcinka ${episode.episodeId} w archiwum`);
+
+    const top = document.createElement('span');
+    top.className = 'latest-release-item-top';
+    const id = document.createElement('strong');
+    id.className = 'latest-release-id';
+    id.textContent = episode.episodeId;
+    const badge = document.createElement('span');
+    badge.className = 'latest-release-badge';
+    badge.textContent = isAfterparty(episode) ? 'AFTERPARTY' : 'ODCINEK';
+    top.append(id, badge);
+
+    const title = document.createElement('span');
+    title.className = 'latest-release-item-title';
+    title.textContent = episode.title;
+
+    const meta = document.createElement('span');
+    meta.className = 'latest-release-item-meta';
+    meta.textContent = `${episode.duration || minutesToTime(episode.y)} · ${episode.url ? releaseSourceLabel(episode) : 'Archiwum'}`;
+
+    link.append(top, title, meta);
+    item.appendChild(link);
+    return item;
+}
+
+function renderLatestRelease() {
+    const panel = $('.latest-release');
+    const list = $('#latest-release-list');
+    const { episodes, paired } = getLatestRelease();
+    if (!panel || !list || !episodes.length) {
         return;
     }
-    setText('#latest-episode-id', latest.episodeId);
-    setText('#latest-title', latest.title);
-    setText('#latest-date', formatDate(latest.date));
-    setText('#latest-duration', latest.duration || minutesToTime(latest.y));
+
+    const baseId = getReleaseBaseId(episodes[0]);
+    panel.classList.toggle('latest-release-paired', paired);
+    setText('#latest-release-label', paired ? 'NAJNOWSZE WYDANIE' : 'NAJNOWSZY ODCINEK');
+    setText('#latest-release-title', paired ? `Wydanie ${baseId}` : 'Najnowszy odcinek');
+    setText('#latest-release-count', paired ? 'DWA ODCINKI' : 'JEDEN ODCINEK');
+    setText('#latest-release-date', formatDate(episodes[0].date));
+    setText('#latest-release-foot', paired ? 'Dwa najnowsze punkty na osi czasu' : 'Najnowszy punkt na osi czasu');
+    list.setAttribute('aria-label', paired ? `Wydanie ${baseId}: dwa odcinki` : 'Najnowszy odcinek');
+    list.replaceChildren(...episodes.map(createLatestReleaseItem));
 
     const sparkline = $('#latest-sparkline');
     if (!sparkline) {
@@ -706,7 +785,7 @@ async function loadData() {
         chartData = await response.json();
         normalizedEpisodes = normalizeEpisodes(chartData.episodes || []);
         renderStats(chartData);
-        renderLatestEpisode();
+        renderLatestRelease();
         renderSignals();
         renderYearBars();
         renderDurationBars();

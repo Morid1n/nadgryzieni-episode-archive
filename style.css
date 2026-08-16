@@ -364,7 +364,7 @@ html[data-theme="dark"] .theme-icon::after {
 }
 
 .hero-copy,
-.latest-card {
+.latest-release {
     position: relative;
     z-index: 1;
 }
@@ -490,7 +490,8 @@ html[data-theme="dark"] .theme-icon::after {
     background: var(--accent);
 }
 
-.latest-card {
+.latest-release {
+    position: relative;
     min-height: 380px;
     padding: clamp(26px, 4vw, 42px);
     overflow: hidden;
@@ -500,7 +501,7 @@ html[data-theme="dark"] .theme-icon::after {
     box-shadow: var(--shadow-lg);
 }
 
-.latest-card::before {
+.latest-release::before {
     position: absolute;
     right: -80px;
     bottom: -120px;
@@ -510,9 +511,11 @@ html[data-theme="dark"] .theme-icon::after {
     border-radius: 50%;
     box-shadow: 0 0 0 35px color-mix(in srgb, var(--accent) 4%, transparent), 0 0 0 70px color-mix(in srgb, var(--accent) 3%, transparent);
     content: "";
+    pointer-events: none;
 }
 
-.latest-card-top,
+.latest-release-top,
+.latest-release-heading,
 .pattern-card-header,
 .chart-meta-row,
 .archive-status,
@@ -531,53 +534,122 @@ html[data-theme="dark"] .theme-icon::after {
     color: var(--muted);
 }
 
-.latest-id {
+.latest-release-date,
+.latest-release-count {
     color: var(--accent);
     font-family: var(--font-mono);
-    font-size: 1rem;
+    font-size: 0.66rem;
     font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
-.latest-rule {
-    width: 100%;
-    height: 1px;
-    margin: 24px 0 32px;
-    background: var(--border);
+.latest-release-heading {
+    margin-top: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
 }
 
-.latest-card h2 {
-    max-width: 380px;
-    min-height: 100px;
+.latest-release h2 {
     margin: 0;
     color: var(--ink);
-    font-size: clamp(1.5rem, 3vw, 2.15rem);
+    font-size: clamp(1.65rem, 3vw, 2.25rem);
     letter-spacing: -0.06em;
     line-height: 1.08;
-    text-wrap: balance;
 }
 
-.latest-meta,
+.latest-release-count {
+    flex: 0 0 auto;
+    color: var(--muted);
+    font-size: 0.58rem;
+}
+
+.latest-release-list {
+    display: grid;
+    gap: 10px;
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.latest-release-item {
+    position: relative;
+    z-index: 1;
+}
+
+.latest-release-link {
+    display: grid;
+    gap: 6px;
+    padding: 14px 15px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--surface) 88%, var(--background));
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.latest-release-link:hover,
+.latest-release-link:focus-visible {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+    transform: translateY(-2px);
+}
+
+.latest-release-item.is-afterparty .latest-release-link {
+    border-color: color-mix(in srgb, var(--accent) 38%, var(--border));
+}
+
+.latest-release-item-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.latest-release-id {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+}
+
+.latest-release-badge {
+    padding: 4px 7px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 11%, transparent);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+}
+
+.latest-release-item-title {
+    color: var(--ink);
+    font-size: 0.96rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.28;
+}
+
+.latest-release-item-meta,
 .signal-card p,
 .latest-foot {
     color: var(--muted);
     font-size: 0.75rem;
 }
 
-.latest-meta {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 18px;
+.latest-release-item-meta {
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: 0.61rem;
 }
 
 .mini-sparkline {
     display: flex;
-    height: 70px;
+    height: 44px;
     align-items: end;
     gap: 5px;
-    margin-top: 36px;
+    margin-top: 22px;
 }
 
 .mini-sparkline span {
@@ -597,7 +669,7 @@ html[data-theme="dark"] .theme-icon::after {
 .latest-foot {
     position: relative;
     z-index: 1;
-    margin: 14px 0 0;
+    margin: 12px 0 0;
     font-family: var(--font-mono);
     font-size: 0.61rem;
     letter-spacing: 0.05em;
@@ -1722,7 +1794,7 @@ html[data-theme="dark"] .theme-icon::after {
         line-height: 1.6;
     }
 
-    .latest-card {
+    .latest-release {
         min-height: 340px;
         margin-top: 44px;
     }
