@@ -1,7 +1,7 @@
 # Nadgryzieni — Statistics
 
 > Generated from the episode archive: `Nadgryzieni Episode Archive.md`
-> Last updated: 2026-08-15
+> Last updated: 2026-08-22
 
 ---
 
@@ -9,9 +9,9 @@
 
 | Metric | Value |
 |---|---|
-| **Total episodes** | 574 |
-| **Date range** | 2010-01-28 — 2026-08-14 |
-| **Episodes with duration** | 574 |
+| **Total episodes** | 576 |
+| **Date range** | 2010-01-28 — 2026-08-22 |
+| **Episodes with duration** | 576 |
 | **Episodes without duration** | 0 |
 
 ---
@@ -20,12 +20,12 @@
 
 | Metric | Value |
 |---|---|
-| **Total listening time** | 983h 12m (983.2 hours) |
-| **Average duration** | 102.8 min (1.7h) |
+| **Total listening time** | 987h 26m (987.4 hours) |
+| **Average duration** | 102.9 min (1.7h) |
 | **Median duration** | 98.1 min (1.6h) |
 | **Longest episode** | 288.6 min |
 | **Shortest episode** | 0.2 min |
-| **Episodes over 2 hours** | 201 |
+| **Episodes over 2 hours** | 202 |
 | **Episodes under 30 minutes** | 44 |
 
 ---
@@ -50,7 +50,7 @@
 | 2023 | 56 | 144.4 min |
 | 2024 | 58 | 133.3 min |
 | 2025 | 57 | 128.3 min |
-| 2026 | 42 | 132.5 min |
+| 2026 | 44 | 132.2 min |
 
 ---
 
@@ -58,10 +58,10 @@
 
 | Bracket | Count | % |
 |---|---|---|
-| Under 30 min | 44 | 7.7% |
-| 30 min – 1 hour | 83 | 14.5% |
-| 1 hour – 2 hours | 246 | 42.9% |
-| 2 hours – 3 hours | 152 | 26.5% |
+| Under 30 min | 44 | 7.6% |
+| 30 min – 1 hour | 83 | 14.4% |
+| 1 hour – 2 hours | 247 | 42.9% |
+| 2 hours – 3 hours | 153 | 26.6% |
 | 3 hours – 4 hours | 46 | 8.0% |
 | Over 4 hours | 3 | 0.5% |
 
@@ -71,7 +71,7 @@
 
 | Year | Count |
 |---|---|
-| 2026 | 42 |
+| 2026 | 44 |
 | 2025 | 57 |
 | 2024 | 58 |
 | 2023 | 56 |
@@ -95,17 +95,17 @@
 
 | Month | Count | % |
 |---|---|---|
-| January | 56 | 9.8% |
+| January | 56 | 9.7% |
 | February | 42 | 7.3% |
 | March | 51 | 8.9% |
 | April | 46 | 8.0% |
-| May | 48 | 8.4% |
-| June | 52 | 9.1% |
+| May | 48 | 8.3% |
+| June | 52 | 9.0% |
 | July | 57 | 9.9% |
-| August | 40 | 7.0% |
+| August | 42 | 7.3% |
 | September | 41 | 7.1% |
-| October | 40 | 7.0% |
-| November | 40 | 7.0% |
+| October | 40 | 6.9% |
+| November | 40 | 6.9% |
 | December | 61 | 10.6% |
 
 ---
@@ -117,9 +117,9 @@
 | Monday | 57 | 9.9% |
 | Tuesday | 41 | 7.1% |
 | Wednesday | 53 | 9.2% |
-| Thursday | 87 | 15.2% |
-| Friday | 296 | 51.6% |
-| Saturday | 22 | 3.8% |
+| Thursday | 87 | 15.1% |
+| Friday | 297 | 51.6% |
+| Saturday | 23 | 4.0% |
 | Sunday | 18 | 3.1% |
 
 ---
@@ -128,10 +128,10 @@
 
 | Category | Count |
 |---|---|
-| Main episodes | 519 |
+| Main episodes | 520 |
 | (Live) | 11 |
+| (Afterparty) | 11 |
 | (Po Godzinach) | 10 |
-| (Afterparty) | 10 |
 | SP (special) | 7 |
 | (Prawie) | 5 |
 | (Na Placu Budowy) | 5 |
@@ -181,19 +181,19 @@
 | nowe | 12 |
 | live | 12 |
 | google | 12 |
+| afterparty | 12 |
 | ios | 11 |
-| dla | 11 |
 
 ---
 
 ## Summary
 
-- **Total episodes:** 574
-- **Total listening time:** 983h 12m
-- **Average duration:** 102.8 min
+- **Total episodes:** 576
+- **Total listening time:** 987h 26m
+- **Average duration:** 102.9 min
 - **Median duration:** 98.1 min
-- **Date range:** 2010-01-28 — 2026-08-14
+- **Date range:** 2010-01-28 — 2026-08-22
 
 ---
 
-*Last updated: 2026-08-15*
+*Last updated: 2026-08-22*
