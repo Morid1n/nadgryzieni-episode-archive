@@ -575,4 +575,4 @@
 | 573 | 601   | 601: Biurko podnoszone sterowane z MacBooka                                                                  | 2026-08-14   | 50:42    |
 | 574 | 601.5 | 601: (Afterparty) Podcasty z kotami opanowują YT, MacBook Air i ChatGPT Business                             | 2026-08-14   | 0:46:23  |
 | 575 | 602   | 602: Pojechałem na Odyseję do IMAX 70 mm w Pradze                                                            | 2026-08-21   | 2:45:40  |
-| 576 | 602.5 | 602: (Afterparty) Jedni będą walczyć o przetrwanie, inni będą robić filmy                                    | 2026-08-22   | 1:28:50  |
+| 576 | 602.5 | 602: (Afterparty) Jedni będą walczyć o przetrwanie, inni będą robić filmy                                    | 2026-08-21   | 1:28:50  |

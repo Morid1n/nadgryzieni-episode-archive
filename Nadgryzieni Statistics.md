@@ -10,7 +10,7 @@
 | Metric | Value |
 |---|---|
 | **Total episodes** | 576 |
-| **Date range** | 2010-01-28 — 2026-08-22 |
+| **Date range** | 2010-01-28 — 2026-08-21 |
 | **Episodes with duration** | 576 |
 | **Episodes without duration** | 0 |
 
@@ -118,8 +118,8 @@
 | Tuesday | 41 | 7.1% |
 | Wednesday | 53 | 9.2% |
 | Thursday | 87 | 15.1% |
-| Friday | 297 | 51.6% |
-| Saturday | 23 | 4.0% |
+| Friday | 298 | 51.7% |
+| Saturday | 22 | 3.8% |
 | Sunday | 18 | 3.1% |
 
 ---
@@ -192,7 +192,7 @@
 - **Total listening time:** 987h 26m
 - **Average duration:** 102.9 min
 - **Median duration:** 98.1 min
-- **Date range:** 2010-01-28 — 2026-08-22
+- **Date range:** 2010-01-28 — 2026-08-21
 
 ---
 
