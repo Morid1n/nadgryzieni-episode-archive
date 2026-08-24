@@ -12462,8 +12462,8 @@
       "episode": "602",
       "title": "602: Pojechałem na Odyseję do IMAX 70 mm w Pradze",
       "date": "2026-08-21",
-      "duration": "2:45:40",
-      "minutes": 165.67,
+      "duration": "2:51:07",
+      "minutes": 171.12,
       "category": "main",
       "year": 2026,
       "url": "https://retrorocketnetwork.pl/602-pojechalem-na-odyseje-do-imax-70-mm-w-pradze/",
@@ -12508,7 +12508,7 @@
   ],
   "stats": {
     "total_episodes": 576,
-    "total_listening_hours": 987.4,
+    "total_listening_hours": 987.5,
     "average_duration": 102.9,
     "min_duration": 0.18,
     "max_duration": 288.65

@@ -574,5 +574,5 @@
 | 572 | 600.5 | 600: (Afterparty) Wojtek kupuje elektryczny skuter, hulajnogę albo nic                                       | 2026-08-07   | 0:53:55  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 573 | 601   | 601: Biurko podnoszone sterowane z MacBooka                                                                  | 2026-08-14   | 50:42    | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 574 | 601.5 | 601: (Afterparty) Podcasty z kotami opanowują YT, MacBook Air i ChatGPT Business                             | 2026-08-14   | 0:46:23  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
-| 575 | 602   | 602: Pojechałem na Odyseję do IMAX 70 mm w Pradze                                                            | 2026-08-21   | 2:45:40  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 575 | 602   | 602: Pojechałem na Odyseję do IMAX 70 mm w Pradze                                                            | 2026-08-21   | 2:51:07  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 576 | 602.5 | 602: (Afterparty) Jedni będą walczyć o przetrwanie, inni będą robić filmy                                    | 2026-08-21   | 1:28:50  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |

@@ -1,7 +1,7 @@
 # Nadgryzieni — Statistics
 
 > Generated from the episode archive: `Nadgryzieni Episode Archive.md`
-> Last updated: 2026-08-22
+> Last updated: 2026-08-24
 
 ---
 
@@ -20,7 +20,7 @@
 
 | Metric | Value |
 |---|---|
-| **Total listening time** | 987h 26m (987.4 hours) |
+| **Total listening time** | 987h 31m (987.5 hours) |
 | **Average duration** | 102.9 min (1.7h) |
 | **Median duration** | 98.1 min (1.6h) |
 | **Longest episode** | 288.6 min |
@@ -50,7 +50,7 @@
 | 2023 | 56 | 144.4 min |
 | 2024 | 58 | 133.3 min |
 | 2025 | 57 | 128.3 min |
-| 2026 | 44 | 132.2 min |
+| 2026 | 44 | 132.4 min |
 
 ---
 
@@ -189,11 +189,11 @@
 ## Summary
 
 - **Total episodes:** 576
-- **Total listening time:** 987h 26m
+- **Total listening time:** 987h 31m
 - **Average duration:** 102.9 min
 - **Median duration:** 98.1 min
 - **Date range:** 2010-01-28 — 2026-08-21
 
 ---
 
-*Last updated: 2026-08-22*
+*Last updated: 2026-08-24*
