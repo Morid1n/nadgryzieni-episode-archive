@@ -43,6 +43,7 @@ class HostParseResult:
     excluded_hosts: List[str] = field(default_factory=list)
     diagnostics: List[str] = field(default_factory=list)
     source_url: str = ""
+    provenance: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -51,6 +52,7 @@ class HostParseResult:
             "excluded_hosts": list(self.excluded_hosts),
             "diagnostics": list(self.diagnostics),
             "source_url": self.source_url,
+            "provenance": dict(self.provenance),
         }
 
 
@@ -134,7 +136,64 @@ _SOCIAL_WORDS = frozenset(
 )
 _HOST_NAME_ALIASES = {
     "norbert cała": "NPC",
+    "norbert": "NPC",
+    "norbi": "NPC",
+    "maciek buchert": "Maciej Buchert",
+    "miłoszu": "Miłosz",
+    "steve’a ballmera": "Steve Ballmer",
+    "michała „nozbe” śliwińskiego": "Michał Śliwiński",
 }
+_DESCRIPTION_PERSON_MARKER_RE = re.compile(
+    r"(?iu)(?<!\w)(?:gość|gościem|gości|goście|gośćmi|gościa|guest(?:s)?)(?!\w)"
+)
+_DESCRIPTION_PERSON_LABEL_RE = re.compile(
+    r"(?iu)^(?:gosc|goscie|guest|guests)(?:\s+specjaln(?:y|i|e))?$"
+)
+_DESCRIPTION_NAME_TOKEN = (
+    r"(?-i:(?:[A-ZĄĆĘŁŃÓŚŹŻ][\wĄĆĘŁŃÓŚŹŻąćęłńóśźż'’-]*|"
+    r"[\"„][^\"”]{1,40}[\"”]))"
+)
+_DESCRIPTION_AFTER_IS_RE = re.compile(
+    rf"(?iu)(?:gość|gościem|gości|goście|gośćmi|gościa|guest(?:s)?)"
+    rf"[^.!?]{{0,180}}?\bjest\b\s+(?:to\s+)?"
+    rf"(?P<name>{_DESCRIPTION_NAME_TOKEN}(?:\s+{_DESCRIPTION_NAME_TOKEN}){{0,3}})"
+)
+_DESCRIPTION_BEFORE_IS_RE = re.compile(
+    rf"(?iu)(?P<name>{_DESCRIPTION_NAME_TOKEN}(?:\s+{_DESCRIPTION_NAME_TOKEN}){{0,3}})"
+    rf"\s+jest\s+(?:[^.!?]{{0,30}}?\s+)?gościem\b"
+)
+_DESCRIPTION_AFTER_DASH_RE = re.compile(
+    rf"(?iu)(?:gość|gościem|gości|goście|gośćmi|gościa|guest(?:s)?)"
+    rf"[^!?]{{0,240}}?[–—-]\s*"
+    rf"(?P<name>{_DESCRIPTION_NAME_TOKEN}(?:\s+{_DESCRIPTION_NAME_TOKEN}){{0,3}})"
+)
+_DESCRIPTION_ROLE_RE = re.compile(
+    rf"(?iu)(?:gość|gościem|gości|goście|gośćmi|gościa|guest(?:s)?)"
+    rf"[^.!?]{{0,180}}?\b(?:pojawił(?:a)? się|robi|wystąpił(?:a)?|"
+    rf"dołączył(?:a)?|zagrał(?:a)?)\b\s+"
+    rf"(?P<name>{_DESCRIPTION_NAME_TOKEN}(?:\s+{_DESCRIPTION_NAME_TOKEN}){{0,3}})"
+)
+_DESCRIPTION_CZYLI_RE = re.compile(
+    rf"(?iu)(?:gość|gościem|gości|goście|gośćmi|gościa|guest(?:s)?)"
+    rf"[^.!?]{{0,180}}?\b(?:czyli|to)\b\s+"
+    rf"(?:(?:nasz|nasza|nasze|własny|własna|własne)\s+){{0,2}}"
+    rf"(?P<name>{_DESCRIPTION_NAME_TOKEN}(?:\s+{_DESCRIPTION_NAME_TOKEN}){{0,3}})"
+)
+_DESCRIPTION_NAME_AS_GUEST_RE = re.compile(
+    rf"(?iu)(?P<name>{_DESCRIPTION_NAME_TOKEN}(?:\s+{_DESCRIPTION_NAME_TOKEN}){{0,2}})"
+    rf"(?:\s+(?:z|ze)\s+[^.!?]{{0,35}}?)?"
+    rf"[^.!?]{{0,80}}?\b(?:specjalny|specjalna|special)\s+"
+    rf"(?:gość|guest)\b"
+)
+_DESCRIPTION_PREVIOUS_EPISODE_RE = re.compile(
+    r"(?iu)\b(?:ostatni(?:ego|ej)?|poprzedni(?:ego|ej)?|last|previous)\s+"
+    r"(?:odcinka|episode)\b"
+)
+
+
+def _safe_description_evidence(value: str) -> str:
+    value = " ".join(unicodedata.normalize("NFKC", value).split()).strip()
+    return re.sub(r"(?iu)\bnorbert\s+cała\b", "NPC", value)[:500]
 
 
 def normalize_host_name(value: str) -> str:
@@ -453,6 +512,176 @@ def _normalise_entries(
     return HostParseResult(status, hosts, excluded, diagnostics, source_url)
 
 
+def _description_marker_in_text(value: str) -> bool:
+    return bool(_DESCRIPTION_PERSON_MARKER_RE.search(value))
+
+
+def _description_label(node: _Node) -> bool:
+    if node.tag not in _HEADING_TAGS or _has_list_ancestor(node):
+        return False
+    value = _normalise_marker(_node_text(node), remove_diacritics=True)
+    value = value.rstrip(" :：\t")
+    return bool(_DESCRIPTION_PERSON_LABEL_RE.fullmatch(value))
+
+
+def _description_sentence_names(value: str) -> List[str]:
+    names: List[str] = []
+    patterns = (
+        _DESCRIPTION_AFTER_IS_RE,
+        _DESCRIPTION_BEFORE_IS_RE,
+        _DESCRIPTION_AFTER_DASH_RE,
+        _DESCRIPTION_ROLE_RE,
+        _DESCRIPTION_CZYLI_RE,
+        _DESCRIPTION_NAME_AS_GUEST_RE,
+    )
+    for pattern in patterns:
+        for match in pattern.finditer(value):
+            if (
+                pattern is _DESCRIPTION_AFTER_DASH_RE
+                and _DESCRIPTION_PREVIOUS_EPISODE_RE.search(value[:match.start("name")])
+            ):
+                continue
+            candidate = match.group("name").strip(" ,;:.!?–—-\t")
+            if candidate and candidate not in names:
+                names.append(candidate)
+    return names
+
+
+def _normalise_description_entries(
+    entries: Sequence[Tuple[str, bool]],
+    source_url: str,
+    diagnostics: Optional[List[str]] = None,
+) -> Tuple[List[str], List[str], List[str]]:
+    diagnostics = list(diagnostics or [])
+    people: List[str] = []
+    excluded: List[str] = []
+    people_keys = set()
+    excluded_keys = set()
+    for raw_value, struck in entries:
+        try:
+            value = normalize_host_name(raw_value)
+        except HostNameError as exc:
+            diagnostics.append("description person entry rejected: " + str(exc))
+            return [], excluded, diagnostics
+        key = host_dedupe_key(value)
+        if struck:
+            if key not in excluded_keys:
+                excluded.append(value)
+                excluded_keys.add(key)
+            continue
+        if key not in people_keys:
+            people.append(value)
+            people_keys.add(key)
+    return people, excluded, diagnostics
+
+
+def _extract_rrn_description_people(
+    document: _Node,
+    roots: Sequence[_Node],
+    source_url: str,
+) -> Tuple[List[str], List[str], List[str], Dict[str, Any]]:
+    """Extract explicit description people without creating a second public type."""
+    entries: List[Tuple[str, bool]] = []
+    diagnostics: List[str] = []
+    evidence: List[Dict[str, str]] = []
+    structural_blocks = 0
+    direct_markers = 0
+    unsafe_marker = False
+
+    for root in roots:
+        for node in _iter_nodes(root):
+            if not _description_label(node):
+                continue
+            structural_blocks += 1
+            marker = " ".join(_node_text(node).split()).strip().rstrip(" :：\t")
+            list_node, reason = _following_unordered_list(node)
+            if list_node is None:
+                diagnostics.append("description people label has no valid following list: " + reason)
+                continue
+            valid, items, list_error = _valid_direct_list_items(list_node)
+            if not valid:
+                diagnostics.append("description people list is malformed: " + list_error)
+                continue
+            block_evidence = []
+            for item in items:
+                value = _text_before_social_link(item)
+                if not value:
+                    diagnostics.append("description people list contains an empty entry")
+                    continue
+                entries.append((value, _node_is_struck(item)))
+                block_evidence.append(value)
+            evidence.append({"marker": marker, "entries": " | ".join(block_evidence)})
+
+        for node in _iter_nodes(root):
+            if node.tag != "p" or _has_list_ancestor(node) or _description_label(node):
+                continue
+            text = " ".join(_node_text(node).split()).strip()
+            if not _description_marker_in_text(text):
+                continue
+            direct_markers += 1
+            if ";" in text or "|" in text:
+                unsafe_marker = True
+                diagnostics.append("description people evidence contains a table delimiter")
+                continue
+            names = _description_sentence_names(text)
+            if names:
+                entries.extend((name, False) for name in names)
+                evidence.append({"marker": "prose", "evidence": _safe_description_evidence(text)})
+            else:
+                diagnostics.append(
+                    "description people marker has no unambiguous name: "
+                    + _safe_description_evidence(text)[:300]
+                )
+
+    people, excluded, diagnostics = _normalise_description_entries(
+        entries, source_url, diagnostics
+    )
+    if structural_blocks > 1:
+        diagnostics.append("multiple description people blocks found; verify deduplication")
+    if unsafe_marker:
+        people = []
+    if not people and not structural_blocks and not direct_markers:
+        all_content = " ".join(_node_text(root) for root in roots)
+        if _description_marker_in_text(all_content):
+            diagnostics.append("description people marker appears only in nested/list content")
+    provenance: Dict[str, Any] = {}
+    if evidence:
+        provenance = {
+            "kind": "direct_source",
+            "source_url": source_url,
+            "description_evidence": evidence,
+        }
+    return people, excluded, diagnostics, provenance
+
+
+def _merge_description_people(
+    result: HostParseResult,
+    document: _Node,
+    roots: Sequence[_Node],
+) -> HostParseResult:
+    people, excluded, diagnostics, provenance = _extract_rrn_description_people(
+        document, roots, result.source_url
+    )
+    result.diagnostics.extend(diagnostics)
+    existing_keys = {host_dedupe_key(host) for host in result.hosts}
+    for person in people:
+        key = host_dedupe_key(person)
+        if key not in existing_keys:
+            result.hosts.append(person)
+            existing_keys.add(key)
+    excluded_keys = {host_dedupe_key(host) for host in result.excluded_hosts}
+    for person in excluded:
+        key = host_dedupe_key(person)
+        if key not in excluded_keys:
+            result.excluded_hosts.append(person)
+            excluded_keys.add(key)
+    if people and result.status == "not_listed":
+        result.status = "verified"
+    if provenance:
+        result.provenance = provenance
+    return result
+
+
 def _source_url_or_error(source_url: str) -> Tuple[str, Optional[str]]:
     if not source_url:
         return "", None
@@ -516,11 +745,12 @@ def parse_rrn_hosts(
                 candidates.append((node, list_node, reason))
 
     if not candidates:
-        return HostParseResult(
+        result = HostParseResult(
             "not_listed",
             diagnostics=["no structural Prowadzący block found"],
             source_url=source_url,
         )
+        return _merge_description_people(result, document, roots)
     if len(candidates) > 1:
         return HostParseResult(
             "parse_error",
@@ -544,7 +774,11 @@ def parse_rrn_hosts(
                 source_url=source_url,
             )
         entries.append((value, _node_is_struck(item)))
-    return _normalise_entries(entries, source_url)
+    return _merge_description_people(
+        _normalise_entries(entries, source_url),
+        document,
+        roots,
+    )
 
 
 def _payload_content_json(payload: Any) -> Tuple[Optional[Any], Optional[str]]:
@@ -646,6 +880,111 @@ def _pm_node_is_struck(node: Mapping[str, Any]) -> bool:
     )
 
 
+def _extract_patreon_description_people(
+    content: Sequence[Any],
+    source_url: str,
+) -> Tuple[List[str], List[str], List[str], Dict[str, Any]]:
+    entries: List[Tuple[str, bool]] = []
+    diagnostics: List[str] = []
+    evidence: List[Dict[str, str]] = []
+    direct_markers = 0
+    unsafe_marker = False
+    for index, node in enumerate(content):
+        if not isinstance(node, Mapping) or node.get("type") != "paragraph":
+            continue
+        text = " ".join(_pm_node_text(node).split()).strip()
+        normalized = _normalise_marker(text, remove_diacritics=True).rstrip(" :：\t")
+        if _DESCRIPTION_PERSON_LABEL_RE.fullmatch(normalized):
+            if index + 1 >= len(content) or not isinstance(content[index + 1], Mapping):
+                diagnostics.append("description people paragraph has no following bulletList")
+                continue
+            bullet_list = content[index + 1]
+            if bullet_list.get("type") != "bulletList":
+                diagnostics.append("description people paragraph is not followed by a bulletList")
+                continue
+            items = bullet_list.get("content", [])
+            if not isinstance(items, list):
+                diagnostics.append("description people bulletList is malformed")
+                continue
+            block_entries = []
+            for item in items:
+                if not isinstance(item, Mapping) or item.get("type") != "listItem":
+                    diagnostics.append("description people bulletList contains a non-listItem")
+                    continue
+                item_content = item.get("content", [])
+                paragraphs = [
+                    child for child in item_content
+                    if isinstance(child, Mapping) and child.get("type") == "paragraph"
+                ] if isinstance(item_content, list) else []
+                if not paragraphs:
+                    diagnostics.append("description people listItem lacks a paragraph")
+                    continue
+                value = _pm_entry_text(paragraphs[0])
+                if not value:
+                    diagnostics.append("description people list contains an empty entry")
+                    continue
+                entries.append((value, _pm_node_is_struck(item)))
+                block_entries.append(value)
+            evidence.append({"marker": text, "entries": " | ".join(block_entries)})
+            continue
+        if not _description_marker_in_text(text):
+            continue
+        direct_markers += 1
+        if ";" in text or "|" in text:
+            unsafe_marker = True
+            diagnostics.append("description people evidence contains a table delimiter")
+            continue
+        names = _description_sentence_names(text)
+        if names:
+            entries.extend((name, False) for name in names)
+            evidence.append({"marker": "prose", "evidence": _safe_description_evidence(text)})
+        else:
+            diagnostics.append(
+                "description people marker has no unambiguous name: "
+                + _safe_description_evidence(text)[:300]
+            )
+    people, excluded, diagnostics = _normalise_description_entries(
+        entries, source_url, diagnostics
+    )
+    if unsafe_marker:
+        people = []
+    if not people and not direct_markers and not evidence:
+        return [], excluded, diagnostics, {}
+    provenance = {
+        "kind": "direct_source",
+        "source_url": source_url,
+        "description_evidence": evidence,
+    } if evidence else {}
+    return people, excluded, diagnostics, provenance
+
+
+def _merge_patreon_description_people(
+    result: HostParseResult,
+    content: Sequence[Any],
+) -> HostParseResult:
+    people, excluded, diagnostics, provenance = _extract_patreon_description_people(
+        content, result.source_url
+    )
+    result.diagnostics.extend(diagnostics)
+    existing_keys = {host_dedupe_key(host) for host in result.hosts}
+    for person in people:
+        key = host_dedupe_key(person)
+        if key not in existing_keys:
+            result.hosts.append(person)
+            existing_keys.add(key)
+    excluded_keys = {host_dedupe_key(host) for host in result.excluded_hosts}
+    for person in excluded:
+        key = host_dedupe_key(person)
+        if key not in excluded_keys:
+            result.excluded_hosts.append(person)
+            excluded_keys.add(key)
+    if people and result.status == "not_listed":
+        result.status = "verified"
+    if provenance:
+        result.provenance = provenance
+    return result
+
+
 def parse_patreon_post_payload(payload: Any, source_url: str = "") -> HostParseResult:
     """Parse a Patreon ProseMirror/Tiptap ``content_json_string`` payload."""
 
@@ -688,11 +1027,12 @@ def parse_patreon_post_payload(payload: Any, source_url: str = "") -> HostParseR
         if heading == "prowadzacy":
             candidates.append((index, node))
     if not candidates:
-        return HostParseResult(
+        result = HostParseResult(
             "not_listed",
             diagnostics=["no structural Prowadzący block found"],
             source_url=canonical_source,
         )
+        return _merge_patreon_description_people(result, content)
     if len(candidates) > 1:
         return HostParseResult(
             "parse_error",
@@ -758,7 +1098,10 @@ def parse_patreon_post_payload(payload: Any, source_url: str = "") -> HostParseR
                 source_url=canonical_source,
             )
         entries.append((value, _pm_node_is_struck(item)))
-    return _normalise_entries(entries, canonical_source)
+    return _merge_patreon_description_people(
+        _normalise_entries(entries, canonical_source),
+        content,
+    )
 
 
 def canonical_url(value: str) -> str:
@@ -1102,7 +1445,7 @@ def serialize_parse_result(result: HostParseResult) -> str:
 # ── Historical audit/apply workflow ──────────────────────────────────────────
 
 AUDIT_SCHEMA_VERSION = 1
-PARSER_VERSION = "nadgryzieni-hosts/1.1"
+PARSER_VERSION = "nadgryzieni-hosts/1.7"
 AUDIT_USER_AGENT = "Nadgryzieni-host-audit/1.0"
 UNRESOLVED_STATUSES = frozenset({"unavailable", "ambiguous", "manual_review"})
 DEFAULT_HOST_CACHE_PATH = Path(os.environ.get(
@@ -1285,6 +1628,10 @@ def _direct_audit_entry(
     )
     base["hosts"] = list(parsed.hosts)
     base["hosts_status"] = parsed.status if parsed.status in {"verified", "not_listed"} else "ambiguous"
+    base["provenance"] = parsed.provenance or {
+        "kind": "direct_source",
+        "source_url": canonical,
+    }
     base["diagnostics"] = list(parsed.diagnostics)
     if parsed.excluded_hosts:
         base["excluded_hosts"] = list(parsed.excluded_hosts)
@@ -1329,6 +1676,7 @@ def _cache_projection(result: Mapping[str, Any]) -> Dict[str, Any]:
         "hosts_status": result.get("hosts_status"),
         "hosts_source": result.get("hosts_source", "rrn"),
         "hosts_source_url": result.get("hosts_source_url", ""),
+        "provenance": dict(result.get("provenance", {})),
         "diagnostics": list(result.get("diagnostics", [])),
         "fetch": dict(result.get("fetch", {})),
     }
@@ -1346,7 +1694,10 @@ def _cached_direct_entry(row: Mapping[str, Any], cached: Mapping[str, Any]) -> D
         "hosts_status": cached.get("hosts_status", "manual_review"),
         "hosts_source": cached.get("hosts_source", "rrn"),
         "hosts_source_url": source_url,
-        "provenance": {"kind": "direct_source", "source_url": source_url},
+        "provenance": dict(cached.get("provenance", {
+            "kind": "direct_source",
+            "source_url": source_url,
+        })),
         "diagnostics": list(cached.get("diagnostics", [])),
         "fetch": dict(cached.get("fetch", {})),
     }

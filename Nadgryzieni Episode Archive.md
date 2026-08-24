@@ -1,10 +1,10 @@
 | #   | Ep.   | Episode title                                                                                                | Publish date | Duration | Hosts                              |
 | --- | ----- | ------------------------------------------------------------------------------------------------------------ | ------------ | -------- | ---------------------------------- |
 | 1   | 1     | 01: Come see our latest recap                                                                                | 2010-01-28   | 42:55    | Brak danych                        |
-| 2   | 2     | 02: Aperture 3                                                                                               | 2010-03-02   | 43:21    | Brak danych                        |
+| 2   | 2     | 02: Aperture 3                                                                                               | 2010-03-02   | 43:21    | Wojtek „Alchemic” Równanek         |
 | 3   | 3     | 03: Podróże z Apple                                                                                          | 2010-05-26   | 21:04    | Brak danych                        |
-| 4   | 4     | 04: WWDC 2010                                                                                                | 2010-06-16   | 12:53    | Brak danych                        |
-| 5   | 5     | 05: iPhone 4                                                                                                 | 2010-07-07   | 15:50    | Brak danych                        |
+| 4   | 4     | 04: WWDC 2010                                                                                                | 2010-06-16   | 12:53    | Zbyszek                            |
+| 5   | 5     | 05: iPhone 4                                                                                                 | 2010-07-07   | 15:50    | NPC                                |
 | 6   | 6     | 06: Antennagate                                                                                              | 2010-07-23   | 45:34    | Brak danych                        |
 | 7   | 7     | 07: Ten po wakacjach                                                                                         | 2010-10-04   | 32:46    | Brak danych                        |
 | 8   | 8     | 08: Windows Phone 7 i nowy iMagazine                                                                         | 2010-10-21   | 39:06    | Brak danych                        |
@@ -19,7 +19,7 @@
 | 17  | 17    | 17: C(*)(*)ki i cenzura                                                                                      | 2010-12-10   | 47:00    | Brak danych                        |
 | 18  | 18    | 18: Zadyma i wykorzystanie naszych iPadów                                                                    | 2010-12-19   | 1:12:02  | Brak danych                        |
 | 19  | 19    | 19: Sprzątaczka Design Studios                                                                               | 2011-01-16   | 1:21:36  | Brak danych                        |
-| 20  | 20    | 20: “You should either be bored or dead by now. Thanks for listening.”                                       | 2011-01-27   | 42:22    | Brak danych                        |
+| 20  | 20    | 20: “You should either be bored or dead by now. Thanks for listening.”                                       | 2011-01-27   | 42:22    | Miłosz Bolechowski                 |
 | 21  | 21    | 21: Hate-ujemy/Hejtujemy(?) FaceTime!                                                                        | 2011-01-28   | 30:02    | Brak danych                        |
 | 22  | 22    | 22: The Dark Side                                                                                            | 2011-02-11   | 56:09    | Brak danych                        |
 | 23  | 23    | 23: Ten po feriach                                                                                           | 2011-02-25   | 59:47    | Brak danych                        |
@@ -29,7 +29,7 @@
 | 27  | 27    | 27: Zajarany jak szczerbaty na suchara                                                                       | 2011-04-14   | 1:02:49  | Brak danych                        |
 | 28  | 28    | 28: Jak idziecie do burdelu to zostawcie iPhone’a w domu                                                     | 2011-04-21   | 54:45    | Brak danych                        |
 | 29  | 29    | 29: Sony popełniło totalny fuckup                                                                            | 2011-04-28   | 1:19:58  | Brak danych                        |
-| 30  | 30    | 30: Miss FaceTime oraz gość specjalny – Steve Ballmer                                                        | 2011-05-06   | 1:28:26  | Brak danych                        |
+| 30  | 30    | 30: Miss FaceTime oraz gość specjalny – Steve Ballmer                                                        | 2011-05-06   | 1:28:26  | Steve Ballmer                      |
 | 31  | 31    | 31: (Ekstra) Audycja Podcasty i podcasterzy z Polskiego Radia Wrocław                                        | 2011-05-09   | 16:28    | Brak danych                        |
 | 32  | 32    | 32: Justin Bieber, Mac i Blondynka                                                                           | 2011-05-19   | 57:39    | Brak danych                        |
 | 33  | 33    | 33: Apple ani nie zaprzecza, ani nie potwierdza                                                              | 2011-05-24   | 1:34:12  | Brak danych                        |
@@ -42,8 +42,8 @@
 | 40  | 40    | 40: Dominikowi ukradli rower, a mi padł MicroSIM                                                             | 2011-07-16   | 2:17:59  | Brak danych                        |
 | 41  | 41    | 41: To jest jakiś obłęd, czyli nowe Maki i OS X Lion                                                         | 2011-07-24   | 2:00:46  | Brak danych                        |
 | 42  | 42    | 42: Chińczycy mają podrobione Apple Store, a my nie mamy żadnego                                             | 2011-07-29   | 2:04:56  | Brak danych                        |
-| 43  | 43    | 43: Mac Mini z SSD, Mini Server i MacBook Air 13″                                                            | 2011-08-05   | 1:24:26  | Brak danych                        |
-| 44  | 44    | 44: Budujemy Hackintosha i MacBook Air 13″                                                                   | 2011-08-12   | 1:44:21  | Brak danych                        |
+| 43  | 43    | 43: Mac Mini z SSD, Mini Server i MacBook Air 13″                                                            | 2011-08-05   | 1:24:26  | Miłosz Bolechowski                 |
+| 44  | 44    | 44: Budujemy Hackintosha i MacBook Air 13″                                                                   | 2011-08-12   | 1:44:21  | Miłosz Bolechowski                 |
 | 45  | 45    | 45: iStig i wszystko o jego Hackintoshu                                                                      | 2011-08-13   | 1:35:53  | Brak danych                        |
 | 46  | 46    | 46: Nie ma dla nas tematów tabu                                                                              | 2011-08-19   | 1:17:29  | Brak danych                        |
 | 47  | 47    | 47: Steve Jobs jeszcze żyje – nie uśmiercajmy go                                                             | 2011-08-25   | 1:05:29  | Brak danych                        |
@@ -59,16 +59,16 @@
 | 57  | 56    | 56: Podsumowanie iOS 5, iCloud i iPhone 4S                                                                   | 2011-10-21   | 1:50:14  | Brak danych                        |
 | 58  | 57    | 57: Gra o Tron, Biografia Steve’a Jobsa i filmy w iTunes Store Polska                                        | 2011-10-27   | 1:00:16  | Brak danych                        |
 | 59  | 58    | 58: Widzimy, nawet jeśli nie patrzymy                                                                        | 2011-11-03   | 1:54:28  | Brak danych                        |
-| 60  | 59    | 59: 1800 czego? Minut? Pesos kolumbijskich?                                                                  | 2011-11-10   | 1:33:54  | Brak danych                        |
+| 60  | 59    | 59: 1800 czego? Minut? Pesos kolumbijskich?                                                                  | 2011-11-10   | 1:33:54  | Marcin Zbijowski                   |
 | 61  | 61    | 61: SSD zmienia światopogląd                                                                                 | 2011-11-18   | 1:43:30  | Brak danych                        |
 | 62  | 62    | 62: Black Friday                                                                                             | 2011-11-25   | 2:25:20  | Brak danych                        |
-| 63  | 63    | 63: Wiemy o Was wszystko!                                                                                    | 2011-12-01   | 1:51:14  | Brak danych                        |
+| 63  | 63    | 63: Wiemy o Was wszystko!                                                                                    | 2011-12-01   | 1:51:14  | Tomek Brzozowski                   |
 | 64  | 64    | 64: Liroy – Grand Papa polskiego Rapa                                                                        | 2011-12-08   | 1:23:06  | Brak danych                        |
 | 65  | 65    | 65: Not Safe For Work                                                                                        | 2011-12-23   | 2:13:41  | Brak danych                        |
 | 66  | 66    | 66: Panu z ptaka pociekło!                                                                                   | 2012-01-05   | 1:37:32  | Brak danych                        |
 | 67  | 67    | 67: edukacyjne Apple, beznadziejne CES i czyszczący Samsung                                                  | 2012-01-13   | 1:32:14  | Brak danych                        |
 | 68  | 68    | 68: iPad to komputer pełną gębą!                                                                             | 2012-01-19   | 1:18:02  | Brak danych                        |
-| 69  | 69    | 69: Zamykamy ACTA                                                                                            | 2012-01-26   | 1:18:52  | Brak danych                        |
+| 69  | 69    | 69: Zamykamy ACTA                                                                                            | 2012-01-26   | 1:18:52  | Krzysztof Młynarski                |
 | 70  | 70    | 70: Czy i jaki dysk sieciowy wybrać do naszego Maka?                                                         | 2012-02-06   | 1:40:14  | Brak danych                        |
 | 71  | 71    | 71: Nadrabiamy                                                                                               | 2012-02-10   | 54:02    | Brak danych                        |
 | 72  | 72    | 72: Woz!!!                                                                                                   | 2012-02-15   | 28:00    | Brak danych                        |
@@ -81,7 +81,7 @@
 | 79  | 79    | 79: Słyszę głosy                                                                                             | 2012-04-05   | 1:32:37  | Brak danych                        |
 | 80  | 80    | 80: Szukamy Pierwszego Polaka z Flashbackiem                                                                 | 2012-04-13   | 1:24:24  | Brak danych                        |
 | 81  | 81    | 81: Urodzeni Mordercy                                                                                        | 2012-04-19   | 1:21:57  | Brak danych                        |
-| 82  | 82    | 82: Zdradzamy wielkie tajemnice!                                                                             | 2012-04-26   | 2:01:52  | Brak danych                        |
+| 82  | 82    | 82: Zdradzamy wielkie tajemnice!                                                                             | 2012-04-26   | 2:01:52  | Zdzisiek                           |
 | 83  | 83    | 83: Moherowe Berety atakują Apple!                                                                           | 2012-05-10   | 1:41:20  | Brak danych                        |
 | 84  | 84    | 84: Grubszy od dwóch Airów                                                                                   | 2012-05-18   | 1:38:15  | Brak danych                        |
 | 85  | 85    | 85: Memory Fajnd Tim Cook i wszystko jasne                                                                   | 2012-05-31   | 1:27:15  | Brak danych                        |
@@ -90,7 +90,7 @@
 | 88  | 87    | 87: Uważaj jak i gdzie wkładasz                                                                              | 2012-06-21   | 1:28:40  | Brak danych                        |
 | 89  | 88    | 88: Poradnik: Jakim jesteś Makiem?                                                                           | 2012-06-28   | 1:30:22  | Brak danych                        |
 | 90  | 89    | 89: Upadek Triady i jego wpływ na wahania rynku technologicznego                                             | 2012-07-05   | 45:27    | Brak danych                        |
-| 91  | 90    | 90: Kamil z Policją w pościgu za iPhonem                                                                     | 2012-07-06   | 17:02    | Brak danych                        |
+| 91  | 90    | 90: Kamil z Policją w pościgu za iPhonem                                                                     | 2012-07-06   | 17:02    | Kamil                              |
 | 92  | 91    | 91: Android jest w wersji pre-alpha!                                                                         | 2012-07-12   | 1:19:09  | Brak danych                        |
 | 93  | 92    | 92: Szybko i płynnie, czyli wszystko o Mountain Lion                                                         | 2012-07-26   | 1:21:52  | Brak danych                        |
 | 94  | 93    | 93: Nie będzie iPada 8″                                                                                      | 2012-08-02   | 1:07:10  | Brak danych                        |
@@ -142,7 +142,7 @@
 | 140 | 129   | 129: Nasze wrażenia po WWDC 2013                                                                             | 2013-06-14   | 1:36:58  | Brak danych                        |
 | 141 | 130   | 130: (Po Godzinach) iOS 7; Norbert vs. Moridin [explicit]                                                    | 2013-06-21   | 46:02    | Brak danych                        |
 | 142 | 131   | 131: iPhone, plastic–fantastic?                                                                              | 2013-07-05   | 51:38    | Brak danych                        |
-| 143 | 132   | 132: iPad only!                                                                                              | 2013-07-22   | 55:12    | Brak danych                        |
+| 143 | 132   | 132: iPad only!                                                                                              | 2013-07-22   | 55:12    | Michał Śliwiński                   |
 | 144 | 133   | 133: Sprzedałem wszystko co miałem … i nerkę                                                                 | 2013-08-05   | 46:27    | Brak danych                        |
 | 145 | 134   | 134: Jesteśmy zaniepokojeni                                                                                  | 2013-08-09   | 42:55    | Brak danych                        |
 | 146 | 135   | 135: Szukamy pracy; idziemy do kina na „Jobs”                                                                | 2013-08-23   | 43:56    | Brak danych                        |
@@ -160,7 +160,7 @@
 | 158 | 147   | 147: Miłość na Bogato                                                                                        | 2014-02-28   | 1:03:24  | Brak danych                        |
 | 159 | 148   | 148: Not Safe for Running                                                                                    | 2014-03-07   | 1:40:51  | Brak danych                        |
 | 160 | 149   | 149: #PierwszaPolka                                                                                          | 2014-03-14   | 41:54    | Brak danych                        |
-| 161 | 150   | 150: Taki ze mnie buntownik                                                                                  | 2014-03-18   | 49:48    | Brak danych                        |
+| 161 | 150   | 150: Taki ze mnie buntownik                                                                                  | 2014-03-18   | 49:48    | NPC                                |
 | 162 | 151   | 151: Good evening ladies and gentlemen!                                                                      | 2014-04-14   | 1:47:00  | Brak danych                        |
 | 163 | 152   | 152: Wywiad z Dmitrim Glukhovskym                                                                            | 2014-05-30   | 25:45    | Brak danych                        |
 | 164 | 153   | 153: Wspólnego Oglądanie WWDC 2014!                                                                          | 2014-06-02   | 2:28     | Brak danych                        |
@@ -429,7 +429,7 @@
 | 427 | 461   | 461: (English) Talking Vision Pro with Casey Liss                                                            | 2024-02-26   | 39:28    | Brak danych                        |
 | 428 | 462   | 462: Nowe Maki i iPady w marcu?                                                                              | 2024-03-01   | 2:55:25  | Thomas Voland; Wojtek Pietrusiewicz |
 | 429 | 463   | 463: Nowy MacBook Air (early 2024) z Apple M3                                                                | 2024-03-08   | 2:03:42  | Thomas Voland; Wojtek Pietrusiewicz |
-| 430 | 464   | 464: Polski deweloper vs. Apple z Michałem Śliwińskim z Nozbe                                                | 2024-03-13   | 1:41:12  | Thomas Voland; Wojtek Pietrusiewicz |
+| 430 | 464   | 464: Polski deweloper vs. Apple z Michałem Śliwińskim z Nozbe                                                | 2024-03-13   | 1:41:12  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 431 | 465   | 465: Jakiego MacBooka wybrać i odkurzacz wchodzący po schodach                                               | 2024-03-15   | 1:33:00  | Thomas Voland; Wojtek Pietrusiewicz |
 | 432 | 466   | 466: Sony Alpha 9 III, Apple podane do sądu przez USA oraz problem z M1 i M2                                 | 2024-03-22   | 2:33:23  | Thomas Voland; Wojtek Pietrusiewicz |
 | 433 | 467   | 467: USA vs. Apple, odkurzacz za 13 zł i promocja Sonosa                                                     | 2024-03-29   | 2:06:12  | Thomas Voland; Wojtek Pietrusiewicz |
@@ -529,7 +529,7 @@
 | 527 | 561   | 561: (Special) Seriale naszego życia                                                                         | 2025-11-21   | 2:31:26  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 528 | 562   | 562: Czarny Piątek i nowy hardware od Valve – Steam Machine i Steam Frame                                    | 2025-11-28   | 2:07:46  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 529 | 563   | 563: Ogromna zmiana w Apple!                                                                                 | 2025-12-05   | 1:58:19  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
-| 530 | 564   | 564: O Japonii (feat. Jakub Tepper)                                                                          | 2025-12-12   | 1:40:59  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 530 | 564   | 564: O Japonii (feat. Jakub Tepper)                                                                          | 2025-12-12   | 1:40:59  | Jakub Tepper; Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 531 | 565   | 565: iOS 26.2 i zablokowane Apple ID                                                                         | 2025-12-19   | 2:27:16  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 532 | 566   | 566: iPhone XX i TV, który nie mieści się w drzwiach                                                         | 2025-12-26   | 2:00:43  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 533 | 567   | 567: Wielkie Podsumowanie 2025                                                                               | 2026-01-02   | 2:49:29  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
@@ -557,7 +557,7 @@
 | 555 | 589   | 589: Multipla z Maranello i wycieraczki Jony’ego Ive’a                                                       | 2026-05-29   | 2:41:48  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 556 | 590   | 590: Nasze oczekiwania od WWDC 2026                                                                          | 2026-06-03   | 1:48:53  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 557 | 591   | 591: WWDC 2026 Afterparty                                                                                    | 2026-06-08   | 1:37:40  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
-| 558 | 592   | 592: Kto kłamie? Apple czy UE? Wrażenia prosto z Apple Park po WWDC 2026                                     | 2026-06-12   | 3:14:54  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 558 | 592   | 592: Kto kłamie? Apple czy UE? Wrażenia prosto z Apple Park po WWDC 2026                                     | 2026-06-12   | 3:14:54  | Dominik Łada; Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 559 | 593   | 593: Nasza pierwsza drukarka 3D – co musimy wiedzieć                                                         | 2026-06-18   | 3:06:25  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 560 | 594   | 594: Steam Machine i nowy iPhone Air za 3700 PLN                                                             | 2026-06-25   | 1:17:19  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 561 | 595   | 595: Tanio już było – Apple podnosi ceny, ale czy to tylko początek?                                         | 2026-07-02   | 3:40:38  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |

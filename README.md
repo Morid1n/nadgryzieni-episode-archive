@@ -31,8 +31,8 @@ nadgryzieni-episode-archive/
 ├── style.css           # Style CSS
 ├── script.js           # Logika wykresu (Chart.js)
 ├── data.json           # Dane wszystkich odcinków (JSON)
-├── host_metadata.json  # Audytowalny manifest hostów i proweniencji
-├── nadgryzieni_hosts.py # Parser RRN, audyt i bezpieczne apply hostów
+├── host_metadata.json  # Audytowalny manifest osób przypisanych do odcinków i proweniencji
+├── nadgryzieni_hosts.py # Parser RRN/Patreon, audyt i bezpieczne apply hostów
 ├── nadgryzieni_pipeline.py # Bezpieczny pipeline RSS/Patreon → archiwum/site
 ├── patreon_posts.json  # Zweryfikowany fallback linków Patreon
 ├── cron/                # Wrappery harmonogramu weekendowego i retry
@@ -46,11 +46,11 @@ nadgryzieni-episode-archive/
 Dane odcinków są dostępne w formacie JSON:
 - [data.json (surowe dane) →](https://morid1n.github.io/nadgryzieni-episode-archive/data.json)
 
-Każdy odcinek zawiera: stabilny `record_key`, numer, tytuł, datę, długość w minutach, sformatowaną długość, kategorię, kanoniczny URL źródłowy oraz `hosts`, `hosts_status`, `hosts_source`, `hosts_source_url` i — gdy potrzebne — `hosts_provenance`. Odcinki Patreon Afterparty są pełnoprawnymi rekordami statystyk i zachowują ułamkowe identyfikatory, np. `595.5`.
+Każdy odcinek zawiera: stabilny `record_key`, numer, tytuł, datę, długość w minutach, sformatowaną długość, kategorię, kanoniczny URL źródłowy oraz `hosts`, `hosts_status`, `hosts_source`, `hosts_source_url` i — gdy potrzebne — `hosts_provenance`. Lista `hosts` obejmuje także osoby jednoznacznie wskazane w opisie odcinka; nie są one publikowane jako osobny typ osoby. Odcinki Patreon Afterparty są pełnoprawnymi rekordami statystyk i zachowują ułamkowe identyfikatory, np. `595.5`.
 
-`host_metadata.json` jest źródłem audytowalnej proweniencji. Strony RRN bez strukturalnego bloku `Prowadzący` mają status `not_listed` i widoczne `Brak danych`; nie są uzupełniane na podstawie domysłów. Afterparty od numeru 550 wzwyż dziedziczą hostów głównego odcinka wyłącznie przez jawny wpis `paired_rrn` z kluczem sparowanego rekordu.
+`host_metadata.json` jest źródłem audytowalnej proweniencji. Strony RRN bez strukturalnego bloku `Prowadzący` są uzupełniane tylko wtedy, gdy opis jednoznacznie wskazuje konkretną osobę; sama wzmianka o osobie odwiedzającej audycję bez nazwiska pozostaje `not_listed` i ma widoczne `Brak danych`. Afterparty od numeru 550 wzwyż dziedziczą hostów głównego odcinka wyłącznie przez jawny wpis `paired_rrn` z kluczem sparowanego rekordu.
 
-Polityka aliasów hostów jest trwała: każda forma `Norbert Cała` jest normalizowana i publikowana jako `NPC` w parserach, manifeście, `data.json`, Markdown oraz przyszłych aktualizacjach i odczytach cache.
+Polityka aliasów hostów jest trwała: historyczne formy aliasu Norberta są normalizowane i publikowane jako `NPC` w parserach, manifeście, `data.json`, Markdown oraz przyszłych aktualizacjach i odczytach cache.
 
 ## ⚙️ Automatyzacja
 

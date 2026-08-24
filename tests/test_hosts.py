@@ -47,6 +47,13 @@ class HostNameNormalizationTests(unittest.TestCase):
         self.assertEqual(normalize_host_name("Norbert Cała"), "NPC")
         self.assertEqual(normalize_host_name("  NORBERT\u00a0CAŁA  "), "NPC")
         self.assertEqual(host_dedupe_key("Norbert Cała"), host_dedupe_key("NPC"))
+        self.assertEqual(normalize_host_name("Norbi"), "NPC")
+        self.assertEqual(normalize_host_name("Miłoszu"), "Miłosz")
+        self.assertEqual(normalize_host_name("Steve’a Ballmera"), "Steve Ballmer")
+        self.assertEqual(
+            normalize_host_name("Michała „Nozbe” Śliwińskiego"),
+            "Michał Śliwiński",
+        )
 
     def test_host_name_separators_are_rejected(self):
         with self.assertRaises(HostNameError):
@@ -100,6 +107,91 @@ class RrnParserTests(unittest.TestCase):
         self.assertEqual(result.status, "not_listed")
         self.assertEqual(result.hosts, [])
 
+    def test_guest_is_a_host_even_when_no_prowadzacy_block_exists(self):
+        html = """
+        <article>
+          <p>Gościem tego odcinka jest Jakub Tepper, z którym rozmawiamy.</p>
+        </article>
+        """
+        result = parse_rrn_hosts(html)
+        self.assertEqual(result.status, "verified")
+        self.assertEqual(result.hosts, ["Jakub Tepper"])
+
+    def test_guest_marker_without_name_does_not_infer_a_host(self):
+        html = """
+        <article>
+          <p>Dzisiaj nagraliśmy odcinek z nowym gościem.</p>
+        </article>
+        """
+        result = parse_rrn_hosts(html)
+        self.assertEqual(result.status, "not_listed")
+        self.assertEqual(result.hosts, [])
+        self.assertIn("no unambiguous name", " ".join(result.diagnostics))
+
+    def test_description_extraction_keeps_only_explicit_name_tokens(self):
+        result = parse_rrn_hosts(
+            """<article><p>Gościem specjalnym jest redaktor serwisu Aperture.pl — Wojtek „Alchemic” Równanek.</p></article>""",
+            expected_url="https://example.test/guest-name-boundary",
+        )
+        self.assertEqual(result.hosts, ['Wojtek „Alchemic” Równanek'])
+
+    def test_description_extraction_does_not_publish_common_noun_as_person(self):
+        result = parse_rrn_hosts(
+            """<article><p>W tym odcinku gościem jest kobieta, o której jeszcze opowiemy.</p></article>""",
+            expected_url="https://example.test/guest-common-noun",
+        )
+        self.assertEqual(result.hosts, [])
+        self.assertEqual(result.status, "not_listed")
+
+    def test_description_extraction_accepts_name_before_guest_marker(self):
+        result = parse_rrn_hosts(
+            """<article><p>W tym odcinku Kamil jest gościem i opowiada o zdarzeniu.</p></article>""",
+            expected_url="https://example.test/guest-name-before-marker",
+        )
+        self.assertEqual(result.hosts, ['Kamil'])
+
+    def test_description_extraction_accepts_name_after_dash_marker(self):
+        result = parse_rrn_hosts(
+            """<article><p>Dołącza do nas gość specjalny – Zdzisiek z TP-Linka – który opowiada o nowościach.</p></article>""",
+            expected_url="https://example.test/guest-name-after-dash",
+        )
+        self.assertEqual(result.hosts, ['Zdzisiek'])
+
+    def test_description_extraction_accepts_appeared_guest_role(self):
+        result = parse_rrn_hosts(
+            """<article><p>Dzisiaj w roli gościa specjalnego pojawił się Błażej Faliszek, który pracuje nad filtrem.</p></article>""",
+            expected_url="https://example.test/guest-role-appeared",
+        )
+        self.assertEqual(result.hosts, ['Błażej Faliszek'])
+
+    def test_description_extraction_accepts_guest_marker_with_czyli_name(self):
+        result = parse_rrn_hosts(
+            """<article><p>Gości specjalista od bezpieczeństwa, czyli nasz własny Krzysztof Młynarski.</p></article>""",
+            expected_url="https://example.test/guest-marker-czyli",
+        )
+        self.assertEqual(result.hosts, ['Krzysztof Młynarski'])
+
+    def test_description_extraction_accepts_guest_as_role_predicate(self):
+        result = parse_rrn_hosts(
+            """<article><p>Dzisiaj za gościa robi Norbert. Po trzecie omawiamy nowy temat.</p></article>""",
+            expected_url="https://example.test/guest-role-predicate",
+        )
+        self.assertEqual(result.hosts, ['NPC'])
+
+    def test_description_extraction_accepts_name_described_as_guest(self):
+        result = parse_rrn_hosts(
+            """<article><p>Michał Śliwiński z Nozbe, jako specjalny gość, opowiada o Apple.</p></article>""",
+            expected_url="https://example.test/guest-name-described",
+        )
+        self.assertEqual(result.hosts, ['Michał Śliwiński'])
+
+    def test_description_extraction_ignores_guest_of_previous_episode(self):
+        result = parse_rrn_hosts(
+            """<article><p>Nie zapomnieliśmy o gościu ostatniego odcinka — Miłoszu.</p></article>""",
+            expected_url="https://example.test/guest-previous-episode",
+        )
+        self.assertEqual(result.hosts, [])
+
     def test_structural_empty_host_list_is_not_listed(self):
         result = parse_rrn_hosts(fixture("rrn-empty-list.html"))
         self.assertEqual(result.status, "not_listed")
@@ -150,6 +242,18 @@ class RrnParserTests(unittest.TestCase):
             expected_episode="86.5",
         )
         self.assertEqual(result.status, "not_listed")
+
+    def test_explicit_guest_from_description_is_merged_into_hosts(self):
+        html = """
+        <article><h2>Prowadzący:</h2>
+        <ul><li>Thomas Voland</li></ul>
+        <p>Gościem tego odcinka jest Miłosz Bolechowski, z którym rozmawiamy.</p>
+        </article>
+        """
+        result = parse_rrn_hosts(html)
+        self.assertEqual(result.status, "verified")
+        self.assertEqual(result.hosts, ["Thomas Voland", "Miłosz Bolechowski"])
+        self.assertNotIn("guests", result.to_dict())
 
 
 class PatreonParserTests(unittest.TestCase):
@@ -220,6 +324,32 @@ class PatreonParserTests(unittest.TestCase):
         result = parse_patreon_post_payload(payload)
         self.assertEqual(result.status, "parse_error")
         self.assertIn("unavailable", " ".join(result.diagnostics).lower())
+
+    def test_patreon_description_person_is_merged_into_hosts(self):
+        document = {
+            "type": "doc",
+            "content": [
+                {"type": "paragraph", "content": [{"type": "text", "text": "Prowadzący:"}]},
+                {
+                    "type": "bulletList",
+                    "content": [{
+                        "type": "listItem",
+                        "content": [{"type": "paragraph", "content": [{"type": "text", "text": "Thomas Voland"}]}],
+                    }],
+                },
+                {"type": "paragraph", "content": [{"type": "text", "text": "Goście:"}]},
+                {
+                    "type": "bulletList",
+                    "content": [{
+                        "type": "listItem",
+                        "content": [{"type": "paragraph", "content": [{"type": "text", "text": "Miłosz Bolechowski"}]}],
+                    }],
+                },
+            ],
+        }
+        result = parse_patreon_post_payload(patreon_payload(document))
+        self.assertEqual(result.status, "verified")
+        self.assertEqual(result.hosts, ["Thomas Voland", "Miłosz Bolechowski"])
 
 
 if __name__ == "__main__":

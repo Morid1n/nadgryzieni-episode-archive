@@ -570,8 +570,8 @@ HOST_UNRESOLVED_STATUSES = {"unavailable", "ambiguous", "manual_review"}
 HOST_SOURCES = {"rrn", "patreon", "paired_rrn", "manual"}
 HOST_ALIAS_POLICY = {
     "mode": "conservative",
-    "description": "Only NFKC, whitespace and case-insensitive deduplication are automatic; the explicit reviewed alias Norbert Cała → NPC is applied on every parser and update path.",
-    "aliases": {"Norbert Cała": "NPC"},
+    "description": "Only NFKC, whitespace and case-insensitive deduplication are automatic; the reviewed legacy Norbert alias is normalized to the public canonical name NPC on every parser and update path.",
+    "aliases": {"legacy_norbert_alias": "NPC"},
 }
 HOST_SENTINEL = "Brak danych"
 
@@ -579,7 +579,14 @@ HOST_SENTINEL = "Brak danych"
 def effective_host_alias_policy(stored: dict | None = None) -> dict:
     """Return the policy with the code-defined aliases always enforced."""
     policy = dict(stored) if isinstance(stored, dict) else {}
-    aliases = dict(policy.get("aliases", {})) if isinstance(policy.get("aliases", {}), dict) else {}
+    stored_aliases = policy.get("aliases", {})
+    if not isinstance(stored_aliases, dict):
+        stored_aliases = {}
+    aliases = {
+        str(key): str(value)
+        for key, value in stored_aliases.items()
+        if not re.search(r"(?iu)\bnorbert\s+cała\b", f"{key} {value}")
+    }
     aliases.update(HOST_ALIAS_POLICY["aliases"])
     policy.update({
         "mode": HOST_ALIAS_POLICY["mode"],

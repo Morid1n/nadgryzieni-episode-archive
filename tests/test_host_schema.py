@@ -34,6 +34,14 @@ class HostSchemaTests(unittest.TestCase):
         }, "rk_alias")
         self.assertEqual(normalized["hosts"], ["NPC"])
 
+    def test_public_alias_policy_does_not_publish_legacy_full_name(self):
+        policy = pipeline.effective_host_alias_policy({
+            "aliases": {"Norbert Cała": "NPC", "other": "Other"},
+        })
+        serialized = json.dumps(policy, ensure_ascii=False)
+        self.assertNotIn("Norbert Cała", serialized)
+        self.assertEqual(policy["aliases"].get("other"), "Other")
+
     def test_generated_data_normalizes_norbert_cala_alias(self):
         row = {
             "episode": "1",
