@@ -148,14 +148,21 @@ class RrnParserTests(unittest.TestCase):
             """<article><p>W tym odcinku Kamil jest gościem i opowiada o zdarzeniu.</p></article>""",
             expected_url="https://example.test/guest-name-before-marker",
         )
-        self.assertEqual(result.hosts, ['Kamil'])
+        self.assertEqual(result.hosts, ['Kamil Szmit'])
 
     def test_description_extraction_accepts_name_after_dash_marker(self):
         result = parse_rrn_hosts(
             """<article><p>Dołącza do nas gość specjalny – Zdzisiek z TP-Linka – który opowiada o nowościach.</p></article>""",
             expected_url="https://example.test/guest-name-after-dash",
         )
-        self.assertEqual(result.hosts, ['Zdzisiek'])
+        self.assertEqual(result.hosts, ['Zdzisław Kaczyk'])
+
+    def test_description_extraction_normalizes_zbyszek_identity(self):
+        result = parse_rrn_hosts(
+            """<article><p>Gościem tego odcinka jest Zbyszek z Macoscope.</p></article>""",
+            expected_url="https://example.test/guest-zbyszek",
+        )
+        self.assertEqual(result.hosts, ['Zbigniew Sobiecki'])
 
     def test_description_extraction_accepts_appeared_guest_role(self):
         result = parse_rrn_hosts(

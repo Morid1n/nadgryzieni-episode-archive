@@ -3,7 +3,7 @@
 | 1   | 1     | 01: Come see our latest recap                                                                                | 2010-01-28   | 42:55    | Brak danych                        |
 | 2   | 2     | 02: Aperture 3                                                                                               | 2010-03-02   | 43:21    | Wojtek „Alchemic” Równanek         |
 | 3   | 3     | 03: Podróże z Apple                                                                                          | 2010-05-26   | 21:04    | Brak danych                        |
-| 4   | 4     | 04: WWDC 2010                                                                                                | 2010-06-16   | 12:53    | Zbyszek                            |
+| 4   | 4     | 04: WWDC 2010                                                                                                | 2010-06-16   | 12:53    | Zbigniew Sobiecki                  |
 | 5   | 5     | 05: iPhone 4                                                                                                 | 2010-07-07   | 15:50    | NPC                                |
 | 6   | 6     | 06: Antennagate                                                                                              | 2010-07-23   | 45:34    | Brak danych                        |
 | 7   | 7     | 07: Ten po wakacjach                                                                                         | 2010-10-04   | 32:46    | Brak danych                        |
@@ -81,7 +81,7 @@
 | 79  | 79    | 79: Słyszę głosy                                                                                             | 2012-04-05   | 1:32:37  | Brak danych                        |
 | 80  | 80    | 80: Szukamy Pierwszego Polaka z Flashbackiem                                                                 | 2012-04-13   | 1:24:24  | Brak danych                        |
 | 81  | 81    | 81: Urodzeni Mordercy                                                                                        | 2012-04-19   | 1:21:57  | Brak danych                        |
-| 82  | 82    | 82: Zdradzamy wielkie tajemnice!                                                                             | 2012-04-26   | 2:01:52  | Zdzisiek                           |
+| 82  | 82    | 82: Zdradzamy wielkie tajemnice!                                                                             | 2012-04-26   | 2:01:52  | Zdzisław Kaczyk                    |
 | 83  | 83    | 83: Moherowe Berety atakują Apple!                                                                           | 2012-05-10   | 1:41:20  | Brak danych                        |
 | 84  | 84    | 84: Grubszy od dwóch Airów                                                                                   | 2012-05-18   | 1:38:15  | Brak danych                        |
 | 85  | 85    | 85: Memory Fajnd Tim Cook i wszystko jasne                                                                   | 2012-05-31   | 1:27:15  | Brak danych                        |
@@ -90,7 +90,7 @@
 | 88  | 87    | 87: Uważaj jak i gdzie wkładasz                                                                              | 2012-06-21   | 1:28:40  | Brak danych                        |
 | 89  | 88    | 88: Poradnik: Jakim jesteś Makiem?                                                                           | 2012-06-28   | 1:30:22  | Brak danych                        |
 | 90  | 89    | 89: Upadek Triady i jego wpływ na wahania rynku technologicznego                                             | 2012-07-05   | 45:27    | Brak danych                        |
-| 91  | 90    | 90: Kamil z Policją w pościgu za iPhonem                                                                     | 2012-07-06   | 17:02    | Kamil                              |
+| 91  | 90    | 90: Kamil z Policją w pościgu za iPhonem                                                                     | 2012-07-06   | 17:02    | Kamil Szmit                        |
 | 92  | 91    | 91: Android jest w wersji pre-alpha!                                                                         | 2012-07-12   | 1:19:09  | Brak danych                        |
 | 93  | 92    | 92: Szybko i płynnie, czyli wszystko o Mountain Lion                                                         | 2012-07-26   | 1:21:52  | Brak danych                        |
 | 94  | 93    | 93: Nie będzie iPada 8″                                                                                      | 2012-08-02   | 1:07:10  | Brak danych                        |

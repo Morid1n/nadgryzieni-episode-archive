@@ -143,6 +143,11 @@ _HOST_NAME_ALIASES = {
     "steve’a ballmera": "Steve Ballmer",
     "michała „nozbe” śliwińskiego": "Michał Śliwiński",
 }
+_DESCRIPTION_PERSON_ALIASES = {
+    "kamil": "Kamil Szmit",
+    "zdzisiek": "Zdzisław Kaczyk",
+    "zbyszek": "Zbigniew Sobiecki",
+}
 _DESCRIPTION_PERSON_MARKER_RE = re.compile(
     r"(?iu)(?<!\w)(?:gość|gościem|gości|goście|gośćmi|gościa|guest(?:s)?)(?!\w)"
 )
@@ -219,6 +224,11 @@ def host_dedupe_key(value: str) -> str:
     """Return the canonical, case-insensitive key for one host name."""
 
     return normalize_host_name(value).casefold()
+
+
+def _normalize_description_person_name(value: str) -> str:
+    normalized = normalize_host_name(value)
+    return _DESCRIPTION_PERSON_ALIASES.get(normalized.casefold(), normalized)
 
 
 def _node_text(node: _Node, include_nested_lists: bool = True) -> str:
@@ -559,7 +569,7 @@ def _normalise_description_entries(
     excluded_keys = set()
     for raw_value, struck in entries:
         try:
-            value = normalize_host_name(raw_value)
+            value = _normalize_description_person_name(raw_value)
         except HostNameError as exc:
             diagnostics.append("description person entry rejected: " + str(exc))
             return [], excluded, diagnostics
@@ -1445,7 +1455,7 @@ def serialize_parse_result(result: HostParseResult) -> str:
 # ── Historical audit/apply workflow ──────────────────────────────────────────
 
 AUDIT_SCHEMA_VERSION = 1
-PARSER_VERSION = "nadgryzieni-hosts/1.7"
+PARSER_VERSION = "nadgryzieni-hosts/1.8"
 AUDIT_USER_AGENT = "Nadgryzieni-host-audit/1.0"
 UNRESOLVED_STATUSES = frozenset({"unavailable", "ambiguous", "manual_review"})
 DEFAULT_HOST_CACHE_PATH = Path(os.environ.get(

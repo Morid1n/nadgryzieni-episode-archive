@@ -76,7 +76,7 @@
       "year": 2010,
       "url": "https://retrorocketnetwork.pl/nadgryzieni-04-wwdc-2010/",
       "hosts": [
-        "Zbyszek"
+        "Zbigniew Sobiecki"
       ],
       "hosts_status": "verified",
       "hosts_source": "rrn",
@@ -88,6 +88,13 @@
           {
             "marker": "prose",
             "evidence": "Zapraszamy do podcastu oznaczonego numerem 4. Tym razem mamy dla Was nielada gratkę, bo gościem tego odcinka jest Zbyszek z Macoscope. Opowie nam o swoich wrażeniach z uczestniczenia w WWDC 2010 oraz spostrzeżeniach dotyczących Steve’a Jobsa podczas keynote o iPhone 4. Kilka innych ciekawostek zapewne też się znajdzie."
+          }
+        ],
+        "description_identity_corrections": [
+          {
+            "source_name": "Zbyszek",
+            "canonical_name": "Zbigniew Sobiecki",
+            "basis": "user_confirmed_identity"
           }
         ]
       }
@@ -1630,7 +1637,7 @@
       "year": 2012,
       "url": "https://retrorocketnetwork.pl/nadgryzieni-82-zdradzamy-wielkie-tajemnice/",
       "hosts": [
-        "Zdzisiek"
+        "Zdzisław Kaczyk"
       ],
       "hosts_status": "verified",
       "hosts_source": "rrn",
@@ -1642,6 +1649,13 @@
           {
             "marker": "prose",
             "evidence": "Witamy w kolejnym odcinku. Dzisiaj rozpoczynamy iPhone’owo i iPodowo z Norbim, który porusza poważny temat w sposób humorystyczny. W drugiej części dołącza Dominik, a ja poruszam tematy konkurencji w sposób poważny, pomimo że temat też jest taki. Na koniec z kolei, a w zasadzie na ponad godzinę, dołącza do nas gość specjalny – Zdzisiek z TP-Linka – który nie tylko opowiada Wam o swoich planowanych nowościach (a jest kilka ciekawych rzeczy), ale również, do spółki z Dominikiem, zdradzają sekrety "
+          }
+        ],
+        "description_identity_corrections": [
+          {
+            "source_name": "Zdzisiek",
+            "canonical_name": "Zdzisław Kaczyk",
+            "basis": "user_confirmed_identity"
           }
         ]
       }
@@ -1809,7 +1823,7 @@
       "year": 2012,
       "url": "https://retrorocketnetwork.pl/nadgryzieni-90-kamil-z-policja-w-poscigu-za-iphonem/",
       "hosts": [
-        "Kamil"
+        "Kamil Szmit"
       ],
       "hosts_status": "verified",
       "hosts_source": "rrn",
@@ -1821,6 +1835,13 @@
           {
             "marker": "prose",
             "evidence": "W środę Beacie Szmit skradziono iPhone’a. Po godzinie miała go spowrotem, a to wszystko dzięki chłodnej głowie Kamila, jej męża, oraz zaufaniu, którym obdarzyła go toruńska Policja. W tym odcinku Kamil jest gościem i opowiada Wam o tym zdarzeniu! Zapraszamy!"
+          }
+        ],
+        "description_identity_corrections": [
+          {
+            "source_name": "Kamil",
+            "canonical_name": "Kamil Szmit",
+            "basis": "user_confirmed_identity"
           }
         ]
       }
