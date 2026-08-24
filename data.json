@@ -1446,13 +1446,17 @@
       "category": "main",
       "year": 2012,
       "url": "https://retrorocketnetwork.pl/nadgryzieni-71-woz/",
-      "hosts": [],
-      "hosts_status": "not_listed",
-      "hosts_source": "rrn",
+      "hosts": [
+        "Steve \"Woz\" Wozniak"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "manual",
       "hosts_source_url": "https://retrorocketnetwork.pl/nadgryzieni-71-woz/",
       "hosts_provenance": {
-        "kind": "direct_source",
-        "source_url": "https://retrorocketnetwork.pl/nadgryzieni-71-woz"
+        "kind": "manual_user_confirmation",
+        "source_url": "https://retrorocketnetwork.pl/nadgryzieni-71-woz",
+        "basis": "explicit_user_confirmation",
+        "note": "User confirmed that Steve \"Woz\" Wozniak appeared in this episode; the source page did not expose a structural Prowadzący block."
       }
     },
     {

@@ -1,7 +1,7 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 130;
+const DATA_VERSION = 131;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 const YEARLY_STATS_START = 2021;
@@ -173,6 +173,24 @@ function hostDedupeKey(value) {
     return value.normalize('NFKC').replace(/\s+/gu, ' ').trim().toLocaleLowerCase('pl-PL');
 }
 
+function hostNameSortKey(value) {
+    const normalized = value.normalize('NFKC').replace(/\s+/gu, ' ').trim();
+    const parts = normalized.split(' ');
+    return {
+        firstName: parts[0] || '',
+        surname: parts.slice(1).join(' '),
+        fullName: normalized,
+    };
+}
+
+function compareHostNames(left, right) {
+    const leftKey = hostNameSortKey(left);
+    const rightKey = hostNameSortKey(right);
+    return hostCollator.compare(leftKey.firstName, rightKey.firstName)
+        || hostCollator.compare(leftKey.surname, rightKey.surname)
+        || hostCollator.compare(leftKey.fullName, rightKey.fullName);
+}
+
 function renderHostsSummary() {
     const list = $('#host-summary-list');
     const empty = $('#hosts-summary-empty');
@@ -197,7 +215,7 @@ function renderHostsSummary() {
         });
     });
 
-    const entries = [...counts.values()].sort((a, b) => b.count - a.count || hostCollator.compare(a.name, b.name));
+    const entries = [...counts.values()].sort((a, b) => b.count - a.count || compareHostNames(a.name, b.name));
     list.replaceChildren(...entries.map((entry) => {
         const item = document.createElement('li');
         item.className = 'host-summary-item';

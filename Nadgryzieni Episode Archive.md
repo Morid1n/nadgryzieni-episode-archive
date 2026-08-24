@@ -71,7 +71,7 @@
 | 69  | 69    | 69: Zamykamy ACTA                                                                                            | 2012-01-26   | 1:18:52  | Krzysztof Młynarski                |
 | 70  | 70    | 70: Czy i jaki dysk sieciowy wybrać do naszego Maka?                                                         | 2012-02-06   | 1:40:14  | Brak danych                        |
 | 71  | 71    | 71: Nadrabiamy                                                                                               | 2012-02-10   | 54:02    | Brak danych                        |
-| 72  | 72    | 72: Woz!!!                                                                                                   | 2012-02-15   | 28:00    | Brak danych                        |
+| 72  | 72    | 72: Woz!!!                                                                                                   | 2012-02-15   | 28:00    | Steve "Woz" Wozniak                |
 | 73  | 73    | 73: OS X Mountain Lion i Macworld                                                                            | 2012-02-20   | 1:34:23  | Brak danych                        |
 | 74  | 74    | 74: Łyka jak pelikan cegłę                                                                                   | 2012-03-01   | 1:15:57  | Brak danych                        |
 | 75  | 75    | 75: iPad 3 – relacja na żywo z prezentacji                                                                   | 2012-03-09   | 2:02:32  | Brak danych                        |
