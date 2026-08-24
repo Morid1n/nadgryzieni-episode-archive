@@ -138,6 +138,103 @@ class HostSchemaTests(unittest.TestCase):
         self.assertEqual(row["hosts"], ["Wojtek Pietrusiewicz"])
         self.assertEqual(row["hosts_source"], "rrn")
 
+    def test_manifest_rejects_credential_bearing_source_url(self):
+        with self.assertRaises(ValueError):
+            pipeline.validate_host_entry({
+                "hosts": ["Wojtek Pietrusiewicz"],
+                "hosts_status": "verified",
+                "hosts_source": "rrn",
+                "hosts_source_url": "https://user:password@retrorocketnetwork.pl/one/",
+            }, "rk_credentials")
+
+    def test_manifest_rejects_provenance_source_url_mismatch(self):
+        with self.assertRaises(ValueError):
+            pipeline.validate_host_entry({
+                "hosts": ["Wojtek Pietrusiewicz"],
+                "hosts_status": "verified",
+                "hosts_source": "rrn",
+                "hosts_source_url": "https://retrorocketnetwork.pl/one/",
+                "provenance": {
+                    "kind": "direct_source",
+                    "source_url": "https://retrorocketnetwork.pl/two/",
+                },
+            }, "rk_mismatch")
+
+    def test_manifest_can_bind_source_url_to_the_archive_row(self):
+        with self.assertRaises(ValueError):
+            pipeline.validate_host_entry({
+                "hosts": ["Wojtek Pietrusiewicz"],
+                "hosts_status": "verified",
+                "hosts_source": "rrn",
+                "hosts_source_url": "https://retrorocketnetwork.pl/two/",
+            }, "rk_bound", expected_source_url="https://retrorocketnetwork.pl/one/")
+
+    def test_manifest_from_rows_drops_orphaned_base_entries(self):
+        row = {
+            "episode": "135",
+            "title": "135: Test",
+            "date": "2015-01-01",
+            "duration": "1:00:00",
+            "url": "https://retrorocketnetwork.pl/135-test/",
+            "hosts": ["Wojtek Pietrusiewicz"],
+            "hosts_status": "verified",
+            "hosts_source": "rrn",
+            "hosts_source_url": "https://retrorocketnetwork.pl/135-test/",
+        }
+        key = pipeline.build_record_key(row)
+        manifest = pipeline.manifest_from_rows(
+            [row],
+            base={"records": {"rk_orphan": {
+                "hosts": ["Orphan Person"],
+                "hosts_status": "verified",
+                "hosts_source": "rrn",
+                "hosts_source_url": "https://retrorocketnetwork.pl/orphan/",
+            }}},
+            strict=True,
+        )
+        self.assertEqual(set(manifest["records"]), {key})
+
+    def test_manifest_rejects_paired_entry_with_missing_pair(self):
+        with self.assertRaises(ValueError):
+            pipeline.validate_manifest_integrity({"records": {"rk_after": {
+                "record_key": "rk_after",
+                "hosts": ["Wojtek Pietrusiewicz"],
+                "hosts_status": "verified",
+                "hosts_source": "paired_rrn",
+                "hosts_source_url": "https://retrorocketnetwork.pl/main/",
+                "provenance": {
+                    "kind": "paired_rrn",
+                    "rule": "afterparty_same_hosts_from_main",
+                    "paired_record_key": "rk_missing",
+                    "paired_episode": "135",
+                },
+            }}})
+
+    def test_manifest_rejects_paired_entry_with_different_hosts(self):
+        with self.assertRaises(ValueError):
+            pipeline.validate_manifest_integrity({"records": {
+                "rk_main": {
+                    "record_key": "rk_main",
+                    "hosts": ["Wojtek Pietrusiewicz"],
+                    "hosts_status": "verified",
+                    "hosts_source": "rrn",
+                    "hosts_source_url": "https://retrorocketnetwork.pl/main/",
+                },
+                "rk_after": {
+                    "record_key": "rk_after",
+                    "hosts": ["Other Person"],
+                    "hosts_status": "verified",
+                    "hosts_source": "paired_rrn",
+                    "hosts_source_url": "https://retrorocketnetwork.pl/main/",
+                    "provenance": {
+                        "kind": "paired_rrn",
+                        "rule": "afterparty_same_hosts_from_main",
+                        "paired_record_key": "rk_main",
+                        "paired_episode": "135",
+                    },
+                },
+            }})
+
 
 if __name__ == "__main__":
     unittest.main()

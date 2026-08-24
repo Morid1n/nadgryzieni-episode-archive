@@ -50,5 +50,32 @@ class FrontendHostsContractTests(unittest.TestCase):
         self.assertIn(".hosts-summary-heading", self.style)
 
 
+class FrontendUpcomingContractTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.html = (REPO_DIR / "index.html").read_text(encoding="utf-8")
+        cls.script = (REPO_DIR / "script.js").read_text(encoding="utf-8")
+        cls.style = (REPO_DIR / "style.css").read_text(encoding="utf-8")
+
+    def test_upcoming_card_has_separate_semantic_markup(self):
+        self.assertIn('id="upcoming-event"', self.html)
+        self.assertIn('id="upcoming-event-title"', self.html)
+        self.assertIn('id="upcoming-event-time"', self.html)
+        self.assertIn('id="upcoming-event-link"', self.html)
+        self.assertIn('hidden', self.html)
+
+    def test_runtime_loads_and_validates_upcoming_artifact(self):
+        self.assertIn("function renderUpcomingEvent(payload)", self.script)
+        self.assertIn("upcoming.json?v=", self.script)
+        self.assertIn("Europe/Warsaw", self.script)
+        self.assertIn("upcomingEvent.hidden = true", self.script)
+        self.assertIn("upcomingEventLink.textContent", self.script)
+
+    def test_upcoming_card_has_responsive_styles(self):
+        self.assertIn(".upcoming-event", self.style)
+        self.assertIn(".upcoming-event-card", self.style)
+        self.assertIn(".upcoming-event-link", self.style)
+
+
 if __name__ == "__main__":
     unittest.main()

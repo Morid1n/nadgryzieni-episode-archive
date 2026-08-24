@@ -153,6 +153,70 @@ class RrnParserTests(unittest.TestCase):
         )
         self.assertEqual(result.hosts, ['Kamil Szmit'])
 
+    def test_description_extraction_drops_sentence_initial_modifier_from_name(self):
+        result = parse_rrn_hosts(
+            """<article><p>Dzisiaj Kamil jest gościem i opowiada o zdarzeniu.</p></article>""",
+            expected_url="https://example.test/guest-leading-modifier",
+        )
+        self.assertEqual(result.status, "verified")
+        self.assertEqual(result.hosts, ["Kamil Szmit"])
+
+    def test_description_extraction_rejects_previous_episode_mentions_in_every_pattern(self):
+        result = parse_rrn_hosts(
+            """<article><p>Gościem poprzedniego odcinka był Jan Kowalski.</p></article>""",
+            expected_url="https://example.test/guest-previous-episode-without-dash",
+        )
+        self.assertEqual(result.status, "not_listed")
+        self.assertEqual(result.hosts, [])
+
+    def test_description_extraction_accepts_plural_guest_sentence(self):
+        result = parse_rrn_hosts(
+            """<article><p>Gośćmi są Jan Kowalski i Anna Nowak.</p></article>""",
+            expected_url="https://example.test/guest-plural",
+        )
+        self.assertEqual(result.status, "verified")
+        self.assertEqual(result.hosts, ["Jan Kowalski", "Anna Nowak"])
+
+    def test_description_extraction_accepts_special_guest_colon_form(self):
+        result = parse_rrn_hosts(
+            """<article><p>Gość specjalny: Jan Kowalski.</p></article>""",
+            expected_url="https://example.test/guest-special-colon",
+        )
+        self.assertEqual(result.status, "verified")
+        self.assertEqual(result.hosts, ["Jan Kowalski"])
+
+    def test_description_extraction_never_publishes_guest_role_word(self):
+        result = parse_rrn_hosts(
+            """<article><p>Gościem jest Jan Kowalski, a gościem jest Anna Nowak.</p></article>""",
+            expected_url="https://example.test/guest-role-word",
+        )
+        self.assertEqual(result.status, "verified")
+        self.assertEqual(result.hosts, ["Jan Kowalski", "Anna Nowak"])
+
+    def test_description_extraction_does_not_discard_explicit_name_before_ordinary_semicolon(self):
+        result = parse_rrn_hosts(
+            """<article><p>Gościem jest Jan Kowalski; rozmawiamy o technologii.</p></article>""",
+            expected_url="https://example.test/guest-semicolon",
+        )
+        self.assertEqual(result.status, "verified")
+        self.assertEqual(result.hosts, ["Jan Kowalski"])
+
+    def test_malformed_html_fails_closed_even_when_a_host_list_is_recoverable(self):
+        result = parse_rrn_hosts(
+            """<article><h2>Prowadzący:</h2><ul><li>Jan Kowalski</article>""",
+            expected_url="https://example.test/malformed-html",
+        )
+        self.assertEqual(result.status, "parse_error")
+        self.assertEqual(result.hosts, [])
+
+    def test_recoverable_unexpected_closing_tag_does_not_block_real_host_detection(self):
+        result = parse_rrn_hosts(
+            """</span><article><p>Gościem jest Jan Kowalski.</p></article>""",
+            expected_url="https://example.test/recoverable-closing-tag",
+        )
+        self.assertEqual(result.status, "verified")
+        self.assertEqual(result.hosts, ["Jan Kowalski"])
+
     def test_description_extraction_accepts_name_after_dash_marker(self):
         result = parse_rrn_hosts(
             """<article><p>Dołącza do nas gość specjalny – Zdzisiek z TP-Linka – który opowiada o nowościach.</p></article>""",

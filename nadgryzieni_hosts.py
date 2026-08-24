@@ -162,6 +162,11 @@ _DESCRIPTION_NAME_TOKEN = (
     r"(?-i:(?:[A-ZĄĆĘŁŃÓŚŹŻ][\wĄĆĘŁŃÓŚŹŻąćęłńóśźż'’-]*|"
     r"[\"„][^\"”]{1,40}[\"”]))"
 )
+_DESCRIPTION_NAME_SEQUENCE = (
+    rf"{_DESCRIPTION_NAME_TOKEN}(?:\s+{_DESCRIPTION_NAME_TOKEN}){{0,2}}"
+    rf"(?:\s*(?:,|i|oraz)\s*{_DESCRIPTION_NAME_TOKEN}"
+    rf"(?:\s+{_DESCRIPTION_NAME_TOKEN}){{0,2}})*"
+)
 _DESCRIPTION_AFTER_IS_RE = re.compile(
     rf"(?iu)(?:gość|gościem|gości|goście|gośćmi|gościa|guest(?:s)?)"
     rf"[^.!?]{{0,180}}?\bjest\b\s+(?:to\s+)?"
@@ -194,9 +199,45 @@ _DESCRIPTION_NAME_AS_GUEST_RE = re.compile(
     rf"[^.!?]{{0,80}}?\b(?:specjalny|specjalna|special)\s+"
     rf"(?:gość|guest)\b"
 )
+_DESCRIPTION_AFTER_ARE_RE = re.compile(
+    rf"(?iu)(?:gośćmi|goście|guests?)\s+(?:są|to)\s+"
+    rf"(?P<names>{_DESCRIPTION_NAME_SEQUENCE})"
+)
+_DESCRIPTION_SPECIAL_COLON_RE = re.compile(
+    rf"(?iu)(?:gość|guest)\s+specjaln(?:y|a|e)\s*:\s*"
+    rf"(?P<name>{_DESCRIPTION_NAME_TOKEN}(?:\s+{_DESCRIPTION_NAME_TOKEN}){{0,3}})"
+)
 _DESCRIPTION_PREVIOUS_EPISODE_RE = re.compile(
     r"(?iu)\b(?:ostatni(?:ego|ej)?|poprzedni(?:ego|ej)?|last|previous)\s+"
     r"(?:odcinka|episode)\b"
+)
+_DESCRIPTION_CONTEXT_WORDS = frozenset(
+    {
+        "a",
+        "ale",
+        "dzisiaj",
+        "gości",
+        "gościa",
+        "goście",
+        "gościem",
+        "gość",
+        "gośćmi",
+        "guest",
+        "guests",
+        "nasz",
+        "nasza",
+        "nasze",
+        "odcinku",
+        "specjalna",
+        "specjalne",
+        "specjalny",
+        "ten",
+        "tym",
+        "w",
+        "własna",
+        "własne",
+        "własny",
+    }
 )
 
 
@@ -539,8 +580,34 @@ def _description_label(node: _Node) -> bool:
 
 
 def _description_sentence_names(value: str) -> List[str]:
+    if _DESCRIPTION_PREVIOUS_EPISODE_RE.search(value):
+        return []
+
+    def candidate_allowed(candidate: str) -> bool:
+        tokens = candidate.strip().split()
+        if not tokens:
+            return False
+        normalized_tokens = [token.strip("\"„”'’,-:;.!?").casefold() for token in tokens]
+        if normalized_tokens[0] in _DESCRIPTION_CONTEXT_WORDS:
+            return False
+        if any(
+            token in {"gość", "gościem", "goście", "gości", "gościa", "gośćmi", "guest", "guests"}
+            for token in normalized_tokens
+        ):
+            return False
+        return True
+
+    def split_sequence(value_to_split: str) -> List[str]:
+        return [
+            piece.strip(" ,;:.!?–—-\t")
+            for piece in re.split(r"\s*(?:,|\bi\b|\boraz\b)\s*", value_to_split, flags=re.I)
+            if piece.strip(" ,;:.!?–—-\t")
+        ]
+
     names: List[str] = []
     patterns = (
+        _DESCRIPTION_AFTER_ARE_RE,
+        _DESCRIPTION_SPECIAL_COLON_RE,
         _DESCRIPTION_AFTER_IS_RE,
         _DESCRIPTION_BEFORE_IS_RE,
         _DESCRIPTION_AFTER_DASH_RE,
@@ -550,14 +617,20 @@ def _description_sentence_names(value: str) -> List[str]:
     )
     for pattern in patterns:
         for match in pattern.finditer(value):
-            if (
-                pattern is _DESCRIPTION_AFTER_DASH_RE
-                and _DESCRIPTION_PREVIOUS_EPISODE_RE.search(value[:match.start("name")])
-            ):
-                continue
-            candidate = match.group("name").strip(" ,;:.!?–—-\t")
-            if candidate and candidate not in names:
-                names.append(candidate)
+            group_name = "names" if "names" in match.groupdict() else "name"
+            candidates = (
+                split_sequence(match.group(group_name))
+                if group_name == "names"
+                else [match.group(group_name)]
+            )
+            for candidate in candidates:
+                candidate = candidate.strip(" ,;:.!?–—-\t")
+                candidate_tokens = candidate.split()
+                while candidate_tokens and candidate_tokens[0].strip("\"„”'’,-:;.!?").casefold() in _DESCRIPTION_CONTEXT_WORDS:
+                    candidate_tokens.pop(0)
+                candidate = " ".join(candidate_tokens)
+                if candidate and candidate_allowed(candidate) and candidate not in names:
+                    names.append(candidate)
     return names
 
 
@@ -623,8 +696,8 @@ def _extract_rrn_description_people(
                     diagnostics.append("description people list contains an empty entry")
                     continue
                 entries.append((value, _node_is_struck(item)))
-                block_evidence.append(value)
-            evidence.append({"marker": marker, "entries": " | ".join(block_evidence)})
+                block_evidence.append(_safe_description_evidence(value))
+            evidence.append({"marker": _safe_description_evidence(marker), "entries": " | ".join(block_evidence)})
 
         for node in _iter_nodes(root):
             if node.tag != "p" or _has_list_ancestor(node) or _description_label(node):
@@ -633,7 +706,7 @@ def _extract_rrn_description_people(
             if not _description_marker_in_text(text):
                 continue
             direct_markers += 1
-            if ";" in text or "|" in text:
+            if "|" in text:
                 unsafe_marker = True
                 diagnostics.append("description people evidence contains a table delimiter")
                 continue
@@ -744,7 +817,13 @@ def parse_rrn_hosts(
     if url_error:
         return HostParseResult("parse_error", diagnostics=[url_error])
     document, parser_diagnostics = _parse_html_tree(html)
-    if any(diagnostic == "HTML parser failed" for diagnostic in parser_diagnostics):
+    fatal_parser_diagnostics = {
+        "HTML input must be text",
+        "HTML parser failed",
+        "misnested HTML tags",
+        "unclosed HTML element",
+    }
+    if any(diagnostic in fatal_parser_diagnostics for diagnostic in parser_diagnostics):
         return HostParseResult("parse_error", diagnostics=list(parser_diagnostics), source_url=source_url)
     marker_errors = _marker_diagnostics(document, expected_title, expected_episode)
     if marker_errors:
@@ -938,13 +1017,13 @@ def _extract_patreon_description_people(
                     diagnostics.append("description people list contains an empty entry")
                     continue
                 entries.append((value, _pm_node_is_struck(item)))
-                block_entries.append(value)
-            evidence.append({"marker": text, "entries": " | ".join(block_entries)})
+                block_entries.append(_safe_description_evidence(value))
+            evidence.append({"marker": _safe_description_evidence(text), "entries": " | ".join(block_entries)})
             continue
         if not _description_marker_in_text(text):
             continue
         direct_markers += 1
-        if ";" in text or "|" in text:
+        if "|" in text:
             unsafe_marker = True
             diagnostics.append("description people evidence contains a table delimiter")
             continue
@@ -1856,6 +1935,36 @@ def _validate_audit_against_current(report: Mapping[str, Any], rows: List[Dict[s
         orphaned = sorted(audit_keys - current_keys)
         raise ValueError(f"Host audit record set mismatch; missing={missing[:3]}, orphaned={orphaned[:3]}")
 
+    rows_by_key = {row["record_key"]: row for row in rows}
+    for record_key, row in rows_by_key.items():
+        result = records[record_key]
+        if not isinstance(result, Mapping):
+            raise ValueError(f"Host audit result for {record_key} is not an object")
+        if str(result.get("record_key") or "") != record_key:
+            raise ValueError(f"Host audit result for {record_key} has a mismatched record key")
+        for field in ("episode", "title", "date", "duration"):
+            if pipeline.normalize_identity_text(result.get(field, "")) != pipeline.normalize_identity_text(row.get(field, "")):
+                raise ValueError(f"Host audit result for {record_key} has a mismatched {field}")
+        result_source_url = str(result.get("hosts_source_url") or "").strip()
+        try:
+            result_source_canonical = canonical_url(result_source_url)
+        except ValueError as exc:
+            raise ValueError(f"Host audit result for {record_key} has an invalid source URL: {exc}") from exc
+        if str(result.get("hosts_source") or "") != "paired_rrn":
+            try:
+                row_source_canonical = canonical_url(str(row.get("url") or ""))
+            except ValueError as exc:
+                raise ValueError(f"Current row {record_key} has an invalid source URL: {exc}") from exc
+            if result_source_canonical != row_source_canonical:
+                raise ValueError(f"Host audit result for {record_key} has a mismatched source URL")
+        provenance = result.get("provenance")
+        if not isinstance(provenance, Mapping):
+            raise ValueError(f"Host audit result for {record_key} has invalid provenance")
+        if result.get("hosts_source") == "paired_rrn":
+            paired_key = str(provenance.get("paired_record_key") or "")
+            if paired_key not in current_keys or paired_key == record_key:
+                raise ValueError(f"Host audit result for {record_key} has an invalid paired record key")
+
 
 def _publishable_manifest(manifest: Mapping[str, Any]) -> None:
     unresolved = [
@@ -1925,13 +2034,12 @@ def apply_audit(audit_path: Path, dry_run: bool = False, write: bool = False) ->
         staged_rows, _ = pipeline.parse_archive(staged_archive)
         if len(staged_rows) != len(rows):
             raise ValueError("Staged archive row count does not match audited dataset")
-        for target, staged in (
+        pipeline.atomic_replace_group([
             (pipeline.ARCHIVE_PATH, staged_archive),
             (pipeline.DATA_JSON_PATH, staged_data),
             (pipeline.HOST_METADATA_PATH, staged_manifest),
             (pipeline.README_PATH, staged_readme),
-        ):
-            os.replace(staged, target)
+        ])
     finally:
         shutil.rmtree(stage_dir, ignore_errors=True)
     pipeline.sync_to_obsidian(dry=False)

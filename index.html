@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=131">
+    <link rel="stylesheet" href="style.css?v=132">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -84,6 +84,20 @@
                     <div class="mini-sparkline" id="latest-sparkline" aria-label="Długości ostatnich odcinków" role="img"></div>
                     <p class="latest-foot" id="latest-release-foot">Najnowsze punkty na osi czasu</p>
                 </aside>
+            </section>
+
+            <section class="upcoming-event container" id="upcoming-event" aria-labelledby="upcoming-event-title" hidden>
+                <div class="upcoming-event-card">
+                    <div class="upcoming-event-copy">
+                        <p class="card-eyebrow"><span class="upcoming-live-dot" aria-hidden="true"></span> NASTĘPNY ODCINEK / LIVE</p>
+                        <h2 id="upcoming-event-title">—</h2>
+                        <p class="upcoming-event-note">Zaplanowana transmisja na żywo</p>
+                    </div>
+                    <div class="upcoming-event-meta">
+                        <time id="upcoming-event-time" datetime="">—</time>
+                        <a class="upcoming-event-link" id="upcoming-event-link" href="#" target="_blank" rel="noopener noreferrer">Otwórz stream <span aria-hidden="true">↗</span></a>
+                    </div>
+                </div>
             </section>
 
             <section class="metric-grid container" id="overview" aria-label="Najważniejsze statystyki">
@@ -347,6 +361,6 @@
             </div>
         </footer>
     </div>
-    <script src="script.js?v=131"></script>
+    <script src="script.js?v=132"></script>
 </body>
 </html>

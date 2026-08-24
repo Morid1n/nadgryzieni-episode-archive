@@ -1,7 +1,7 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 131;
+const DATA_VERSION = 132;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 const YEARLY_STATS_START = 2021;
@@ -58,6 +58,70 @@ function formatDate(date) {
     }
     const parsedDate = new Date(`${date}T00:00:00`);
     return Number.isNaN(parsedDate.getTime()) ? date : dateFormatter.format(parsedDate);
+}
+
+function renderUpcomingEvent(payload) {
+    const upcomingEvent = $('#upcoming-event');
+    const upcomingEventTitle = $('#upcoming-event-title');
+    const upcomingEventTime = $('#upcoming-event-time');
+    const upcomingEventLink = $('#upcoming-event-link');
+    if (!upcomingEvent || !upcomingEventTitle || !upcomingEventTime || !upcomingEventLink) {
+        return;
+    }
+
+    upcomingEvent.hidden = true;
+    const event = payload?.event;
+    if (!event || typeof event !== 'object') {
+        return;
+    }
+    const title = typeof event.title === 'string' ? event.title.trim() : '';
+    const videoId = typeof event.video_id === 'string' ? event.video_id.trim() : '';
+    const scheduledStart = typeof event.scheduled_start_utc === 'string'
+        ? new Date(event.scheduled_start_utc)
+        : new Date('invalid');
+    if (!title || !/^[A-Za-z0-9_-]{6,20}$/.test(videoId) || Number.isNaN(scheduledStart.getTime()) || scheduledStart <= new Date()) {
+        return;
+    }
+
+    let url;
+    try {
+        url = new URL(event.url);
+    } catch (_error) {
+        return;
+    }
+    if (url.protocol !== 'https:' || !['youtube.com', 'www.youtube.com'].includes(url.hostname)
+        || url.pathname !== '/watch' || url.searchParams.get('v') !== videoId) {
+        return;
+    }
+
+    const upcomingDateFormatter = new Intl.DateTimeFormat('pl-PL', {
+        dateStyle: 'full',
+        timeStyle: 'short',
+        timeZone: 'Europe/Warsaw',
+    });
+    upcomingEventTitle.textContent = title;
+    upcomingEventTime.textContent = upcomingDateFormatter.format(scheduledStart);
+    upcomingEventTime.setAttribute('datetime', event.scheduled_start_utc);
+    upcomingEventLink.href = url.toString();
+    upcomingEventLink.textContent = 'Otwórz stream ↗';
+    upcomingEvent.hidden = false;
+}
+
+async function loadUpcomingEvent() {
+    const upcomingEvent = $('#upcoming-event');
+    if (!upcomingEvent) {
+        return;
+    }
+    try {
+        const response = await fetch(`upcoming.json?v=${Date.now()}`, { cache: 'no-store' });
+        if (!response.ok) {
+            throw new Error(`Upcoming event request failed: ${response.status}`);
+        }
+        renderUpcomingEvent(await response.json());
+    } catch (error) {
+        upcomingEvent.hidden = true;
+        console.warn('Upcoming Nadgryzieni event is unavailable:', error);
+    }
 }
 
 function getEpisodeYear(episode) {
@@ -884,4 +948,5 @@ async function loadData() {
 
 applyTheme(getTheme());
 bindInteractions();
+loadUpcomingEvent();
 loadData();

@@ -15,6 +15,11 @@ spec = importlib.util.spec_from_file_location("nadgryzieni_pipeline", MODULE_PAT
 pipeline = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = pipeline
 spec.loader.exec_module(pipeline)
+HOSTS_MODULE_PATH = REPO_DIR / "nadgryzieni_hosts.py"
+hosts_spec = importlib.util.spec_from_file_location("nadgryzieni_hosts_for_pipeline_tests", HOSTS_MODULE_PATH)
+host_tools = importlib.util.module_from_spec(hosts_spec)
+sys.modules[hosts_spec.name] = host_tools
+hosts_spec.loader.exec_module(host_tools)
 
 
 class PipelineHardeningTests(unittest.TestCase):
@@ -129,6 +134,76 @@ class PipelineHardeningTests(unittest.TestCase):
         missing_url = [dict(rows[0], url="")]
         with self.assertRaises(ValueError):
             pipeline.validate_generated_data(pipeline.generate_data_json(missing_url), missing_url)
+
+    def test_atomic_replace_group_publishes_all_files(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            target_a = root / "a.txt"
+            target_b = root / "b.txt"
+            staged_a = root / "a.stage"
+            staged_b = root / "b.stage"
+            target_a.write_text("old-a", encoding="utf-8")
+            target_b.write_text("old-b", encoding="utf-8")
+            staged_a.write_text("new-a", encoding="utf-8")
+            staged_b.write_text("new-b", encoding="utf-8")
+            pipeline.atomic_replace_group([(target_a, staged_a), (target_b, staged_b)])
+            self.assertEqual(target_a.read_text(encoding="utf-8"), "new-a")
+            self.assertEqual(target_b.read_text(encoding="utf-8"), "new-b")
+
+    def test_atomic_replace_group_rolls_back_after_a_late_failure(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            target_a = root / "a.txt"
+            target_b = root / "b.txt"
+            staged_a = root / "a.stage"
+            staged_b = root / "b.stage"
+            target_a.write_text("old-a", encoding="utf-8")
+            target_b.write_text("old-b", encoding="utf-8")
+            staged_a.write_text("new-a", encoding="utf-8")
+            staged_b.write_text("new-b", encoding="utf-8")
+            original_replace = pipeline.os.replace
+            calls = {"count": 0}
+
+            def fail_on_fourth_call(source, destination):
+                calls["count"] += 1
+                if calls["count"] == 4:
+                    raise OSError("simulated publication failure")
+                return original_replace(source, destination)
+
+            with patch.object(pipeline.os, "replace", side_effect=fail_on_fourth_call):
+                with self.assertRaises(OSError):
+                    pipeline.atomic_replace_group([(target_a, staged_a), (target_b, staged_b)])
+            self.assertEqual(target_a.read_text(encoding="utf-8"), "old-a")
+            self.assertEqual(target_b.read_text(encoding="utf-8"), "old-b")
+
+    def test_audit_validation_binds_identity_fields_to_each_row(self):
+        row = {
+            "record_key": "rk_identity",
+            "episode": "602",
+            "title": "602: Test",
+            "date": "2026-08-21",
+            "duration": "?",
+            "url": "https://retrorocketnetwork.pl/602-test/",
+        }
+        report = {
+            "schema_version": 1,
+            "parser_version": host_tools.PARSER_VERSION,
+            "dataset_fingerprint": pipeline.dataset_fingerprint([row]),
+            "records": {"rk_identity": {
+                "record_key": "rk_identity",
+                "episode": "602",
+                "title": "602: swapped identity",
+                "date": "2026-08-21",
+                "duration": "?",
+                "hosts": [],
+                "hosts_status": "not_listed",
+                "hosts_source": "rrn",
+                "hosts_source_url": row["url"],
+                "provenance": {"kind": "direct_source", "source_url": row["url"]},
+            }},
+        }
+        with self.assertRaises(ValueError):
+            host_tools._validate_audit_against_current(report, [row])
 
 
 if __name__ == "__main__":

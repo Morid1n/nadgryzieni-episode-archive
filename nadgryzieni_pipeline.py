@@ -42,7 +42,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 import unicodedata
 
-from nadgryzieni_hosts import normalize_host_name
+from nadgryzieni_hosts import canonical_url, normalize_host_name
 
 # ── Configuration ────────────────────────────────────────────────────────────
 # Resolve from the script location so manual and cron invocations use the same checkout.
@@ -78,6 +78,39 @@ STATE_DIR = Path(os.environ.get(
 RETRY_STATE_PATH = STATE_DIR / "nadgryzieni-retry-state.json"
 LOCK_PATH = STATE_DIR / "nadgryzieni-pipeline.lock"
 _LOCK_HANDLE = None
+
+
+def atomic_replace_group(replacements: list[tuple[Path, Path]]) -> None:
+    """Replace several files as one recoverable publication transaction."""
+    if not replacements:
+        return
+    normalized = [(Path(target), Path(staged)) for target, staged in replacements]
+    backup_dir = Path(tempfile.mkdtemp(prefix=".nadgryzieni-publication-backup-", dir=str(normalized[0][0].parent)))
+    backups: dict[Path, Path] = {}
+    installed: list[Path] = []
+    try:
+        for index, (target, staged) in enumerate(normalized):
+            if not staged.exists():
+                raise FileNotFoundError(f"Staged publication file is missing: {staged}")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if target.exists():
+                backup = backup_dir / f"{index}.bak"
+                os.replace(target, backup)
+                backups[target] = backup
+            os.replace(staged, target)
+            installed.append(target)
+    except Exception:
+        for target in reversed(installed):
+            try:
+                target.unlink()
+            except FileNotFoundError:
+                pass
+        for target, backup in reversed(list(backups.items())):
+            if backup.exists():
+                os.replace(backup, target)
+        raise
+    finally:
+        shutil.rmtree(backup_dir, ignore_errors=True)
 
 # Cache-busting version is committed with the generated site, not kept in /tmp.
 CACHE_VERSION_FILE = REPO_DIR / ".cache-version"
@@ -660,7 +693,11 @@ def _host_dedupe_key(value: str) -> str:
     return normalize_identity_text(value).casefold()
 
 
-def validate_host_entry(entry: dict, record_key: str = "") -> dict:
+def validate_host_entry(
+    entry: dict,
+    record_key: str = "",
+    expected_source_url: str = "",
+) -> dict:
     """Validate and normalize one manifest entry without changing host spelling."""
     if not isinstance(entry, dict):
         raise ValueError(f"Host metadata for {record_key or 'record'} is not an object")
@@ -695,13 +732,34 @@ def validate_host_entry(entry: dict, record_key: str = "") -> dict:
         raise ValueError(f"Verified host metadata for {record_key or 'record'} must contain a host")
     if status == "not_listed" and normalized_hosts:
         raise ValueError(f"Not-listed host metadata for {record_key or 'record'} cannot contain hosts")
-    if not source_url or urlparse(source_url).scheme not in {"http", "https"} or not urlparse(source_url).netloc:
-        raise ValueError(f"Host metadata for {record_key or 'record'} has no valid source URL")
+    try:
+        strict_source_url = canonical_url(source_url)
+    except ValueError as exc:
+        raise ValueError(f"Host metadata for {record_key or 'record'} has no valid source URL: {exc}") from exc
+    if expected_source_url and source != "paired_rrn":
+        try:
+            expected_canonical = canonical_url(expected_source_url)
+        except ValueError as exc:
+            raise ValueError(f"Expected source URL for {record_key or 'record'} is invalid: {exc}") from exc
+        if strict_source_url != expected_canonical:
+            raise ValueError(f"Host metadata source URL mismatch for {record_key or 'record'}")
+
     provenance = entry.get("provenance")
     if provenance is None:
-        provenance = {"kind": "direct_source", "source_url": canonical_source_url(source_url)}
+        provenance = {"kind": "direct_source", "source_url": source_url}
     if not isinstance(provenance, dict) or not provenance.get("kind"):
         raise ValueError(f"Host metadata for {record_key or 'record'} has invalid provenance")
+    provenance = dict(provenance)
+    if provenance.get("source_url"):
+        try:
+            strict_provenance_url = canonical_url(str(provenance["source_url"]))
+        except ValueError as exc:
+            raise ValueError(f"Host metadata provenance URL for {record_key or 'record'} is invalid: {exc}") from exc
+        if strict_provenance_url != strict_source_url:
+            raise ValueError(f"Host metadata provenance/source URL mismatch for {record_key or 'record'}")
+        provenance["source_url"] = str(provenance["source_url"]).strip()
+    elif source != "paired_rrn":
+        raise ValueError(f"Host metadata for {record_key or 'record'} lacks provenance source URL")
     if source == "paired_rrn":
         if provenance.get("kind") != "paired_rrn" or not provenance.get("paired_record_key"):
             raise ValueError(f"Paired host metadata for {record_key or 'record'} lacks its paired record")
@@ -712,7 +770,7 @@ def validate_host_entry(entry: dict, record_key: str = "") -> dict:
         "hosts": normalized_hosts,
         "hosts_status": status,
         "hosts_source": source,
-        "hosts_source_url": canonical_source_url(source_url),
+        "hosts_source_url": source_url,
         "provenance": provenance,
     }
     if isinstance(entry.get("diagnostics"), list):
@@ -720,6 +778,37 @@ def validate_host_entry(entry: dict, record_key: str = "") -> dict:
     if isinstance(entry.get("audit"), dict):
         result["audit"] = dict(entry["audit"])
     return result
+
+
+def validate_manifest_integrity(manifest: dict) -> dict:
+    """Validate every entry and all cross-record Afterparty relationships."""
+    if not isinstance(manifest, dict) or not isinstance(manifest.get("records"), dict):
+        raise ValueError("Host manifest has no records object")
+    normalized_records = {
+        str(record_key): validate_host_entry(manifest["records"][record_key], str(record_key))
+        for record_key in sorted(manifest["records"], key=str)
+    }
+    for record_key, entry in normalized_records.items():
+        if entry["hosts_source"] != "paired_rrn":
+            continue
+        provenance = entry["provenance"]
+        paired_key = str(provenance.get("paired_record_key") or "")
+        if not paired_key or paired_key == record_key or paired_key not in normalized_records:
+            raise ValueError(f"Paired host metadata for {record_key} references a missing or self pair")
+        paired = normalized_records[paired_key]
+        if paired["hosts_source"] != "rrn":
+            raise ValueError(f"Paired host metadata for {record_key} does not reference an RRN record")
+        if entry["hosts"] != paired["hosts"]:
+            raise ValueError(f"Paired host metadata for {record_key} has different hosts from its pair")
+        if entry["hosts_status"] != paired["hosts_status"]:
+            raise ValueError(f"Paired host metadata for {record_key} has a different status from its pair")
+        if entry["hosts_source_url"] != paired["hosts_source_url"]:
+            raise ValueError(f"Paired host metadata for {record_key} has a different source URL from its pair")
+    return {
+        "schema_version": HOST_SCHEMA_VERSION,
+        "alias_policy": effective_host_alias_policy(manifest.get("alias_policy")),
+        "records": normalized_records,
+    }
 
 
 def load_host_metadata(path: Path = HOST_METADATA_PATH) -> dict:
@@ -732,24 +821,16 @@ def load_host_metadata(path: Path = HOST_METADATA_PATH) -> dict:
     stored_alias_policy = payload.get("alias_policy", HOST_ALIAS_POLICY)
     if not isinstance(stored_alias_policy, dict) or stored_alias_policy.get("mode") != "conservative" or not isinstance(stored_alias_policy.get("aliases", {}), dict):
         raise ValueError("host_metadata.json has an invalid alias policy")
-    alias_policy = effective_host_alias_policy(stored_alias_policy)
-    records = {}
-    for record_key, entry in payload["records"].items():
-        records[str(record_key)] = validate_host_entry(entry, str(record_key))
-    return {"schema_version": HOST_SCHEMA_VERSION, "alias_policy": alias_policy, "records": records}
+    return validate_manifest_integrity({
+        "schema_version": HOST_SCHEMA_VERSION,
+        "alias_policy": effective_host_alias_policy(stored_alias_policy),
+        "records": payload["records"],
+    })
 
 
 def write_host_metadata(manifest: dict, path: Path = HOST_METADATA_PATH, dry: bool = False) -> None:
     """Write a deterministic manifest, or a .dry artifact when requested."""
-    records = manifest.get("records", {})
-    normalized = {
-        "schema_version": HOST_SCHEMA_VERSION,
-        "alias_policy": effective_host_alias_policy(manifest.get("alias_policy")),
-        "records": {
-            key: validate_host_entry(records[key], key)
-            for key in sorted(records)
-        },
-    }
+    normalized = validate_manifest_integrity(manifest)
     target = path if not dry else path.with_name(path.name.replace(".json", ".dry.json"))
     target.write_text(json.dumps(normalized, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     log.info("Host metadata written: %s (%d records)", target, len(normalized["records"]))
@@ -783,11 +864,24 @@ def hosts_cell(row: dict) -> str:
 def apply_host_metadata(rows: list[dict], manifest: dict, strict: bool = False) -> list[dict]:
     """Join manifest entries onto rows by record_key."""
     records = manifest.get("records", {})
+    if not isinstance(records, dict):
+        raise ValueError("Host manifest records must be an object")
+    if strict:
+        expected_keys = {build_record_key(row) for row in rows}
+        actual_keys = {str(key) for key in records}
+        if actual_keys != expected_keys:
+            missing = sorted(expected_keys - actual_keys)
+            orphaned = sorted(actual_keys - expected_keys)
+            raise ValueError(f"Host manifest row binding mismatch (missing={missing[:3]}, orphaned={orphaned[:3]})")
+        validate_manifest_integrity(manifest)
     for row in rows:
         row["record_key"] = build_record_key(row)
         entry = records.get(row["record_key"])
         if entry:
-            normalized = validate_host_entry(entry, row["record_key"])
+            expected_source_url = None
+            if entry.get("hosts_source") != "paired_rrn":
+                expected_source_url = row.get("hosts_source_url") or row.get("url")
+            normalized = validate_host_entry(entry, row["record_key"], expected_source_url=expected_source_url or "")
             row.update({key: value for key, value in normalized.items() if key != "provenance"})
             row["hosts_provenance"] = normalized["provenance"]
         elif strict:
@@ -796,8 +890,9 @@ def apply_host_metadata(rows: list[dict], manifest: dict, strict: bool = False) 
 
 
 def manifest_from_rows(rows: list[dict], base: dict | None = None, strict: bool = True) -> dict:
-    """Build the tracked manifest from enriched rows while preserving old entries."""
-    records = dict((base or {}).get("records", {}))
+    """Build the tracked manifest from the current rows, never preserving orphans."""
+    records = {}
+    base_records = (base or {}).get("records", {})
     for row in rows:
         row["record_key"] = build_record_key(row)
         if not row.get("hosts_status"):
@@ -811,19 +906,23 @@ def manifest_from_rows(rows: list[dict], base: dict | None = None, strict: bool 
             "hosts_source_url": row.get("hosts_source_url") or row.get("url"),
             "provenance": row.get("hosts_provenance"),
         }
-        previous = records.get(row["record_key"], {})
+        previous = base_records.get(row["record_key"], {}) if isinstance(base_records, dict) else {}
         for optional_field in ("diagnostics", "audit"):
             if row.get(optional_field) is not None:
                 entry_input[optional_field] = row[optional_field]
             elif isinstance(previous, dict) and previous.get(optional_field) is not None:
                 entry_input[optional_field] = previous[optional_field]
-        entry = validate_host_entry(entry_input, row["record_key"])
+        entry = validate_host_entry(
+            entry_input,
+            row["record_key"],
+            expected_source_url=(row.get("hosts_source_url") or row.get("url")) if row.get("hosts_source") != "paired_rrn" else "",
+        )
         records[row["record_key"]] = entry
-    return {
+    return validate_manifest_integrity({
         "schema_version": HOST_SCHEMA_VERSION,
         "alias_policy": effective_host_alias_policy((base or {}).get("alias_policy")),
         "records": records,
-    }
+    })
 
 
 def enrich_host_rows(rows: list[dict], manifest: dict, refresh_keys: set[str] | None = None) -> dict:
@@ -1248,9 +1347,13 @@ def validate_generated_data(data: dict, rows: list[dict]) -> None:
 
     for episode, row in zip(episodes, rows):
         url = episode.get("url", "")
-        parsed = urlparse(url)
-        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
-            raise ValueError(f"Episode {episode.get('episode')} has no canonical source URL")
+        try:
+            episode_source_url = canonical_url(str(url))
+            row_source_url = canonical_url(str(row.get("url") or ""))
+        except ValueError as exc:
+            raise ValueError(f"Episode {episode.get('episode')} has no canonical source URL: {exc}") from exc
+        if episode_source_url != row_source_url:
+            raise ValueError(f"Episode {episode.get('episode')} source URL does not match the archive row")
         if not episode.get("title") or not episode.get("date"):
             raise ValueError(f"Episode {episode.get('episode')} is missing title or date")
         if episode.get("record_key") != build_record_key(row):
@@ -1258,15 +1361,19 @@ def validate_generated_data(data: dict, rows: list[dict]) -> None:
         hosts = episode.get("hosts")
         if not isinstance(hosts, list):
             raise ValueError(f"Episode {episode.get('episode')} has no hosts list")
+        expected_host_source_url = "" if row.get("hosts_source") == "paired_rrn" else str(row.get("hosts_source_url") or row.get("url") or "")
         validate_host_entry({
             "hosts": hosts,
             "hosts_status": episode.get("hosts_status"),
             "hosts_source": episode.get("hosts_source"),
             "hosts_source_url": episode.get("hosts_source_url"),
             "provenance": row.get("hosts_provenance") or episode.get("hosts_provenance"),
-        }, episode.get("record_key", ""))
+        }, episode.get("record_key", ""), expected_source_url=expected_host_source_url)
         if episode.get("hosts_status") in HOST_UNRESOLVED_STATUSES:
             raise ValueError(f"Episode {episode.get('episode')} has unresolved host metadata")
+
+    if rows and all(row.get("hosts_status") for row in rows):
+        manifest_from_rows(rows, strict=True)
 
     stats = data.get("stats", {})
     if stats.get("total_episodes") != len(episodes):
@@ -1649,10 +1756,10 @@ def generate_statistics(rows: list[dict]) -> str:
     return md
 
 
-def write_stats(content: str, dry: bool = False) -> None:
-    target = STATS_PATH if not dry else STATS_PATH.with_name(
+def write_stats(content: str, dry: bool = False, target_path: Path | None = None) -> None:
+    target = target_path or (STATS_PATH if not dry else STATS_PATH.with_name(
         STATS_PATH.name.replace(".md", ".dry.md")
-    )
+    ))
     target.write_text(content, encoding="utf-8")
     log.info(f"Statistics written: {target}")
 
@@ -1743,49 +1850,60 @@ def bump_cache_version(dry: bool = False) -> int:
     return v
 
 
-def update_cache_busting(version: int, dry: bool = False) -> None:
+def update_cache_busting(
+    version: int,
+    dry: bool = False,
+    index_path: Path | None = None,
+    script_path: Path | None = None,
+) -> None:
     """Update ?v=N references in index.html and script.js."""
     if dry:
         log.info(f"[DRY RUN] Would bump cache-busting to v={version}")
         return
 
-    # Update index.html
-    if INDEX_HTML_PATH.exists():
-        html = INDEX_HTML_PATH.read_text(encoding="utf-8")
+    index_path = index_path or INDEX_HTML_PATH
+    script_path = script_path or SCRIPT_JS_PATH
+    if index_path.exists():
+        html = index_path.read_text(encoding="utf-8")
         html = re.sub(r'style\.css\?v=\d+', f'style.css?v={version}', html)
         html = re.sub(r'script\.js\?v=\d+', f'script.js?v={version}', html)
-        INDEX_HTML_PATH.write_text(html, encoding="utf-8")
+        index_path.write_text(html, encoding="utf-8")
         log.info(f"index.html cache-busting updated to v={version}")
 
-    # Update script.js data version constant
-    if SCRIPT_JS_PATH.exists():
-        js = SCRIPT_JS_PATH.read_text(encoding="utf-8")
+    if script_path.exists():
+        js = script_path.read_text(encoding="utf-8")
         js = re.sub(r"const DATA_VERSION = \d+;", f"const DATA_VERSION = {version};", js)
-        SCRIPT_JS_PATH.write_text(js, encoding="utf-8")
+        script_path.write_text(js, encoding="utf-8")
         log.info(f"script.js DATA_VERSION cache-busting updated to v={version}")
 
 
 # ── Git Operations ───────────────────────────────────────────────────────────
 
-def git_commit_and_push(message: str, dry: bool = False) -> bool:
-    """Stage only generated files, commit if needed, and retry the push safely."""
+def _redact_git_output(value: str) -> str:
+    return re.sub(r"(https?://)([^/@\s]+):([^/@\s]+)@", r"\1[REDACTED]@", value)
+
+
+def git_commit_and_push_paths(message: str, paths: list[str], dry: bool = False) -> bool:
+    """Stage only the supplied generated files, commit, and push safely."""
     if dry:
         log.info(f"[DRY RUN] Would commit: {message}")
         return False
+    if not paths:
+        raise ValueError("At least one Git path is required")
 
     repo = str(REPO_DIR)
-    status_cmd = ["git", "status", "--porcelain", "--untracked-files=all", "--", *PUBLISH_PATHS]
+    status_cmd = ["git", "status", "--porcelain", "--untracked-files=all", "--", *paths]
     status = subprocess.run(status_cmd, cwd=repo, capture_output=True, text=True)
     if status.returncode != 0:
-        raise RuntimeError(f"Git status failed: {status.stderr.strip()}")
+        raise RuntimeError(f"Git status failed: {_redact_git_output(status.stderr.strip())}")
     if not status.stdout.strip():
         log.info("No generated file changes to commit.")
         return False
 
-    add_cmd = ["git", "add", "--", *PUBLISH_PATHS]
+    add_cmd = ["git", "add", "--", *paths]
     added = subprocess.run(add_cmd, cwd=repo, capture_output=True, text=True)
     if added.returncode != 0:
-        raise RuntimeError(f"Git staging failed: {added.stderr.strip()}")
+        raise RuntimeError(f"Git staging failed: {_redact_git_output(added.stderr.strip())}")
 
     staged = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=repo)
     if staged.returncode == 0:
@@ -1801,7 +1919,7 @@ def git_commit_and_push(message: str, dry: bool = False) -> bool:
         text=True,
     )
     if commit.returncode != 0:
-        raise RuntimeError(f"Git commit failed: {commit.stderr.strip()}")
+        raise RuntimeError(f"Git commit failed: {_redact_git_output(commit.stderr.strip())}")
 
     push_cmd = ["git", "push", "origin", "HEAD:main"]
     for attempt in range(1, 4):
@@ -1809,10 +1927,15 @@ def git_commit_and_push(message: str, dry: bool = False) -> bool:
         if pushed.returncode == 0:
             log.info("Git commit and push complete")
             return True
-        log.warning("Git push attempt %d/3 failed: %s", attempt, pushed.stderr.strip())
+        log.warning("Git push attempt %d/3 failed: %s", attempt, _redact_git_output(pushed.stderr.strip()))
         if attempt < 3:
             time.sleep(2 ** attempt)
     raise RuntimeError("Git push failed after 3 attempts")
+
+
+def git_commit_and_push(message: str, dry: bool = False) -> bool:
+    """Stage the normal generated-file set, commit if needed, and push."""
+    return git_commit_and_push_paths(message, PUBLISH_PATHS, dry=dry)
 
 
 # ── Main Pipeline ────────────────────────────────────────────────────────────
@@ -1943,37 +2066,81 @@ def run_pipeline(dry: bool = False, force: bool = False, refresh_hosts: bool = F
     host_manifest = enrich_host_rows(all_rows, host_manifest, refresh_keys=refresh_keys)
     apply_host_metadata(all_rows, host_manifest, strict=True)
 
-    write_archive(all_rows, dry=dry)
+    publish_outputs = bool(new_episodes or force or refresh_hosts)
+    stage_dir = None
+    try:
+        if dry:
+            write_archive(all_rows, dry=True)
 
-    # Step 5: Generate data.json
-    log.info("Step 5: Generating data.json...")
-    data = generate_data_json(all_rows, url_by_title)
-    validate_generated_data(data, all_rows)
-    write_data_json(data, dry=dry)
-    write_host_metadata(host_manifest, path=HOST_METADATA_PATH, dry=dry)
+            # Step 5: Generate data.json
+            log.info("Step 5: Generating data.json...")
+            data = generate_data_json(all_rows, url_by_title)
+            validate_generated_data(data, all_rows)
+            write_data_json(data, dry=True)
+            write_host_metadata(host_manifest, path=HOST_METADATA_PATH, dry=True)
 
-    # Step 5b: Update README.md stats table
-    log.info("Step 5b: Updating README.md...")
-    update_readme(data, dry=dry)
+            # Step 5b: Update README.md stats table
+            log.info("Step 5b: Updating README.md...")
+            update_readme(data, dry=True)
 
-    # Step 6: Generate statistics when publishing or explicitly forced.
-    if new_episodes or force or refresh_hosts:
-        log.info("Step 6: Generating statistics...")
-        stats_md = generate_statistics(all_rows)
-        write_stats(stats_md, dry=dry)
-    else:
-        log.info("Step 6: Skipping statistics (no new episodes).")
+            if publish_outputs:
+                log.info("Step 6: Generating statistics...")
+                write_stats(generate_statistics(all_rows), dry=True)
+                log.info("Step 7: Bumping cache-busting version...")
+                new_version = bump_cache_version(dry=True)
+                update_cache_busting(new_version, dry=True)
+        else:
+            stage_dir = Path(tempfile.mkdtemp(prefix=".nadgryzieni-pipeline-stage-", dir=str(REPO_DIR.parent)))
+            staged_archive = stage_dir / ARCHIVE_PATH.name
+            staged_data = stage_dir / DATA_JSON_PATH.name
+            staged_manifest = stage_dir / HOST_METADATA_PATH.name
+            staged_readme = stage_dir / README_PATH.name
+            staged_stats = stage_dir / STATS_PATH.name
+            staged_cache = stage_dir / CACHE_VERSION_FILE.name
+            staged_index = stage_dir / INDEX_HTML_PATH.name
+            staged_script = stage_dir / SCRIPT_JS_PATH.name
 
-    # Step 7: Bump cache-busting when publishing or explicitly forced.
-    if new_episodes or force or refresh_hosts:
-        log.info("Step 7: Bumping cache-busting version...")
-        new_version = bump_cache_version(dry=dry)
-        update_cache_busting(new_version, dry=dry)
-    else:
-        log.info("Step 7: Skipping cache-busting bump (no new episodes).")
+            write_archive(all_rows, target_path=staged_archive)
+            log.info("Step 5: Generating data.json...")
+            data = generate_data_json(all_rows, url_by_title)
+            validate_generated_data(data, all_rows)
+            write_data_json(data, target_path=staged_data)
+            write_host_metadata(host_manifest, path=staged_manifest)
+
+            log.info("Step 5b: Updating README.md...")
+            update_readme(data, target_path=staged_readme)
+            log.info("Step 6: Generating statistics...")
+            write_stats(generate_statistics(all_rows), target_path=staged_stats)
+            log.info("Step 7: Bumping cache-busting version...")
+            new_version = bump_cache_version(dry=True)
+            shutil.copy2(INDEX_HTML_PATH, staged_index)
+            shutil.copy2(SCRIPT_JS_PATH, staged_script)
+            update_cache_busting(new_version, index_path=staged_index, script_path=staged_script)
+            staged_cache.write_text(str(new_version) + "\n", encoding="utf-8")
+
+            # Re-validate the exact files that are about to be published.
+            staged_data_payload = json.loads(staged_data.read_text(encoding="utf-8"))
+            validate_generated_data(staged_data_payload, all_rows)
+            load_host_metadata(staged_manifest)
+            staged_rows, _ = parse_archive(staged_archive)
+            if len(staged_rows) != len(all_rows):
+                raise ValueError("Staged archive row count does not match the generated dataset")
+            atomic_replace_group([
+                (ARCHIVE_PATH, staged_archive),
+                (DATA_JSON_PATH, staged_data),
+                (HOST_METADATA_PATH, staged_manifest),
+                (README_PATH, staged_readme),
+                (STATS_PATH, staged_stats),
+                (CACHE_VERSION_FILE, staged_cache),
+                (INDEX_HTML_PATH, staged_index),
+                (SCRIPT_JS_PATH, staged_script),
+            ])
+    finally:
+        if stage_dir is not None:
+            shutil.rmtree(stage_dir, ignore_errors=True)
 
     # Step 8: Sync to Obsidian before publishing, then verify Git changes.
-    if new_episodes or force or refresh_hosts:
+    if publish_outputs:
         log.info("Step 8: Syncing to Obsidian vault...")
         sync_to_obsidian(dry=dry)
         log.info("Step 9: Committing and pushing to Git...")
