@@ -2,8 +2,10 @@
   "schema_version": 1,
   "alias_policy": {
     "mode": "conservative",
-    "description": "Only NFKC, whitespace and case-insensitive deduplication are automatic; semantic aliases and name changes are not merged without an explicit reviewed mapping.",
-    "aliases": {}
+    "description": "Only NFKC, whitespace and case-insensitive deduplication are automatic; the explicit reviewed alias Norbert Cała → NPC is applied on every parser and update path.",
+    "aliases": {
+      "Norbert Cała": "NPC"
+    }
   },
   "records": {
     "rk_00386687d343c42f34a977e4": {
@@ -247,7 +249,7 @@
     "rk_0434b3abe8102433df0a299b": {
       "record_key": "rk_0434b3abe8102433df0a299b",
       "hosts": [
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -638,7 +640,7 @@
       "record_key": "rk_0ff07867aa36e74a28f45f7f",
       "hosts": [
         "Dominik Łada",
-        "Norbert Cała"
+        "NPC"
       ],
       "hosts_status": "verified",
       "hosts_source": "rrn",
@@ -1063,7 +1065,7 @@
       "record_key": "rk_180ee5cce9db3aa45b9e9b52",
       "hosts": [
         "Dominik Łada",
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -1391,7 +1393,7 @@
     "rk_1e79a0bb6695bc98b322975e": {
       "record_key": "rk_1e79a0bb6695bc98b322975e",
       "hosts": [
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -1464,7 +1466,7 @@
     "rk_20de9719972b08b972f77dd5": {
       "record_key": "rk_20de9719972b08b972f77dd5",
       "hosts": [
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -1988,7 +1990,7 @@
     "rk_31381ad264538a4444a392c3": {
       "record_key": "rk_31381ad264538a4444a392c3",
       "hosts": [
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -2248,7 +2250,7 @@
       "record_key": "rk_36610cc21be4956e82ddae68",
       "hosts": [
         "Krzysiek Grochowski",
-        "Norbert Cała"
+        "NPC"
       ],
       "hosts_status": "verified",
       "hosts_source": "rrn",
@@ -2669,7 +2671,7 @@
     "rk_3b57aacf20752065a486e0e3": {
       "record_key": "rk_3b57aacf20752065a486e0e3",
       "hosts": [
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -3467,7 +3469,7 @@
     "rk_50607fb423368c962dcf5ffb": {
       "record_key": "rk_50607fb423368c962dcf5ffb",
       "hosts": [
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -3541,7 +3543,7 @@
       "record_key": "rk_51855f2bc961c022e0cabb0e",
       "hosts": [
         "Dominik Łada",
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -3925,7 +3927,7 @@
     "rk_5ad3bb68417a289dc00164c9": {
       "record_key": "rk_5ad3bb68417a289dc00164c9",
       "hosts": [
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -4145,7 +4147,7 @@
     "rk_5dc341fddf2fb7de4889e6d4": {
       "record_key": "rk_5dc341fddf2fb7de4889e6d4",
       "hosts": [
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -4254,7 +4256,7 @@
       "record_key": "rk_63885d766f9bf4e4ea55a0cd",
       "hosts": [
         "Dominik Łada",
-        "Norbert Cała"
+        "NPC"
       ],
       "hosts_status": "verified",
       "hosts_source": "rrn",
@@ -4325,7 +4327,7 @@
     "rk_662b92ebd7dbebb33ccb8b12": {
       "record_key": "rk_662b92ebd7dbebb33ccb8b12",
       "hosts": [
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -4855,7 +4857,7 @@
     "rk_7127c55fd36c8f8a65c799c2": {
       "record_key": "rk_7127c55fd36c8f8a65c799c2",
       "hosts": [
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -5911,7 +5913,7 @@
       "record_key": "rk_874359fd93f12b77ec6c25c1",
       "hosts": [
         "Dominik Łada",
-        "Norbert Cała"
+        "NPC"
       ],
       "hosts_status": "verified",
       "hosts_source": "rrn",
@@ -6699,7 +6701,7 @@
     "rk_a22f578a40b26dddaec8705d": {
       "record_key": "rk_a22f578a40b26dddaec8705d",
       "hosts": [
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -7722,7 +7724,7 @@
     "rk_b79b6550c1e6eb66ef1d3d35": {
       "record_key": "rk_b79b6550c1e6eb66ef1d3d35",
       "hosts": [
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz",
         "Wojtek Pokwicki"
       ],
@@ -8700,7 +8702,7 @@
       "record_key": "rk_d7c71128928c4173337b61a7",
       "hosts": [
         "Dominik Łada",
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -8900,7 +8902,7 @@
     "rk_dacec81af752dddbded2a5ec": {
       "record_key": "rk_dacec81af752dddbded2a5ec",
       "hosts": [
-        "Norbert Cała",
+        "NPC",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -10168,7 +10170,7 @@
       "record_key": "rk_f82296731bec6a052de8d5b1",
       "hosts": [
         "Dominik Łada",
-        "Norbert Cała"
+        "NPC"
       ],
       "hosts_status": "verified",
       "hosts_source": "rrn",

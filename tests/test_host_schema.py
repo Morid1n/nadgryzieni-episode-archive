@@ -25,6 +25,31 @@ class HostSchemaTests(unittest.TestCase):
         second = dict(first, date="2015-01-02", duration="1:01:00")
         self.assertNotEqual(pipeline.build_record_key(first), pipeline.build_record_key(second))
 
+    def test_manifest_validation_normalizes_norbert_cala_alias(self):
+        normalized = pipeline.validate_host_entry({
+            "hosts": ["Norbert Cała"],
+            "hosts_status": "verified",
+            "hosts_source": "rrn",
+            "hosts_source_url": "https://retrorocketnetwork.pl/host-test/",
+        }, "rk_alias")
+        self.assertEqual(normalized["hosts"], ["NPC"])
+
+    def test_generated_data_normalizes_norbert_cala_alias(self):
+        row = {
+            "episode": "1",
+            "title": "1: Test",
+            "date": "2010-01-01",
+            "duration": "1:00",
+            "url": "https://retrorocketnetwork.pl/one/",
+            "hosts": ["Norbert Cała"],
+            "hosts_status": "verified",
+            "hosts_source": "rrn",
+            "hosts_source_url": "https://retrorocketnetwork.pl/one/",
+            "hosts_provenance": {"kind": "direct_source", "source_url": "https://retrorocketnetwork.pl/one/"},
+        }
+        generated = pipeline.generate_data_json([row])
+        self.assertEqual(generated["episodes"][0]["hosts"], ["NPC"])
+
     def test_record_key_survives_duration_correction_or_missing_rss_duration(self):
         first = {
             "episode": "602",

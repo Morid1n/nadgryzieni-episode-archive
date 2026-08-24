@@ -42,6 +42,8 @@ from pathlib import Path
 from urllib.parse import urlparse
 import unicodedata
 
+from nadgryzieni_hosts import normalize_host_name
+
 # ── Configuration ────────────────────────────────────────────────────────────
 # Resolve from the script location so manual and cron invocations use the same checkout.
 REPO_DIR = Path(os.environ.get("NADGRYZIENI_REPO_DIR", Path(__file__).resolve().parent))
@@ -568,10 +570,28 @@ HOST_UNRESOLVED_STATUSES = {"unavailable", "ambiguous", "manual_review"}
 HOST_SOURCES = {"rrn", "patreon", "paired_rrn", "manual"}
 HOST_ALIAS_POLICY = {
     "mode": "conservative",
-    "description": "Only NFKC, whitespace and case-insensitive deduplication are automatic; semantic aliases and name changes are not merged without an explicit reviewed mapping.",
-    "aliases": {},
+    "description": "Only NFKC, whitespace and case-insensitive deduplication are automatic; the explicit reviewed alias Norbert Cała → NPC is applied on every parser and update path.",
+    "aliases": {"Norbert Cała": "NPC"},
 }
 HOST_SENTINEL = "Brak danych"
+
+
+def effective_host_alias_policy(stored: dict | None = None) -> dict:
+    """Return the policy with the code-defined aliases always enforced."""
+    policy = dict(stored) if isinstance(stored, dict) else {}
+    aliases = dict(policy.get("aliases", {})) if isinstance(policy.get("aliases", {}), dict) else {}
+    aliases.update(HOST_ALIAS_POLICY["aliases"])
+    policy.update({
+        "mode": HOST_ALIAS_POLICY["mode"],
+        "description": HOST_ALIAS_POLICY["description"],
+        "aliases": aliases,
+    })
+    return policy
+
+
+def normalize_host_display_name(value: str) -> str:
+    """Normalize a stored/displayed host through the shared alias policy."""
+    return normalize_host_name(value)
 
 
 def normalize_identity_text(value: str) -> str:
@@ -647,7 +667,7 @@ def validate_host_entry(entry: dict, record_key: str = "") -> dict:
     for host in hosts:
         if not isinstance(host, str) or not host.strip():
             raise ValueError(f"Host metadata for {record_key or 'record'} has an invalid host name")
-        display = normalize_identity_text(host)
+        display = normalize_host_display_name(host)
         if ";" in display or "|" in display:
             raise ValueError(f"Host metadata for {record_key or 'record'} contains a table delimiter")
         key = _host_dedupe_key(display)
@@ -698,13 +718,14 @@ def validate_host_entry(entry: dict, record_key: str = "") -> dict:
 def load_host_metadata(path: Path = HOST_METADATA_PATH) -> dict:
     """Load and validate the tracked host manifest."""
     if not path.exists():
-        return {"schema_version": HOST_SCHEMA_VERSION, "alias_policy": HOST_ALIAS_POLICY, "records": {}}
+        return {"schema_version": HOST_SCHEMA_VERSION, "alias_policy": effective_host_alias_policy(), "records": {}}
     payload = json.loads(path.read_text(encoding="utf-8"))
     if payload.get("schema_version") != HOST_SCHEMA_VERSION or not isinstance(payload.get("records"), dict):
         raise ValueError("host_metadata.json has an unsupported schema")
-    alias_policy = payload.get("alias_policy", HOST_ALIAS_POLICY)
-    if not isinstance(alias_policy, dict) or alias_policy.get("mode") != "conservative" or not isinstance(alias_policy.get("aliases", {}), dict):
+    stored_alias_policy = payload.get("alias_policy", HOST_ALIAS_POLICY)
+    if not isinstance(stored_alias_policy, dict) or stored_alias_policy.get("mode") != "conservative" or not isinstance(stored_alias_policy.get("aliases", {}), dict):
         raise ValueError("host_metadata.json has an invalid alias policy")
+    alias_policy = effective_host_alias_policy(stored_alias_policy)
     records = {}
     for record_key, entry in payload["records"].items():
         records[str(record_key)] = validate_host_entry(entry, str(record_key))
@@ -716,7 +737,7 @@ def write_host_metadata(manifest: dict, path: Path = HOST_METADATA_PATH, dry: bo
     records = manifest.get("records", {})
     normalized = {
         "schema_version": HOST_SCHEMA_VERSION,
-        "alias_policy": manifest.get("alias_policy", HOST_ALIAS_POLICY),
+        "alias_policy": effective_host_alias_policy(manifest.get("alias_policy")),
         "records": {
             key: validate_host_entry(records[key], key)
             for key in sorted(records)
@@ -732,7 +753,7 @@ def parse_hosts_cell(value: str) -> list[str]:
     value = normalize_identity_text(value)
     if not value or value == HOST_SENTINEL:
         return []
-    return [normalize_identity_text(part) for part in value.split(";") if normalize_identity_text(part)]
+    return [normalize_host_display_name(part) for part in value.split(";") if normalize_identity_text(part)]
 
 
 def hosts_cell(row: dict) -> str:
@@ -793,7 +814,7 @@ def manifest_from_rows(rows: list[dict], base: dict | None = None, strict: bool 
         records[row["record_key"]] = entry
     return {
         "schema_version": HOST_SCHEMA_VERSION,
-        "alias_policy": (base or {}).get("alias_policy", HOST_ALIAS_POLICY),
+        "alias_policy": effective_host_alias_policy((base or {}).get("alias_policy")),
         "records": records,
     }
 
@@ -1137,7 +1158,7 @@ def generate_data_json(rows: list[dict], url_by_title: dict[str, str | list[str]
                 source_url = fallback
 
         hosts = sorted(
-            [normalize_identity_text(host) for host in (r.get("hosts") or [])],
+            [normalize_host_display_name(host) for host in (r.get("hosts") or [])],
             key=_host_dedupe_key,
         )
         hosts_status = r.get("hosts_status") or "not_listed"

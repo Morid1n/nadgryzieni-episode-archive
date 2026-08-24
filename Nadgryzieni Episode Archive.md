@@ -176,33 +176,33 @@
 | 174 | 208   | 208: Na Bogato i tablet z Androidem                                                                          | 2014-08-20   | 1:30:01  | Paweł Hać; Wojtek Pietrusiewicz    |
 | 175 | 209   | 209: Leniwa Zuza – Odcinek Optymistyczny                                                                     | 2014-09-02   | 1:50:38  | Kinga Ochendowska; Wojtek Pietrusiewicz |
 | 176 | 210   | 210: Dobrze posiedzieć przy Żubrze                                                                           | 2014-09-03   | 2:36:39  | Marek Moi; Wojtek Pietrusiewicz    |
-| 177 | 211   | 211: Jestem taki trochę zmieszany                                                                            | 2014-09-15   | 1:21:26  | Dominik Łada; Norbert Cała; Wojtek Pietrusiewicz |
+| 177 | 211   | 211: Jestem taki trochę zmieszany                                                                            | 2014-09-15   | 1:21:26  | Dominik Łada; NPC; Wojtek Pietrusiewicz |
 | 178 | 212   | 212: Bardziej jestem zainteresowana spłaszczaniem żelków, żeby zrobiły się z nich małe latające spodki       | 2014-09-26   | 2:01:35  | Dominik Łada; Kinga Ochendowska; Wojtek Pietrusiewicz |
 | 179 | 213   | 213: Raz w Tygodniu, Czasami Dwa                                                                             | 2014-11-07   | 0:11     | Brak danych                        |
 | 180 | 214   | 214: Politycznie i Religijnie Poprawny                                                                       | 2014-12-01   | 17:33    | Dominik Łada; Wojtek Pietrusiewicz |
 | 181 | 215   | 215: Nie będę tego ciął                                                                                      | 2014-12-02   | 15:53    | Dominik Łada; Wojtek Pietrusiewicz |
-| 182 | 216   | 216: Internet of Things                                                                                      | 2014-12-03   | 9:23     | Dominik Łada; Norbert Cała         |
-| 183 | 217   | 217: Googlowo-Androidowo                                                                                     | 2014-12-04   | 10:09    | Dominik Łada; Norbert Cała         |
-| 184 | 218   | 218: Gwiazdka z Google                                                                                       | 2014-12-05   | 9:40     | Dominik Łada; Norbert Cała         |
+| 182 | 216   | 216: Internet of Things                                                                                      | 2014-12-03   | 9:23     | Dominik Łada; NPC                  |
+| 183 | 217   | 217: Googlowo-Androidowo                                                                                     | 2014-12-04   | 10:09    | Dominik Łada; NPC                  |
+| 184 | 218   | 218: Gwiazdka z Google                                                                                       | 2014-12-05   | 9:40     | Dominik Łada; NPC                  |
 | 185 | 218.5 | 218½: (Prawie) na żywo z premiery Moto X, Moto G, Moto 360 i Nexusa 6                                        | 2014-12-08   | 16:52    | Dominik Łada; Wojtek Pietrusiewicz |
-| 186 | 219   | 219: Technologia we mgle                                                                                     | 2014-12-09   | 16:01    | Norbert Cała; Wojtek Pietrusiewicz |
-| 187 | 220   | 220: iPhone vs. iPad                                                                                         | 2014-12-10   | 18:07    | Norbert Cała; Wojtek Pietrusiewicz |
+| 186 | 219   | 219: Technologia we mgle                                                                                     | 2014-12-09   | 16:01    | NPC; Wojtek Pietrusiewicz          |
+| 187 | 220   | 220: iPhone vs. iPad                                                                                         | 2014-12-10   | 18:07    | NPC; Wojtek Pietrusiewicz          |
 | 188 | 221   | 221: Monitorujemy                                                                                            | 2014-12-11   | 19:15    | Marek Moi; Wojtek Pietrusiewicz    |
 | 189 | 222   | 222: Fotografujemy                                                                                           | 2014-12-12   | 35:46    | Marek Moi; Wojtek Pietrusiewicz    |
-| 190 | 223   | 223: Pierwszy Polak, który zapłacił 650 PLN kary w Pendolino                                                 | 2014-12-15   | 23:44    | Norbert Cała; Wojtek Pietrusiewicz |
-| 191 | 224   | 224: iPhone dla reszty z nas                                                                                 | 2014-12-16   | 15:42    | Norbert Cała; Wojtek Pietrusiewicz |
+| 190 | 223   | 223: Pierwszy Polak, który zapłacił 650 PLN kary w Pendolino                                                 | 2014-12-15   | 23:44    | NPC; Wojtek Pietrusiewicz          |
+| 191 | 224   | 224: iPhone dla reszty z nas                                                                                 | 2014-12-16   | 15:42    | NPC; Wojtek Pietrusiewicz          |
 | 192 | 225   | 225: Daj mi pięć rubli; po co Ci 20 rubli?                                                                   | 2014-12-17   | 14:19    | Dominik Łada; Wojtek Pietrusiewicz |
 | 193 | 226   | 226: Panowie odpowiedzialni za macanie                                                                       | 2014-12-18   | 11:34    | Dominik Łada; Wojtek Pietrusiewicz |
-| 194 | 227   | 227: Mądry Mini Żuczek                                                                                       | 2014-12-19   | 19:40    | Norbert Cała; Wojtek Pietrusiewicz |
+| 194 | 227   | 227: Mądry Mini Żuczek                                                                                       | 2014-12-19   | 19:40    | NPC; Wojtek Pietrusiewicz          |
 | 195 | 228   | 228: Jak to jest żyć w Ameryce                                                                               | 2014-12-29   | 16:20    | Dominik Łada; Michał Zieliński     |
-| 196 | 229   | 229: B&O Polska z MacBookami                                                                                 | 2014-12-30   | 18:32    | Krzysiek Grochowski; Norbert Cała  |
+| 196 | 229   | 229: B&O Polska z MacBookami                                                                                 | 2014-12-30   | 18:32    | Krzysiek Grochowski; NPC           |
 | 197 | 230   | 230: Workflow dla iOS                                                                                        | 2014-12-31   | 15:53    | Dominik Łada; Paweł Hać            |
-| 198 | 231   | 231: Norbert jedzie do USA po Apple Watcha                                                                   | 2015-01-05   | 31:29    | Dominik Łada; Norbert Cała; Wojtek Pietrusiewicz |
-| 199 | 232   | 232: Plotki o MacBook Air 12″ z Retiną, a Norbert jest owcą                                                  | 2015-01-07   | 44:43    | Dominik Łada; Norbert Cała; Wojtek Pietrusiewicz |
+| 198 | 231   | 231: Norbert jedzie do USA po Apple Watcha                                                                   | 2015-01-05   | 31:29    | Dominik Łada; NPC; Wojtek Pietrusiewicz |
+| 199 | 232   | 232: Plotki o MacBook Air 12″ z Retiną, a Norbert jest owcą                                                  | 2015-01-07   | 44:43    | Dominik Łada; NPC; Wojtek Pietrusiewicz |
 | 200 | 233   | 233: Helikoptery, słuchawki i muzyka                                                                         | 2015-01-08   | 29:02    | Dominik Łada; Wojtek Pietrusiewicz |
 | 201 | 234   | 234: Dominika nowy MacBook Pro 13″ z Retiną                                                                  | 2015-01-09   | 30:57    | Dominik Łada; Wojtek Pietrusiewicz |
-| 202 | 235   | 235: Gadżet Roku 2014 iMagazine                                                                              | 2015-01-12   | 15:58    | Dominik Łada; Norbert Cała         |
-| 203 | 236   | 236: Siri, odsłoń zegarek                                                                                    | 2015-01-13   | 20:22    | Norbert Cała; Wojtek Pietrusiewicz |
+| 202 | 235   | 235: Gadżet Roku 2014 iMagazine                                                                              | 2015-01-12   | 15:58    | Dominik Łada; NPC                  |
+| 203 | 236   | 236: Siri, odsłoń zegarek                                                                                    | 2015-01-13   | 20:22    | NPC; Wojtek Pietrusiewicz          |
 | 204 | 237   | 237: Wojtek ma banana                                                                                        | 2015-01-14   | 20:11    | Dominik Łada; Wojtek Pietrusiewicz |
 | 205 | 238   | 238: Guess who’s back                                                                                        | 2015-01-16   | 52:46    | Kinga Ochendowska; Wojtek Pietrusiewicz |
 | 206 | 239   | 239: Nozbe wygrywa okładkę iMagazine!                                                                        | 2015-01-19   | 25:40    | Dominik Łada; Michał Śliwiński     |
@@ -226,20 +226,20 @@
 | 224 | 257   | 257: (Po Godzinach) Ja jestem dinozaurem, a Ty jesteś Wojtek [NSFW]                                          | 2016-05-17   | 1:15:58  | Kinga Ochendowska; Wojtek Pietrusiewicz |
 | 225 | 258   | 258: Tom Cook                                                                                                | 2016-05-25   | 46:49    | Kinga Ochendowska; Wojtek Pietrusiewicz |
 | 226 | 259   | 259: Nowy Top Gear, Nowe MacBooki Pro i Nowe iPhone’y                                                        | 2016-06-03   | 1:00:36  | Michał Zieliński; Wojtek Pietrusiewicz |
-| 227 | 260   | 260: Chwila przed WWDC 2016                                                                                  | 2016-06-09   | 48:25    | Norbert Cała; Wojtek Pietrusiewicz |
+| 227 | 260   | 260: Chwila przed WWDC 2016                                                                                  | 2016-06-09   | 48:25    | NPC; Wojtek Pietrusiewicz          |
 | 228 | 261   | 261: iChwila po WWDC 2016                                                                                    | 2016-06-14   | 1:54:39  | Marek Moi; Wojtek Pietrusiewicz    |
 | 229 | 262   | 262: (Po Godzinach) Szeryf drogowy, Tesla Model S i spalony zasilacz [NSFW]                                  | 2016-07-21   | 52:06    | Marek Moi; Wojtek Pietrusiewicz    |
 | 230 | 263   | 263: (Po Godzinach) Problemy pierwszego świata                                                               | 2016-07-27   | 1:34:42  | Marek Moi; Wojtek Pietrusiewicz    |
-| 231 | 264   | 264: MacBook Pro 13″ Touch Bar vs. Escape                                                                    | 2017-01-26   | 1:26:16  | Norbert Cała; Wojtek Pietrusiewicz |
+| 231 | 264   | 264: MacBook Pro 13″ Touch Bar vs. Escape                                                                    | 2017-01-26   | 1:26:16  | NPC; Wojtek Pietrusiewicz          |
 | 232 | 265   | 265: Smog, zanieczyszczenia i SmoothAir                                                                      | 2017-01-31   | 47:47    | Błażej Faliszek; Wojtek Pietrusiewicz |
 | 233 | 266   | 266: WOŚP, Gadżet Roku i The Man in the High Castle                                                          | 2017-02-01   | 1:18:25  | Dominik Łada; Wojtek Pietrusiewicz |
 | 234 | 267   | 267: Bo świat się wokół dupy kręci                                                                           | 2017-02-03   | 1:13:04  | Robert Nawrowski; Wojtek Pietrusiewicz |
-| 235 | 268   | 268: W AirPods wyglądam jak stylowy człowiek, czyli jak debil                                                | 2017-02-17   | 1:36:16  | Norbert Cała; Wojtek Pietrusiewicz |
-| 236 | 269   | 269: Apple Watch zamiast iPhone’a                                                                            | 2017-02-24   | 1:41:27  | Norbert Cała; Wojtek Pietrusiewicz |
+| 235 | 268   | 268: W AirPods wyglądam jak stylowy człowiek, czyli jak debil                                                | 2017-02-17   | 1:36:16  | NPC; Wojtek Pietrusiewicz          |
+| 236 | 269   | 269: Apple Watch zamiast iPhone’a                                                                            | 2017-02-24   | 1:41:27  | NPC; Wojtek Pietrusiewicz          |
 | 237 | 270   | 270: Oczywiście mnóstwo kutasów jest                                                                         | 2017-03-03   | 1:59:00  | Jan Mazurczak; Wojtek Pietrusiewicz |
 | 238 | 271   | 271: Porzygałem się, czyli odcinek o iPhone 7 (PRODUCT)RED                                                   | 2017-03-22   | 1:05:42  | Dominik Łada; Krzysiek Kołacz; Wojtek Pietrusiewicz; Wojtek Pokwicki |
 | 239 | 272   | 272: Kłamałeś                                                                                                | 2017-03-30   | 1:19:30  | Jan Mazurczak; Wojtek Pietrusiewicz |
-| 240 | 273   | 273: Half-Life 3 potwierdzony!                                                                               | 2017-04-07   | 1:28:17  | Norbert Cała; Wojtek Pietrusiewicz; Wojtek Pokwicki |
+| 240 | 273   | 273: Half-Life 3 potwierdzony!                                                                               | 2017-04-07   | 1:28:17  | NPC; Wojtek Pietrusiewicz; Wojtek Pokwicki |
 | 241 | 274   | 274: Przynajmniej koty nie tupią                                                                             | 2017-04-14   | 1:47:50  | Kinga Ochendowska; Wojtek Pietrusiewicz |
 | 242 | 275   | 275: Star Wars: The Last Jedi – Kolory Zbuntowanego Zwiastunu                                                | 2017-04-18   | 1:26:36  | Krzysiek Kołacz; Wojtek Pietrusiewicz; Wojtek Pokwicki |
 | 243 | 276   | 276: Samsung Galaxy S8, Xiaomi Mi6, LG G6 i trochę o iPhone                                                  | 2017-04-21   | 1:11:15  | Dominik Łada; Wojtek Pietrusiewicz |
@@ -252,9 +252,9 @@
 | 250 | 283   | 283: iMac Pro i ciąg dalszy Raspberry Pi i nowy setup                                                        | 2018-02-16   | 1:22:00  | Piotr Pokraczyński; Wojtek Pietrusiewicz |
 | 251 | 284   | 284: (Po Godzinach) Mac vs. Windows, Xbox vs. PlayStation, itp.                                              | 2018-02-23   | 59:18    | Piotr Pokraczyński; Wojtek Pietrusiewicz |
 | 252 | 285   | 285: (Po Godzinach) IEM Katowice 2018 i nasze ulubione aplikacje na Mac                                      | 2018-03-07   | 1:07:38  | Piotr Pokraczyński; Wojtek Pietrusiewicz |
-| 253 | 286   | 286: HomePod, tylko HomePod                                                                                  | 2018-03-07   | 1:19:32  | Norbert Cała; Wojtek Pietrusiewicz |
+| 253 | 286   | 286: HomePod, tylko HomePod                                                                                  | 2018-03-07   | 1:19:32  | NPC; Wojtek Pietrusiewicz          |
 | 254 | 287   | 287: Przygoda z HomePodem                                                                                    | 2018-03-16   | 1:33:41  | Piotr Pokraczyński; Wojtek Pietrusiewicz |
-| 255 | 288   | 288: HomeKit i nowy GerdaLock                                                                                | 2018-03-19   | 52:26    | Norbert Cała; Wojtek Pietrusiewicz |
+| 255 | 288   | 288: HomeKit i nowy GerdaLock                                                                                | 2018-03-19   | 52:26    | NPC; Wojtek Pietrusiewicz          |
 | 256 | 289   | 289: Stowarzyszenie Anonimowych Alkoholików                                                                  | 2019-11-18   | 1:09:30  | Kinga Ochendowska; Wojtek Pietrusiewicz |
 | 257 | 290   | 290: Nowy 16-calowy MacBook Pro                                                                              | 2019-11-25   | 1:32:48  | Dominik Łada; Wojtek Pietrusiewicz |
 | 258 | 291   | 291: Toksyczność                                                                                             | 2019-11-28   | 1:27:44  | Maciej Buchert; Wojtek Pietrusiewicz |

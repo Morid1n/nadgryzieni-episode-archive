@@ -132,14 +132,18 @@ _SOCIAL_WORDS = frozenset(
         "youtube",
     }
 )
+_HOST_NAME_ALIASES = {
+    "norbert cała": "NPC",
+}
 
 
 def normalize_host_name(value: str) -> str:
-    """NFKC-normalize and whitespace-collapse one displayed host name.
+    """NFKC-normalize, alias-normalize and whitespace-collapse one host name.
 
     The display spelling (including case and diacritics) is preserved after
-    Unicode normalization.  Table delimiters are rejected rather than
-    rewritten, because silently changing them would corrupt a Markdown cell.
+    Unicode normalization, except for explicit reviewed aliases.  Table
+    delimiters are rejected rather than rewritten, because silently changing
+    them would corrupt a Markdown cell.
     """
 
     if not isinstance(value, str):
@@ -149,7 +153,7 @@ def normalize_host_name(value: str) -> str:
         raise HostNameError("host name is empty")
     if ";" in normalized or "|" in normalized:
         raise HostNameError("host name contains a forbidden semicolon or pipe")
-    return normalized
+    return _HOST_NAME_ALIASES.get(normalized.casefold(), normalized)
 
 
 def host_dedupe_key(value: str) -> str:
@@ -1321,7 +1325,7 @@ def _save_host_cache(path: Path, records: Mapping[str, Any]) -> None:
 
 def _cache_projection(result: Mapping[str, Any]) -> Dict[str, Any]:
     return {
-        "hosts": list(result.get("hosts", [])),
+        "hosts": [normalize_host_name(host) for host in result.get("hosts", [])],
         "hosts_status": result.get("hosts_status"),
         "hosts_source": result.get("hosts_source", "rrn"),
         "hosts_source_url": result.get("hosts_source_url", ""),
@@ -1338,7 +1342,7 @@ def _cached_direct_entry(row: Mapping[str, Any], cached: Mapping[str, Any]) -> D
         "title": str(row.get("title", "")),
         "date": str(row.get("date", "")),
         "duration": str(row.get("duration", "")),
-        "hosts": list(cached.get("hosts", [])),
+        "hosts": [normalize_host_name(host) for host in cached.get("hosts", [])],
         "hosts_status": cached.get("hosts_status", "manual_review"),
         "hosts_source": cached.get("hosts_source", "rrn"),
         "hosts_source_url": source_url,

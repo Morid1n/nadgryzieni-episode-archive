@@ -50,6 +50,8 @@ Każdy odcinek zawiera: stabilny `record_key`, numer, tytuł, datę, długość 
 
 `host_metadata.json` jest źródłem audytowalnej proweniencji. Strony RRN bez strukturalnego bloku `Prowadzący` mają status `not_listed` i widoczne `Brak danych`; nie są uzupełniane na podstawie domysłów. Afterparty od numeru 550 wzwyż dziedziczą hostów głównego odcinka wyłącznie przez jawny wpis `paired_rrn` z kluczem sparowanego rekordu.
 
+Polityka aliasów hostów jest trwała: każda forma `Norbert Cała` jest normalizowana i publikowana jako `NPC` w parserach, manifeście, `data.json`, Markdown oraz przyszłych aktualizacjach i odczytach cache.
+
 ## ⚙️ Automatyzacja
 
 Aktywny pipeline jest uruchamiany z profilu R2-D2. Główny job Hermesa działa w sobotę o 04:00 czasu lokalnego, czyli w noc z piątku na sobotę. Przed uruchomieniem deterministycznego wrappera korzysta z narzędzi przeglądarki Hermesa do odczytu wyrenderowanych wpisów Patreon i rejestruje nowe metadane przez `cron/register-patreon-post.py`. Drugi wrapper działa we wtorek o tej samej porze, ale wykonuje pipeline wyłącznie wtedy, gdy sobotni przebieg nie znalazł nowych odcinków. Stan retry jest przechowywany poza repozytorium w chronionym pliku profilu.

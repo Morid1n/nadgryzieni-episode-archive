@@ -4,6 +4,7 @@ from pathlib import Path
 
 from nadgryzieni_hosts import (
     HostNameError,
+    _cached_direct_entry,
     host_dedupe_key,
     normalize_host_name,
     parse_patreon_post_payload,
@@ -42,11 +43,23 @@ class HostNameNormalizationTests(unittest.TestCase):
             host_dedupe_key("Wojtek Pietrusiewicz"),
         )
 
+    def test_norbert_cala_is_always_published_as_npc(self):
+        self.assertEqual(normalize_host_name("Norbert Cała"), "NPC")
+        self.assertEqual(normalize_host_name("  NORBERT\u00a0CAŁA  "), "NPC")
+        self.assertEqual(host_dedupe_key("Norbert Cała"), host_dedupe_key("NPC"))
+
     def test_host_name_separators_are_rejected(self):
         with self.assertRaises(HostNameError):
             normalize_host_name("Name; Other")
         with self.assertRaises(HostNameError):
             host_dedupe_key("Name | Other")
+
+    def test_cached_host_alias_is_normalized_before_future_update(self):
+        cached = _cached_direct_entry(
+            {"record_key": "rk_cache", "episode": "1", "title": "1: Test"},
+            {"hosts": ["Norbert Cała"], "hosts_status": "verified", "hosts_source": "rrn"},
+        )
+        self.assertEqual(cached["hosts"], ["NPC"])
 
 
 class RrnParserTests(unittest.TestCase):
