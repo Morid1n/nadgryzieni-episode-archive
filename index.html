@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=128">
+    <link rel="stylesheet" href="style.css?v=129">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -120,6 +120,17 @@
                         <h2 id="signals-title">Archiwum w skrócie</h2>
                     </div>
                     <p class="section-summary">Kilka punktów odniesienia, zanim wejdziesz głębiej w dane.</p>
+                </div>
+                <div class="hosts-summary" id="hosts-summary" aria-labelledby="hosts-summary-title">
+                    <div class="hosts-summary-heading">
+                        <div>
+                            <p class="eyebrow">PROWADZĄCY / 01</p>
+                            <h3 id="hosts-summary-title">Kto prowadzi rozmowy?</h3>
+                        </div>
+                        <p class="hosts-summary-description" id="hosts-summary-description">Lista prowadzących i liczba odcinków, w których pojawiają się w archiwum.</p>
+                    </div>
+                    <ul class="host-summary-list" id="host-summary-list" aria-label="Prowadzący i liczba odcinków"></ul>
+                    <p class="hosts-summary-empty" id="hosts-summary-empty" hidden>Brak danych o prowadzących.</p>
                 </div>
                 <div class="signal-grid">
                     <article class="signal-card signal-card-featured">
@@ -336,6 +347,6 @@
             </div>
         </footer>
     </div>
-    <script src="script.js?v=128"></script>
+    <script src="script.js?v=129"></script>
 </body>
 </html>

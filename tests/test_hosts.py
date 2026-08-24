@@ -1,0 +1,213 @@
+import json
+import unittest
+from pathlib import Path
+
+from nadgryzieni_hosts import (
+    HostNameError,
+    host_dedupe_key,
+    normalize_host_name,
+    parse_patreon_post_payload,
+    parse_rrn_hosts,
+)
+
+
+ROOT = Path(__file__).resolve().parents[1]
+FIXTURES = ROOT / "tests" / "fixtures" / "hosts"
+
+
+def fixture(name):
+    return (FIXTURES / name).read_text(encoding="utf-8")
+
+
+def patreon_payload(document):
+    return {
+        "data": {
+            "attributes": {
+                "content_json_string": json.dumps(document, ensure_ascii=False),
+            }
+        }
+    }
+
+
+class HostNameNormalizationTests(unittest.TestCase):
+    def test_normalize_host_name_nfkc_collapses_unicode_whitespace(self):
+        self.assertEqual(
+            normalize_host_name("  Wojtek\u00a0Pietrusiewicz\u2003  "),
+            "Wojtek Pietrusiewicz",
+        )
+
+    def test_host_dedupe_key_is_case_insensitive_after_normalization(self):
+        self.assertEqual(
+            host_dedupe_key("  WOJTEK\u00a0Pietrusiewicz "),
+            host_dedupe_key("Wojtek Pietrusiewicz"),
+        )
+
+    def test_host_name_separators_are_rejected(self):
+        with self.assertRaises(HostNameError):
+            normalize_host_name("Name; Other")
+        with self.assertRaises(HostNameError):
+            host_dedupe_key("Name | Other")
+
+
+class RrnParserTests(unittest.TestCase):
+    def test_old_h2_host_block_is_scoped_to_article_content(self):
+        result = parse_rrn_hosts(
+            fixture("rrn-old-h2.html"),
+            expected_title="Nadgryzieni 300: Stary format",
+            expected_episode="300",
+        )
+        self.assertEqual(result.status, "verified")
+        self.assertEqual(
+            result.hosts,
+            ["Wojtek Pietrusiewicz", "Thomas Voland"],
+        )
+        self.assertEqual(result.excluded_hosts, [])
+
+    def test_new_p_host_block_strips_social_suffixes_dedupes_and_excludes_struck_entries(self):
+        result = parse_rrn_hosts(
+            fixture("rrn-new-p-social.html"),
+            expected_title="Nadgryzieni 301: Nowy format",
+            expected_episode="301",
+        )
+        self.assertEqual(result.status, "verified")
+        self.assertEqual(
+            result.hosts,
+            ["Anna Kowalska", "Łukasz Żółć", "Thomas Voland"],
+        )
+        self.assertEqual(result.excluded_hosts, ["Stary Gospodarz", "Drugi Usunięty"])
+        self.assertFalse(any("@" in host for host in result.hosts))
+
+    def test_missing_host_block_is_not_listed(self):
+        result = parse_rrn_hosts(fixture("rrn-no-host-block.html"))
+        self.assertEqual(result.status, "not_listed")
+        self.assertEqual(result.hosts, [])
+
+    def test_prose_mention_of_prowadzacy_is_not_a_host_block(self):
+        result = parse_rrn_hosts(fixture("rrn-prose-only.html"))
+        self.assertEqual(result.status, "not_listed")
+        self.assertEqual(result.hosts, [])
+
+    def test_structural_empty_host_list_is_not_listed(self):
+        result = parse_rrn_hosts(fixture("rrn-empty-list.html"))
+        self.assertEqual(result.status, "not_listed")
+        self.assertEqual(result.hosts, [])
+
+    def test_multiple_host_blocks_fail_closed(self):
+        result = parse_rrn_hosts(fixture("rrn-ambiguous.html"))
+        self.assertEqual(result.status, "parse_error")
+        self.assertIn("multiple", " ".join(result.diagnostics).lower())
+
+    def test_heading_without_immediately_following_list_fails_closed(self):
+        result = parse_rrn_hosts(fixture("rrn-invalid-following.html"))
+        self.assertEqual(result.status, "parse_error")
+        self.assertEqual(result.hosts, [])
+
+    def test_list_with_non_direct_entries_fails_closed(self):
+        result = parse_rrn_hosts(fixture("rrn-malformed-list.html"))
+        self.assertEqual(result.status, "parse_error")
+        self.assertIn("direct list", " ".join(result.diagnostics).lower())
+
+    def test_forbidden_separator_in_source_entry_is_diagnosed(self):
+        result = parse_rrn_hosts(fixture("rrn-separators.html"))
+        self.assertEqual(result.status, "parse_error")
+        self.assertTrue(
+            any("semicolon" in diagnostic.lower() or "pipe" in diagnostic.lower()
+                for diagnostic in result.diagnostics)
+        )
+
+    def test_presentational_wrapper_list_is_unwrapped(self):
+        html = """
+        <article><h2>Prowadzący:</h2>
+        <ul><li style="list-style-type:none"><ul>
+          <li>Thomas Voland (<a href="https://twitter.com/thomas">@thomas</a>)</li>
+          <li>Wojtek Pietrusiewicz (<a href="https://twitter.com/morid1n">@morid1n</a>)</li>
+        </ul></li></ul></article>
+        """
+        result = parse_rrn_hosts(html)
+        self.assertEqual(result.status, "verified")
+        self.assertEqual(result.hosts, ["Thomas Voland", "Wojtek Pietrusiewicz"])
+
+    def test_fractional_archive_marker_can_match_legacy_title_body(self):
+        html = """
+        <article><h1>WWDC 2012</h1><p>Brak sekcji prowadzących.</p></article>
+        """
+        result = parse_rrn_hosts(
+            html,
+            expected_title="86½: (Live) WWDC 2012",
+            expected_episode="86.5",
+        )
+        self.assertEqual(result.status, "not_listed")
+
+
+class PatreonParserTests(unittest.TestCase):
+    def test_patreon_prosemirror_content_extracts_ordered_hosts(self):
+        document = {
+            "type": "doc",
+            "content": [
+                {"type": "paragraph", "content": [{"type": "text", "text": "Prowadzący:"}]},
+                {
+                    "type": "bulletList",
+                    "content": [
+                        {
+                            "type": "listItem",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {"type": "text", "text": "Michał Żółć "},
+                                        {
+                                            "type": "text",
+                                            "text": "@michal",
+                                            "marks": [
+                                                {
+                                                    "type": "link",
+                                                    "attrs": {"href": "https://twitter.example/michal"},
+                                                }
+                                            ],
+                                        },
+                                    ],
+                                }
+                            ],
+                        },
+                        {
+                            "type": "listItem",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [{"type": "text", "text": "michał\u00a0żółć"}],
+                                }
+                            ],
+                        },
+                        {
+                            "type": "listItem",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [{"type": "text", "text": "Élodie Nowak"}],
+                                }
+                            ],
+                        },
+                    ],
+                },
+            ],
+        }
+        result = parse_patreon_post_payload(
+            patreon_payload(document),
+            source_url="https://www.patreon.com/iMagazinePL/posts/301-test#comments",
+        )
+        self.assertEqual(result.status, "verified")
+        self.assertEqual(result.hosts, ["Michał Żółć", "Élodie Nowak"])
+        self.assertEqual(
+            result.source_url,
+            "https://www.patreon.com/iMagazinePL/posts/301-test",
+        )
+
+    def test_patreon_unavailable_content_is_an_explicit_parse_error(self):
+        payload = {"data": {"attributes": {"content_json_string": None}}}
+        result = parse_patreon_post_payload(payload)
+        self.assertEqual(result.status, "parse_error")
+        self.assertIn("unavailable", " ".join(result.diagnostics).lower())
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,13 +1,14 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 128;
+const DATA_VERSION = 129;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 const YEARLY_STATS_START = 2021;
 
 let chartInstance = null;
 let chartData = null;
+let rawEpisodes = [];
 let normalizedEpisodes = [];
 let chartMode = 'line';
 const archiveState = {
@@ -132,6 +133,10 @@ function normalizeEpisodes(episodes) {
             duration: episode.duration || '',
             url: episode.url || '',
             category: episode.category || '',
+            hosts: Array.isArray(episode.hosts) ? episode.hosts.filter((name) => typeof name === 'string' && name.trim()) : [],
+            hostsStatus: episode.hosts_status || '',
+            hostsSource: episode.hosts_source || '',
+            hostsSourceUrl: episode.hosts_source_url || '',
         }))
         .filter((episode) => Number.isFinite(episode.y))
         .sort((a, b) => {
@@ -160,6 +165,53 @@ function renderStats(data) {
     setText('#archive-year-range', yearRange);
     setText('#hero-lede', `${formatNumber(totalEpisodes, 0)} odcinków zebranych w jednym, żywym archiwum.`);
     setText('#footer-update', formatDate(normalizedEpisodes.at(-1)?.date));
+}
+
+const hostCollator = new Intl.Collator('pl-PL', { sensitivity: 'base', numeric: false });
+
+function hostDedupeKey(value) {
+    return value.normalize('NFKC').replace(/\s+/gu, ' ').trim().toLocaleLowerCase('pl-PL');
+}
+
+function renderHostsSummary() {
+    const list = $('#host-summary-list');
+    const empty = $('#hosts-summary-empty');
+    if (!list || !empty) {
+        return;
+    }
+
+    const counts = new Map();
+    let noDataCount = 0;
+    rawEpisodes.forEach((episode) => {
+        const names = Array.isArray(episode.hosts)
+            ? episode.hosts.filter((name) => typeof name === 'string' && name.trim())
+            : [];
+        const uniqueNames = new Map(names.map((name) => [hostDedupeKey(name), name.trim()]));
+        if (!uniqueNames.size) {
+            noDataCount += 1;
+        }
+        uniqueNames.forEach((displayName, key) => {
+            const entry = counts.get(key) || { name: displayName, count: 0 };
+            entry.count += 1;
+            counts.set(key, entry);
+        });
+    });
+
+    const entries = [...counts.values()].sort((a, b) => b.count - a.count || hostCollator.compare(a.name, b.name));
+    list.replaceChildren(...entries.map((entry) => {
+        const item = document.createElement('li');
+        item.className = 'host-summary-item';
+        const name = document.createElement('strong');
+        name.textContent = entry.name;
+        const count = document.createElement('span');
+        count.textContent = `${integerFormatter.format(entry.count)} ${entry.count === 1 ? 'odcinek' : 'odcinków'}`;
+        item.append(name, count);
+        return item;
+    }));
+    empty.hidden = entries.length > 0;
+    setText('#hosts-summary-description', entries.length
+        ? `${integerFormatter.format(entries.length)} unikalnych prowadzących · ${integerFormatter.format(noDataCount)} odcinków bez opublikowanej listy.`
+        : 'Lista prowadzących i liczba odcinków, w których pojawiają się w archiwum.');
 }
 
 function isAfterparty(episode) {
@@ -669,6 +721,11 @@ function createEpisodeCard(episode) {
     const date = document.createElement('span');
     date.className = 'episode-date';
     date.textContent = formatDate(episode.date);
+    const hosts = document.createElement('span');
+    hosts.className = 'episode-hosts';
+    hosts.textContent = episode.hosts.length
+        ? `Prowadzący: ${episode.hosts.join(', ')}`
+        : 'Prowadzący: Brak danych';
     const sourceLink = document.createElement('a');
     sourceLink.className = 'episode-link';
     sourceLink.href = episode.url;
@@ -677,7 +734,7 @@ function createEpisodeCard(episode) {
     sourceLink.textContent = episode.url.includes('patreon.com') ? 'Patreon' : 'Retro Rocket Network';
     sourceLink.setAttribute('aria-label', `Otwórz odcinek ${episode.episodeId} w ${sourceLink.textContent}`);
     sourceLink.insertAdjacentText('beforeend', ' ↗');
-    card.append(top, title, date, sourceLink);
+    card.append(top, title, date, hosts, sourceLink);
     return card;
 }
 
@@ -702,7 +759,7 @@ function getFilteredEpisodes() {
         .reverse()
         .filter((episode) => {
             const matchesYear = archiveState.year === 'all' || getEpisodeYear(episode) === archiveState.year;
-            const searchText = `${episode.episodeId} ${episode.title} ${episode.date}`.toLocaleLowerCase('pl-PL');
+            const searchText = `${episode.episodeId} ${episode.title} ${episode.date} ${episode.hosts.join(' ')}`.toLocaleLowerCase('pl-PL');
             return matchesYear && (!query || searchText.includes(query));
         });
 }
@@ -783,9 +840,11 @@ async function loadData() {
             throw new Error(`Data request failed: ${response.status}`);
         }
         chartData = await response.json();
-        normalizedEpisodes = normalizeEpisodes(chartData.episodes || []);
+        rawEpisodes = Array.isArray(chartData.episodes) ? chartData.episodes : [];
+        normalizedEpisodes = normalizeEpisodes(rawEpisodes);
         renderStats(chartData);
         renderLatestRelease();
+        renderHostsSummary();
         renderSignals();
         renderYearBars();
         renderDurationBars();

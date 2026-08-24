@@ -28,8 +28,8 @@ class PairedReleaseHeroContractTests(unittest.TestCase):
 
     def test_current_data_contains_the_regular_and_afterparty_pair(self):
         latest_two = self.data["episodes"][-2:]
-        self.assertEqual([episode["episode"] for episode in latest_two], ["601", "601.5"])
-        self.assertEqual({episode["date"] for episode in latest_two}, {"2026-08-14"})
+        self.assertEqual(latest_two[1]["episode"], f"{latest_two[0]['episode']}.5")
+        self.assertEqual({episode["date"] for episode in latest_two}, {latest_two[0]["date"]})
         self.assertEqual({episode["category"] for episode in latest_two}, {"main", "afterparty"})
         self.assertTrue(all(episode["url"] for episode in latest_two))
 

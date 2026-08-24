@@ -31,6 +31,8 @@ nadgryzieni-episode-archive/
 ├── style.css           # Style CSS
 ├── script.js           # Logika wykresu (Chart.js)
 ├── data.json           # Dane wszystkich odcinków (JSON)
+├── host_metadata.json  # Audytowalny manifest hostów i proweniencji
+├── nadgryzieni_hosts.py # Parser RRN, audyt i bezpieczne apply hostów
 ├── nadgryzieni_pipeline.py # Bezpieczny pipeline RSS/Patreon → archiwum/site
 ├── patreon_posts.json  # Zweryfikowany fallback linków Patreon
 ├── cron/                # Wrappery harmonogramu weekendowego i retry
@@ -44,7 +46,9 @@ nadgryzieni-episode-archive/
 Dane odcinków są dostępne w formacie JSON:
 - [data.json (surowe dane) →](https://morid1n.github.io/nadgryzieni-episode-archive/data.json)
 
-Każdy odcinek zawiera: numer, tytuł, datę, długość w minutach, sformatowaną długość, kategorię i kanoniczny URL źródłowy. Odcinki Patreon Afterparty są pełnoprawnymi rekordami statystyk i zachowują ułamkowe identyfikatory, np. `595.5`.
+Każdy odcinek zawiera: stabilny `record_key`, numer, tytuł, datę, długość w minutach, sformatowaną długość, kategorię, kanoniczny URL źródłowy oraz `hosts`, `hosts_status`, `hosts_source`, `hosts_source_url` i — gdy potrzebne — `hosts_provenance`. Odcinki Patreon Afterparty są pełnoprawnymi rekordami statystyk i zachowują ułamkowe identyfikatory, np. `595.5`.
+
+`host_metadata.json` jest źródłem audytowalnej proweniencji. Strony RRN bez strukturalnego bloku `Prowadzący` mają status `not_listed` i widoczne `Brak danych`; nie są uzupełniane na podstawie domysłów. Afterparty od numeru 550 wzwyż dziedziczą hostów głównego odcinka wyłącznie przez jawny wpis `paired_rrn` z kluczem sparowanego rekordu.
 
 ## ⚙️ Automatyzacja
 
@@ -53,6 +57,18 @@ Aktywny pipeline jest uruchamiany z profilu R2-D2. Główny job Hermesa działa 
 `patreon_posts.json` jest śledzonym manifestem zweryfikowanych wpisów Afterparty. Może zawierać tytuł, datę i długość zebrane przez przeglądarkę, ponieważ Patreon blokuje zwykłe żądania HTTP. Dane uwierzytelniające nie są zapisywane w repozytorium.
 
 Pipeline wymaga zweryfikowanego wygenerowanego outputu przed synchronizacją Obsidian i publikacją GitHub Pages. Gdy nie ma nowych odcinków, nie tworzy commita ani nie wykonuje pushu.
+
+Jednorazowe odtworzenie hostów wykonuje się dwuetapowo — audyt nie zmienia repozytorium, a `apply` odrzuca niepełny lub nieaktualny audyt:
+
+```bash
+python3 nadgryzieni_hosts.py audit --output /tmp/hosts-audit.json
+python3 nadgryzieni_hosts.py apply --audit /tmp/hosts-audit.json --dry-run
+python3 nadgryzieni_hosts.py apply --audit /tmp/hosts-audit.json --write
+```
+
+Audyt używa resumowalnego cache wyników poza repozytorium (`~/.hermes/profiles/r2-d2/state/nadgryzieni-host-cache.json`); `--refresh` wymusza ponowne odczytanie źródeł. Cache nie przechowuje treści HTML ani danych uwierzytelniających.
+
+Cotygodniowy pipeline wzbogaca tylko nowe rekordy; jawne odświeżenie całości wymaga `--refresh-hosts`. `--force` regeneruje artefakty bez masowego pobierania hostów.
 
 ## 🛠️ Technologie
 

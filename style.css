@@ -783,6 +783,86 @@ html[data-theme="dark"] .theme-icon::after {
     line-height: 1.6;
 }
 
+.hosts-summary {
+    margin: 34px 0 16px;
+    padding: clamp(22px, 3vw, 32px);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    border-radius: var(--radius-lg);
+    background: var(--surface-soft);
+    box-shadow: var(--shadow-sm);
+}
+
+.hosts-summary-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.hosts-summary-heading .eyebrow {
+    margin-bottom: 11px;
+}
+
+.hosts-summary h3 {
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(1.35rem, 2.5vw, 2rem);
+    letter-spacing: -0.06em;
+    line-height: 1.08;
+}
+
+.hosts-summary-description {
+    max-width: 390px;
+    margin: 0 0 2px;
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.55;
+    text-align: right;
+}
+
+.host-summary-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 8px;
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.host-summary-item {
+    display: flex;
+    min-width: 0;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+}
+
+.host-summary-item strong {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--ink);
+    font-size: 0.82rem;
+    line-height: 1.35;
+}
+
+.host-summary-item span {
+    flex: 0 0 auto;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    white-space: nowrap;
+}
+
+.hosts-summary-empty {
+    margin: 24px 0 0;
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+
 .signal-grid {
     display: grid;
     grid-template-columns: 1.25fr 1fr 1fr;
@@ -1564,6 +1644,15 @@ html[data-theme="dark"] .theme-icon::after {
     border-top: 1px solid var(--border);
 }
 
+.episode-hosts {
+    display: block;
+    margin-top: 9px;
+    color: var(--muted-strong);
+    font-size: 0.69rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
 .episode-link {
     display: inline-flex;
     align-items: center;
@@ -1806,6 +1895,20 @@ html[data-theme="dark"] .theme-icon::after {
     .section-heading-inline,
     .chart-header {
         display: block;
+    }
+
+    .hosts-summary-heading {
+        display: block;
+    }
+
+    .hosts-summary-description {
+        max-width: none;
+        margin-top: 14px;
+        text-align: left;
+    }
+
+    .host-summary-list {
+        grid-template-columns: 1fr;
     }
 
     .section-summary {

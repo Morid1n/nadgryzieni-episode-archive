@@ -24,12 +24,14 @@ Usage:
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import re
 import shutil
 import ssl
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -38,6 +40,7 @@ from datetime import datetime, date, timedelta
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 from urllib.parse import urlparse
+import unicodedata
 
 # ── Configuration ────────────────────────────────────────────────────────────
 # Resolve from the script location so manual and cron invocations use the same checkout.
@@ -45,6 +48,7 @@ REPO_DIR = Path(os.environ.get("NADGRYZIENI_REPO_DIR", Path(__file__).resolve().
 ARCHIVE_PATH = REPO_DIR / "Nadgryzieni Episode Archive.md"
 STATS_PATH = REPO_DIR / "Nadgryzieni Statistics.md"
 DATA_JSON_PATH = REPO_DIR / "data.json"
+HOST_METADATA_PATH = REPO_DIR / "host_metadata.json"
 INDEX_HTML_PATH = REPO_DIR / "index.html"
 SCRIPT_JS_PATH = REPO_DIR / "script.js"
 README_PATH = REPO_DIR / "README.md"
@@ -60,9 +64,9 @@ PATREON_MANIFEST_PATH = REPO_DIR / "patreon_posts.json"
 
 # Content widths for the padded markdown table (content is left-justified,
 # with 1 space padding on each side between | characters)
-# Derived from the existing archive: field widths between | are 5, 7, 110, 14, 10
-# which gives content widths of 3, 5, 108, 12, 8
-COL_CONTENT_WIDTHS = [3, 5, 108, 12, 8]  # counter, episode, title, date, duration
+# Derived from the existing archive; Hosts is appended so the legacy column
+# order remains stable: counter, episode, title, date, duration, hosts.
+COL_CONTENT_WIDTHS = [3, 5, 108, 12, 8, 34]
 
 # Durable operational state. These files are deliberately outside the Git checkout.
 STATE_DIR = Path(os.environ.get(
@@ -82,6 +86,7 @@ PUBLISH_PATHS = [
     "Nadgryzieni Statistics.md",
     "README.md",
     "data.json",
+    "host_metadata.json",
     "patreon_posts.json",
     "index.html",
     "script.js",
@@ -555,25 +560,332 @@ def extract_episode_number(title: str) -> str:
     return "SP"
 
 
+# ── Host metadata and record identity ────────────────────────────────────────
+
+HOST_SCHEMA_VERSION = 1
+HOST_STATUSES = {"verified", "not_listed", "unavailable", "ambiguous", "manual_review"}
+HOST_UNRESOLVED_STATUSES = {"unavailable", "ambiguous", "manual_review"}
+HOST_SOURCES = {"rrn", "patreon", "paired_rrn", "manual"}
+HOST_ALIAS_POLICY = {
+    "mode": "conservative",
+    "description": "Only NFKC, whitespace and case-insensitive deduplication are automatic; semantic aliases and name changes are not merged without an explicit reviewed mapping.",
+    "aliases": {},
+}
+HOST_SENTINEL = "Brak danych"
+
+
+def normalize_identity_text(value: str) -> str:
+    """Normalize text used only for deterministic identity/fingerprint keys."""
+    return " ".join(unicodedata.normalize("NFKC", str(value or "")).replace("\u00a0", " ").split()).strip()
+
+
+def canonical_source_url(value: str) -> str:
+    """Canonicalize a public source URL for identity comparisons."""
+    value = str(value or "").strip()
+    if not value:
+        return ""
+    parsed = urlparse(value)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        return value
+    path = parsed.path or "/"
+    if path != "/":
+        path = path.rstrip("/") + "/"
+    return parsed._replace(
+        scheme=parsed.scheme.lower(),
+        netloc=parsed.netloc.lower(),
+        path=path,
+        fragment="",
+    ).geturl()
+
+
+def build_record_key(row: dict) -> str:
+    """Return a stable record key that does not rely on episode number alone or duration."""
+    identity = {
+        "source_url": canonical_source_url(row.get("url") or row.get("source_url", "")),
+        "date": normalize_identity_text(row.get("date", "")),
+        "episode": normalize_identity_text(row.get("episode", "")),
+        "title": normalize_identity_text(row.get("title", "")),
+    }
+    digest = hashlib.sha256(
+        json.dumps(identity, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()[:24]
+    return f"rk_{digest}"
+
+
+def dataset_fingerprint(rows: list[dict]) -> str:
+    """Fingerprint non-host record identity fields for audit/apply reconciliation."""
+    canonical_rows = []
+    for row in rows:
+        canonical_rows.append({
+            "record_key": build_record_key(row),
+            "source_url": canonical_source_url(row.get("url") or row.get("source_url", "")),
+            "episode": normalize_identity_text(row.get("episode", "")),
+            "title": normalize_identity_text(row.get("title", "")),
+            "date": normalize_identity_text(row.get("date", "")),
+            "duration": normalize_identity_text(row.get("duration", "")),
+        })
+    canonical_rows.sort(key=lambda value: value["record_key"])
+    payload = json.dumps(canonical_rows, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _host_dedupe_key(value: str) -> str:
+    return normalize_identity_text(value).casefold()
+
+
+def validate_host_entry(entry: dict, record_key: str = "") -> dict:
+    """Validate and normalize one manifest entry without changing host spelling."""
+    if not isinstance(entry, dict):
+        raise ValueError(f"Host metadata for {record_key or 'record'} is not an object")
+    if record_key and entry.get("record_key") not in (None, "", record_key):
+        raise ValueError(f"Host metadata record-key mismatch for {record_key}")
+    hosts = entry.get("hosts")
+    if not isinstance(hosts, list):
+        raise ValueError(f"Host metadata for {record_key or 'record'} has no hosts list")
+    normalized_hosts = []
+    seen = set()
+    for host in hosts:
+        if not isinstance(host, str) or not host.strip():
+            raise ValueError(f"Host metadata for {record_key or 'record'} has an invalid host name")
+        display = normalize_identity_text(host)
+        if ";" in display or "|" in display:
+            raise ValueError(f"Host metadata for {record_key or 'record'} contains a table delimiter")
+        key = _host_dedupe_key(display)
+        if key in seen:
+            raise ValueError(f"Host metadata for {record_key or 'record'} contains duplicate host names")
+        seen.add(key)
+        normalized_hosts.append(display)
+    normalized_hosts.sort(key=_host_dedupe_key)
+
+    status = str(entry.get("hosts_status") or "")
+    source = str(entry.get("hosts_source") or "")
+    source_url = str(entry.get("hosts_source_url") or "").strip()
+    if status not in HOST_STATUSES:
+        raise ValueError(f"Host metadata for {record_key or 'record'} has invalid status: {status!r}")
+    if source not in HOST_SOURCES:
+        raise ValueError(f"Host metadata for {record_key or 'record'} has invalid source: {source!r}")
+    if status == "verified" and not normalized_hosts:
+        raise ValueError(f"Verified host metadata for {record_key or 'record'} must contain a host")
+    if status == "not_listed" and normalized_hosts:
+        raise ValueError(f"Not-listed host metadata for {record_key or 'record'} cannot contain hosts")
+    if not source_url or urlparse(source_url).scheme not in {"http", "https"} or not urlparse(source_url).netloc:
+        raise ValueError(f"Host metadata for {record_key or 'record'} has no valid source URL")
+    provenance = entry.get("provenance")
+    if provenance is None:
+        provenance = {"kind": "direct_source", "source_url": canonical_source_url(source_url)}
+    if not isinstance(provenance, dict) or not provenance.get("kind"):
+        raise ValueError(f"Host metadata for {record_key or 'record'} has invalid provenance")
+    if source == "paired_rrn":
+        if provenance.get("kind") != "paired_rrn" or not provenance.get("paired_record_key"):
+            raise ValueError(f"Paired host metadata for {record_key or 'record'} lacks its paired record")
+        if provenance.get("rule") != "afterparty_same_hosts_from_main":
+            raise ValueError(f"Paired host metadata for {record_key or 'record'} lacks the approved rule")
+    result = {
+        "record_key": record_key,
+        "hosts": normalized_hosts,
+        "hosts_status": status,
+        "hosts_source": source,
+        "hosts_source_url": canonical_source_url(source_url),
+        "provenance": provenance,
+    }
+    if isinstance(entry.get("diagnostics"), list):
+        result["diagnostics"] = [str(item) for item in entry["diagnostics"]]
+    if isinstance(entry.get("audit"), dict):
+        result["audit"] = dict(entry["audit"])
+    return result
+
+
+def load_host_metadata(path: Path = HOST_METADATA_PATH) -> dict:
+    """Load and validate the tracked host manifest."""
+    if not path.exists():
+        return {"schema_version": HOST_SCHEMA_VERSION, "alias_policy": HOST_ALIAS_POLICY, "records": {}}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("schema_version") != HOST_SCHEMA_VERSION or not isinstance(payload.get("records"), dict):
+        raise ValueError("host_metadata.json has an unsupported schema")
+    alias_policy = payload.get("alias_policy", HOST_ALIAS_POLICY)
+    if not isinstance(alias_policy, dict) or alias_policy.get("mode") != "conservative" or not isinstance(alias_policy.get("aliases", {}), dict):
+        raise ValueError("host_metadata.json has an invalid alias policy")
+    records = {}
+    for record_key, entry in payload["records"].items():
+        records[str(record_key)] = validate_host_entry(entry, str(record_key))
+    return {"schema_version": HOST_SCHEMA_VERSION, "alias_policy": alias_policy, "records": records}
+
+
+def write_host_metadata(manifest: dict, path: Path = HOST_METADATA_PATH, dry: bool = False) -> None:
+    """Write a deterministic manifest, or a .dry artifact when requested."""
+    records = manifest.get("records", {})
+    normalized = {
+        "schema_version": HOST_SCHEMA_VERSION,
+        "alias_policy": manifest.get("alias_policy", HOST_ALIAS_POLICY),
+        "records": {
+            key: validate_host_entry(records[key], key)
+            for key in sorted(records)
+        },
+    }
+    target = path if not dry else path.with_name(path.name.replace(".json", ".dry.json"))
+    target.write_text(json.dumps(normalized, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    log.info("Host metadata written: %s (%d records)", target, len(normalized["records"]))
+
+
+def parse_hosts_cell(value: str) -> list[str]:
+    """Parse a six-column Hosts cell while accepting the legacy blank value."""
+    value = normalize_identity_text(value)
+    if not value or value == HOST_SENTINEL:
+        return []
+    return [normalize_identity_text(part) for part in value.split(";") if normalize_identity_text(part)]
+
+
+def hosts_cell(row: dict) -> str:
+    """Serialize host metadata into the human-readable Markdown cell."""
+    hosts = row.get("hosts") or []
+    if row.get("hosts_status") in HOST_UNRESOLVED_STATUSES:
+        return "Do weryfikacji"
+    if row.get("hosts_status") == "not_listed" or not hosts:
+        return HOST_SENTINEL
+    validated = validate_host_entry({
+        "hosts": hosts,
+        "hosts_status": row.get("hosts_status", "verified"),
+        "hosts_source": row.get("hosts_source", "rrn"),
+        "hosts_source_url": row.get("hosts_source_url") or row.get("url", "https://example.invalid/"),
+        "provenance": row.get("hosts_provenance") or row.get("provenance"),
+    })
+    return "; ".join(validated["hosts"])
+
+
+def apply_host_metadata(rows: list[dict], manifest: dict, strict: bool = False) -> list[dict]:
+    """Join manifest entries onto rows by record_key."""
+    records = manifest.get("records", {})
+    for row in rows:
+        row["record_key"] = build_record_key(row)
+        entry = records.get(row["record_key"])
+        if entry:
+            normalized = validate_host_entry(entry, row["record_key"])
+            row.update({key: value for key, value in normalized.items() if key != "provenance"})
+            row["hosts_provenance"] = normalized["provenance"]
+        elif strict:
+            raise ValueError(f"No host metadata for record {row['record_key']}")
+    return rows
+
+
+def manifest_from_rows(rows: list[dict], base: dict | None = None, strict: bool = True) -> dict:
+    """Build the tracked manifest from enriched rows while preserving old entries."""
+    records = dict((base or {}).get("records", {}))
+    for row in rows:
+        row["record_key"] = build_record_key(row)
+        if not row.get("hosts_status"):
+            if strict:
+                raise ValueError(f"Record {row['record_key']} has no host status")
+            continue
+        entry_input = {
+            "hosts": row.get("hosts", []),
+            "hosts_status": row.get("hosts_status"),
+            "hosts_source": row.get("hosts_source"),
+            "hosts_source_url": row.get("hosts_source_url") or row.get("url"),
+            "provenance": row.get("hosts_provenance"),
+        }
+        previous = records.get(row["record_key"], {})
+        for optional_field in ("diagnostics", "audit"):
+            if row.get(optional_field) is not None:
+                entry_input[optional_field] = row[optional_field]
+            elif isinstance(previous, dict) and previous.get(optional_field) is not None:
+                entry_input[optional_field] = previous[optional_field]
+        entry = validate_host_entry(entry_input, row["record_key"])
+        records[row["record_key"]] = entry
+    return {
+        "schema_version": HOST_SCHEMA_VERSION,
+        "alias_policy": (base or {}).get("alias_policy", HOST_ALIAS_POLICY),
+        "records": records,
+    }
+
+
+def enrich_host_rows(rows: list[dict], manifest: dict, refresh_keys: set[str] | None = None) -> dict:
+    """Fetch only missing/refreshed rows and explicitly pair approved Afterparty rows."""
+    import nadgryzieni_hosts as host_tools
+
+    refresh_keys = refresh_keys or set()
+    apply_host_metadata(rows, manifest, strict=False)
+    rows_by_episode = {
+        str(row.get("episode", "")): row
+        for row in rows
+        if "(afterparty)" not in normalize_identity_text(row.get("title", "")).casefold()
+    }
+    fetch_cache = {}
+    robots_cache = {}
+    last_fetch = [0.0]
+    pending_pairs = []
+    for row in rows:
+        row["record_key"] = build_record_key(row)
+        needs_refresh = row["record_key"] in refresh_keys or not row.get("hosts_status")
+        if not needs_refresh:
+            continue
+        episode = str(row.get("episode", ""))
+        try:
+            numeric_episode = float(episode)
+        except ValueError:
+            numeric_episode = None
+        is_afterparty = "(afterparty)" in normalize_identity_text(row.get("title", "")).casefold()
+        base_episode = str(int(numeric_episode)) if numeric_episode is not None else ""
+        main = rows_by_episode.get(base_episode)
+        if is_afterparty and numeric_episode is not None and numeric_episode >= 550 and main is not None:
+            pending_pairs.append((row, main))
+            continue
+        result = host_tools._direct_audit_entry(row, fetch_cache, robots_cache, last_fetch, 0.25)
+        row.update({
+            "hosts": list(result.get("hosts", [])),
+            "hosts_status": result.get("hosts_status", "manual_review"),
+            "hosts_source": result.get("hosts_source", "manual"),
+            "hosts_source_url": result.get("hosts_source_url", ""),
+            "hosts_provenance": result.get("provenance"),
+        })
+        if result.get("diagnostics"):
+            row["diagnostics"] = list(result["diagnostics"])
+    for row, main in pending_pairs:
+        if main.get("hosts_status") not in {"verified", "not_listed"}:
+            raise ValueError(
+                f"Cannot pair host metadata for {row.get('episode')}: main record is unresolved"
+            )
+        row.update({
+            "hosts": list(main.get("hosts", [])),
+            "hosts_status": main["hosts_status"],
+            "hosts_source": "paired_rrn",
+            "hosts_source_url": main.get("hosts_source_url") or main.get("url", ""),
+            "hosts_provenance": {
+                "kind": "paired_rrn",
+                "rule": "afterparty_same_hosts_from_main",
+                "paired_record_key": main["record_key"],
+                "paired_episode": str(main.get("episode", "")),
+            },
+        })
+    return manifest_from_rows(rows, base=manifest, strict=True)
+
+
 # ── Archive Reading ──────────────────────────────────────────────────────────
 
 def parse_archive(path: Path) -> tuple[list[dict], str]:
-    """Parse the padded markdown table. Returns (rows, header_block)."""
+    """Parse either the legacy five-column or enriched six-column archive table."""
     content = path.read_text(encoding="utf-8")
     lines = content.splitlines()
 
-    # Find table start (first line starting with "|")
     table_start = None
     for i, line in enumerate(lines):
-        if line.strip().startswith("|") and "---" not in line:
+        if line.strip().startswith("|") and "Episode title" in line and "Publish date" in line:
             table_start = i
             break
 
     if table_start is None:
         raise ValueError("Could not find table in archive")
 
-    # The header is the first two lines: header + separator
     header_lines = lines[table_start:table_start + 2]
+    header_parts = [part.strip() for part in header_lines[0].strip().split("|")[1:-1]]
+    try:
+        counter_index = header_parts.index("#")
+        episode_index = header_parts.index("Ep.")
+        title_index = header_parts.index("Episode title")
+        date_index = header_parts.index("Publish date")
+        duration_index = header_parts.index("Duration")
+    except ValueError as exc:
+        raise ValueError("Archive header is missing a required column") from exc
+    hosts_index = header_parts.index("Hosts") if "Hosts" in header_parts else None
 
     # Find table end (blank line after table)
     table_end = table_start + 2
@@ -584,23 +896,71 @@ def parse_archive(path: Path) -> tuple[list[dict], str]:
     else:
         table_end = len(lines)
 
-    # Parse data rows
     rows = []
     for line in lines[table_start + 2:table_end]:
         stripped = line.strip()
         if not stripped.startswith("|"):
             continue
-        parts = [p.strip() for p in stripped.split("|") if p.strip()]
-        if len(parts) >= 5:
-            rows.append({
-                "counter": parts[0],
-                "episode": parts[1],
-                "title": parts[2],
-                "date": parts[3],
-                "duration": parts[4],
-            })
+        parts = [part.strip() for part in stripped.split("|")[1:-1]]
+        if len(parts) < len(header_parts) or not parts[counter_index].isdigit():
+            continue
+        row = {
+            "counter": parts[counter_index],
+            "episode": parts[episode_index],
+            "title": parts[title_index],
+            "date": parts[date_index],
+            "duration": parts[duration_index],
+            "hosts": parse_hosts_cell(parts[hosts_index]) if hosts_index is not None else [],
+        }
+        if hosts_index is not None and parts[hosts_index] == HOST_SENTINEL:
+            row["hosts_status"] = "not_listed"
+        elif hosts_index is not None and parts[hosts_index] == "Do weryfikacji":
+            row["hosts"] = []
+            row["hosts_status"] = "manual_review"
+        rows.append(row)
 
     return rows, "\n".join(header_lines)
+
+
+def _row_match_key(row: dict) -> tuple[str, str, str, str, str]:
+    return (
+        normalize_identity_text(row.get("episode", "")),
+        normalize_identity_text(row.get("title", "")),
+        normalize_identity_text(row.get("date", "")),
+        normalize_identity_text(row.get("duration", "")),
+        normalize_identity_text(row.get("counter", "")),
+    )
+
+
+def attach_existing_data(rows: list[dict], data: dict) -> list[dict]:
+    """Restore source URLs and durable fields when reading a legacy archive table."""
+    episodes = data.get("episodes", []) if isinstance(data, dict) else []
+    by_exact: dict[tuple[str, str, str, str], list[dict]] = defaultdict(list)
+    by_title: dict[str, list[dict]] = defaultdict(list)
+    for episode in episodes:
+        key = (
+            normalize_identity_text(episode.get("episode", "")),
+            normalize_identity_text(episode.get("title", "")),
+            normalize_identity_text(episode.get("date", "")),
+            normalize_identity_text(episode.get("duration", "")),
+        )
+        by_exact[key].append(episode)
+        by_title[normalize_lookup_title(episode.get("title", ""))].append(episode)
+
+    for row in rows:
+        exact_key = _row_match_key(row)[:4]
+        matches = by_exact.get(exact_key, [])
+        if len(matches) == 1:
+            source = matches[0]
+        else:
+            title_matches = by_title.get(normalize_lookup_title(row.get("title", "")), [])
+            source = title_matches[0] if len(title_matches) == 1 else None
+        if source:
+            for field in ("url", "record_key", "hosts", "hosts_status", "hosts_source", "hosts_source_url", "hosts_provenance"):
+                if source.get(field) not in (None, ""):
+                    row[field] = source[field]
+        row["record_key"] = build_record_key(row)
+    return rows
 
 
 # ── Archive Writing ──────────────────────────────────────────────────────────
@@ -610,23 +970,28 @@ def pad_field(text: str, width: int) -> str:
     return text.ljust(width)
 
 
-def write_archive(rows: list[dict], dry: bool = False) -> None:
+def write_archive(rows: list[dict], dry: bool = False, target_path: Path | None = None) -> None:
     """Write the archive markdown table with column padding."""
-    cw = COL_CONTENT_WIDTHS  # content widths: 3, 5, 108, 12, 8
+    cw = COL_CONTENT_WIDTHS
 
-    header = f"| {pad_field('#', cw[0])} | {pad_field('Ep.', cw[1])} | {pad_field('Episode title', cw[2])} | {pad_field('Publish date', cw[3])} | {pad_field('Duration', cw[4])} |"
-    separator = f"| {pad_field('', cw[0]).replace(' ', '-')} | {pad_field('', cw[1]).replace(' ', '-')} | {pad_field('', cw[2]).replace(' ', '-')} | {pad_field('', cw[3]).replace(' ', '-')} | {pad_field('', cw[4]).replace(' ', '-')} |"
+    header_values = ["#", "Ep.", "Episode title", "Publish date", "Duration", "Hosts"]
+    header = "| " + " | ".join(pad_field(value, width) for value, width in zip(header_values, cw)) + " |"
+    separator = "| " + " | ".join("-" * width for width in cw) + " |"
 
     lines = [header, separator]
     for r in rows:
-        line = f"| {pad_field(r['counter'], cw[0])} | {pad_field(r['episode'], cw[1])} | {pad_field(r['title'], cw[2])} | {pad_field(r['date'], cw[3])} | {pad_field(r['duration'], cw[4])} |"
+        host_value = hosts_cell(r)
+        line = "| " + " | ".join(pad_field(value, width) for value, width in zip(
+            [r["counter"], r["episode"], r["title"], r["date"], r["duration"], host_value],
+            cw,
+        )) + " |"
         lines.append(line)
 
     content = "\n".join(lines) + "\n"
 
-    target = ARCHIVE_PATH if not dry else ARCHIVE_PATH.with_name(
+    target = target_path or (ARCHIVE_PATH if not dry else ARCHIVE_PATH.with_name(
         ARCHIVE_PATH.name.replace(".md", ".dry.md")
-    )
+    ))
     target.write_text(content, encoding="utf-8")
     log.info(f"Archive written: {target} ({len(rows)} rows)")
 
@@ -722,7 +1087,26 @@ def normalize_lookup_title(title: str) -> str:
     return " ".join(unicodedata.normalize("NFKC", title).replace("\u00a0", " ").split()).strip()
 
 
-def generate_data_json(rows: list[dict], url_by_title: dict[str, str] | None = None) -> dict:
+def resolve_existing_source_url(item: dict, rows: list[dict]) -> str:
+    """Prefer an existing canonical URL when RSS misassigns a historical link."""
+    title = normalize_lookup_title(item.get("title", ""))
+    episode = normalize_identity_text(item.get("episode_number", ""))
+    date_value = normalize_identity_text(item.get("date", ""))
+    duration = normalize_identity_text(item.get("duration", ""))
+    matches = [
+        row for row in rows
+        if normalize_identity_text(row.get("episode", "")) == episode
+        and normalize_lookup_title(row.get("title", "")) == title
+        and normalize_identity_text(row.get("date", "")) == date_value
+        and (not duration or normalize_identity_text(row.get("duration", "")) == duration)
+        and row.get("url")
+    ]
+    if len(matches) == 1:
+        return str(matches[0]["url"])
+    return str(item.get("url") or "")
+
+
+def generate_data_json(rows: list[dict], url_by_title: dict[str, str | list[str]] | None = None) -> dict:
     """Generate the data.json structure for Chart.js."""
     episodes = []
     durations_min = []
@@ -744,13 +1128,25 @@ def generate_data_json(rows: list[dict], url_by_title: dict[str, str] | None = N
 
         category = detect_category(r["title"], r["episode"])
         dur_str = r["duration"] if r["duration"] else "?"
-        source_url = (
-            r.get("url")
-            or url_by_title.get(normalize_lookup_title(r["title"]))
-            or PATREON_POST_URLS.get(r["episode"], "")
+        source_url = r.get("url", "")
+        if not source_url:
+            fallback = url_by_title.get(normalize_lookup_title(r["title"]))
+            if isinstance(fallback, list):
+                source_url = fallback[0] if len(set(fallback)) == 1 else ""
+            elif isinstance(fallback, str):
+                source_url = fallback
+
+        hosts = sorted(
+            [normalize_identity_text(host) for host in (r.get("hosts") or [])],
+            key=_host_dedupe_key,
         )
+        hosts_status = r.get("hosts_status") or "not_listed"
+        hosts_source = r.get("hosts_source") or ("rrn" if "retrorocketnetwork.pl" in source_url else "manual")
+        hosts_source_url = canonical_source_url(r.get("hosts_source_url") or source_url)
+        record_key = build_record_key(r)
 
         episodes.append({
+            "record_key": record_key,
             "episode": r["episode"],
             "title": r["title"],
             "date": r["date"],
@@ -759,6 +1155,11 @@ def generate_data_json(rows: list[dict], url_by_title: dict[str, str] | None = N
             "category": category,
             "year": int(year) if year else None,
             "url": source_url,
+            "hosts": hosts,
+            "hosts_status": hosts_status,
+            "hosts_source": hosts_source,
+            "hosts_source_url": hosts_source_url,
+            "hosts_provenance": r.get("hosts_provenance"),
         })
 
     # Stats
@@ -813,13 +1214,31 @@ def validate_generated_data(data: dict, rows: list[dict]) -> None:
     if identifiers != expected_ids:
         raise ValueError("Generated data order or identifiers do not match the archive")
 
-    for episode in episodes:
+    record_keys = [str(episode.get("record_key", "")) for episode in episodes]
+    if any(not record_key for record_key in record_keys) or len(set(record_keys)) != len(record_keys):
+        raise ValueError("Generated data contains missing or duplicate record keys")
+
+    for episode, row in zip(episodes, rows):
         url = episode.get("url", "")
         parsed = urlparse(url)
         if parsed.scheme not in {"http", "https"} or not parsed.netloc:
             raise ValueError(f"Episode {episode.get('episode')} has no canonical source URL")
         if not episode.get("title") or not episode.get("date"):
             raise ValueError(f"Episode {episode.get('episode')} is missing title or date")
+        if episode.get("record_key") != build_record_key(row):
+            raise ValueError(f"Episode {episode.get('episode')} has a record-key mismatch")
+        hosts = episode.get("hosts")
+        if not isinstance(hosts, list):
+            raise ValueError(f"Episode {episode.get('episode')} has no hosts list")
+        validate_host_entry({
+            "hosts": hosts,
+            "hosts_status": episode.get("hosts_status"),
+            "hosts_source": episode.get("hosts_source"),
+            "hosts_source_url": episode.get("hosts_source_url"),
+            "provenance": row.get("hosts_provenance") or episode.get("hosts_provenance"),
+        }, episode.get("record_key", ""))
+        if episode.get("hosts_status") in HOST_UNRESOLVED_STATUSES:
+            raise ValueError(f"Episode {episode.get('episode')} has unresolved host metadata")
 
     stats = data.get("stats", {})
     if stats.get("total_episodes") != len(episodes):
@@ -830,17 +1249,17 @@ def validate_generated_data(data: dict, rows: list[dict]) -> None:
         raise ValueError("Afterparty category count does not match the archive")
 
 
-def write_data_json(data: dict, dry: bool = False) -> None:
-    target = DATA_JSON_PATH if not dry else DATA_JSON_PATH.with_name(
+def write_data_json(data: dict, dry: bool = False, target_path: Path | None = None) -> None:
+    target = target_path or (DATA_JSON_PATH if not dry else DATA_JSON_PATH.with_name(
         DATA_JSON_PATH.name.replace(".json", ".dry.json")
-    )
+    ))
     target.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     log.info(f"data.json written: {target} ({len(data['episodes'])} episodes)")
 
 
 # ── README Update ──────────────────────────────────────────────────────────────
 
-def update_readme(data: dict, dry: bool = False) -> None:
+def update_readme(data: dict, dry: bool = False, target_path: Path | None = None) -> None:
     """Update the README.md stats table with current numbers."""
     if not README_PATH.exists():
         log.warning(f"README.md not found at {README_PATH}")
@@ -882,9 +1301,9 @@ def update_readme(data: dict, dry: bool = False) -> None:
         content,
     )
 
-    target = README_PATH if not dry else README_PATH.with_name(
+    target = target_path or (README_PATH if not dry else README_PATH.with_name(
         README_PATH.name.replace(".md", ".dry.md")
-    )
+    ))
     target.write_text(content, encoding="utf-8")
     log.info(f"README.md updated: {target} ({total} episodes)")
 
@@ -1370,10 +1789,13 @@ def git_commit_and_push(message: str, dry: bool = False) -> bool:
 
 # ── Main Pipeline ────────────────────────────────────────────────────────────
 
-def run_pipeline(dry: bool = False, force: bool = False) -> int:
+def run_pipeline(dry: bool = False, force: bool = False, refresh_hosts: bool = False) -> int:
     log.info("=" * 60)
     log.info("Nadgryzieni Pipeline — starting")
-    log.info(f"Mode: {'DRY RUN' if dry else 'LIVE'}")
+    mode_label = 'DRY RUN' if dry else 'LIVE'
+    if refresh_hosts:
+        mode_label += ' + REFRESH HOSTS'
+    log.info(f"Mode: {mode_label}")
     log.info("=" * 60)
 
     # Step 1: Fetch RSS
@@ -1383,29 +1805,30 @@ def run_pipeline(dry: bool = False, force: bool = False) -> int:
     log.info(f"  Parsed {len(items)} episodes from RSS")
 
     # Preserve known URLs and refresh them from the current RSS feed.
-    url_by_title = {}
+    url_by_title: dict[str, list[str]] = defaultdict(list)
+    current_data = {}
     if DATA_JSON_PATH.exists():
         try:
             current_data = json.loads(DATA_JSON_PATH.read_text(encoding="utf-8"))
-            url_by_title.update({
-                normalize_lookup_title(e.get("title", "")): e["url"]
-                for e in current_data.get("episodes", [])
-                if e.get("title") and e.get("url")
-            })
+            for episode in current_data.get("episodes", []):
+                title_key = normalize_lookup_title(episode.get("title", ""))
+                if title_key and episode.get("url") and episode["url"] not in url_by_title[title_key]:
+                    url_by_title[title_key].append(episode["url"])
         except (OSError, json.JSONDecodeError):
             log.warning("Could not read existing episode URLs; rebuilding from RSS")
-    url_by_title.update({
-        normalize_lookup_title(item["title"]): item["url"]
-        for item in items
-        if item.get("title") and item.get("url")
-    })
+    for item in items:
+        title_key = normalize_lookup_title(item.get("title", ""))
+        if title_key and item.get("url") and item["url"] not in url_by_title[title_key]:
+            url_by_title[title_key].append(item["url"])
 
     # Step 2: Load existing archive
     log.info("Step 2: Loading existing archive...")
     existing_rows, _ = parse_archive(ARCHIVE_PATH)
+    attach_existing_data(existing_rows, current_data)
     log.info(f"  Archive has {len(existing_rows)} rows")
 
-    # Build lookup of existing episode numbers
+    # Build both stable-record and episode-number lookups. Episode numbers are not unique.
+    existing_record_keys = {build_record_key(row) for row in existing_rows}
     existing_ep_numbers = set()
     for r in existing_rows:
         # Extract just the numeric part for comparison
@@ -1417,18 +1840,19 @@ def run_pipeline(dry: bool = False, force: bool = False) -> int:
     new_episodes = []
     for item in items:
         ep_num = item["episode_number"]
-        if ep_num in existing_ep_numbers:
-            continue
-        # Format duration for archive
-        duration = item["duration"] if item["duration"] else "?"
-        new_episodes.append({
+        candidate = {
             "counter": str(len(existing_rows) + len(new_episodes) + 1),
             "episode": ep_num,
             "title": item["title"],
             "date": item["date"],
-            "duration": duration,
-            "url": item.get("url", ""),
-        })
+            "duration": item["duration"] if item["duration"] else "?",
+            "url": resolve_existing_source_url(item, existing_rows),
+        }
+        candidate["record_key"] = build_record_key(candidate)
+        if candidate["record_key"] in existing_record_keys:
+            continue
+        new_episodes.append(candidate)
+        existing_record_keys.add(candidate["record_key"])
         existing_ep_numbers.add(ep_num)
 
     # Step 3b: Check Patreon for afterparty episodes
@@ -1440,13 +1864,12 @@ def run_pipeline(dry: bool = False, force: bool = False) -> int:
             log.info(f"    #{ep['episode']}: {ep['title'][:60]}...")
         new_episodes.extend(patreon_new)
         existing_ep_numbers.update(ep["episode"] for ep in patreon_new)
-        url_by_title.update({
-            normalize_lookup_title(ep["title"]): ep.get("url", "")
-            for ep in patreon_new
-            if ep.get("title") and ep.get("url")
-        })
+        for ep in patreon_new:
+            title_key = normalize_lookup_title(ep.get("title", ""))
+            if title_key and ep.get("url") and ep["url"] not in url_by_title[title_key]:
+                url_by_title[title_key].append(ep["url"])
 
-    if not new_episodes and not force:
+    if not new_episodes and not force and not refresh_hosts:
         log.info("No new episodes found. Exiting silently.")
         return 0
 
@@ -1478,6 +1901,20 @@ def run_pipeline(dry: bool = False, force: bool = False) -> int:
     for i, r in enumerate(all_rows, start=1):
         r["counter"] = str(i)
 
+    # Host enrichment is mandatory before generated output is published.
+    log.info("Step 4b: Enriching host metadata...")
+    if not HOST_METADATA_PATH.exists():
+        raise RuntimeError(
+            "host_metadata.json is missing; run `python3 nadgryzieni_hosts.py audit ...` "
+            "and apply the verified audit before the weekly pipeline"
+        )
+    host_manifest = load_host_metadata()
+    refresh_keys = {row["record_key"] for row in all_rows} if refresh_hosts else {
+        build_record_key(row) for row in new_episodes
+    }
+    host_manifest = enrich_host_rows(all_rows, host_manifest, refresh_keys=refresh_keys)
+    apply_host_metadata(all_rows, host_manifest, strict=True)
+
     write_archive(all_rows, dry=dry)
 
     # Step 5: Generate data.json
@@ -1485,13 +1922,14 @@ def run_pipeline(dry: bool = False, force: bool = False) -> int:
     data = generate_data_json(all_rows, url_by_title)
     validate_generated_data(data, all_rows)
     write_data_json(data, dry=dry)
+    write_host_metadata(host_manifest, path=HOST_METADATA_PATH, dry=dry)
 
     # Step 5b: Update README.md stats table
     log.info("Step 5b: Updating README.md...")
     update_readme(data, dry=dry)
 
     # Step 6: Generate statistics when publishing or explicitly forced.
-    if new_episodes or force:
+    if new_episodes or force or refresh_hosts:
         log.info("Step 6: Generating statistics...")
         stats_md = generate_statistics(all_rows)
         write_stats(stats_md, dry=dry)
@@ -1499,7 +1937,7 @@ def run_pipeline(dry: bool = False, force: bool = False) -> int:
         log.info("Step 6: Skipping statistics (no new episodes).")
 
     # Step 7: Bump cache-busting when publishing or explicitly forced.
-    if new_episodes or force:
+    if new_episodes or force or refresh_hosts:
         log.info("Step 7: Bumping cache-busting version...")
         new_version = bump_cache_version(dry=dry)
         update_cache_busting(new_version, dry=dry)
@@ -1507,12 +1945,12 @@ def run_pipeline(dry: bool = False, force: bool = False) -> int:
         log.info("Step 7: Skipping cache-busting bump (no new episodes).")
 
     # Step 8: Sync to Obsidian before publishing, then verify Git changes.
-    if new_episodes or force:
+    if new_episodes or force or refresh_hosts:
         log.info("Step 8: Syncing to Obsidian vault...")
         sync_to_obsidian(dry=dry)
         log.info("Step 9: Committing and pushing to Git...")
         today = date.today().isoformat()
-        action = "regeneration" if force and not new_episodes else "archive update"
+        action = "host refresh" if refresh_hosts and not new_episodes else "regeneration" if force and not new_episodes else "archive update"
         commit_msg = f"Nadgryzieni {action} – {today} ({len(new_episodes)} new episodes)"
         git_commit_and_push(commit_msg, dry=dry)
 
@@ -1527,6 +1965,7 @@ def run_pipeline(dry: bool = False, force: bool = False) -> int:
 def main() -> int:
     dry = "--dry" in sys.argv
     force = "--force" in sys.argv
+    refresh_hosts = "--refresh-hosts" in sys.argv
     run_kind = os.environ.get("NADGRYZIENI_RUN_KIND", "manual").lower()
     today = date.today()
 
@@ -1541,7 +1980,7 @@ def main() -> int:
         write_retry_state(RETRY_STATE_PATH, today, pending=False)
 
     try:
-        new_count = run_pipeline(dry=dry, force=force)
+        new_count = run_pipeline(dry=dry, force=force, refresh_hosts=refresh_hosts)
     except Exception:
         if run_kind in {"primary", "retry"} and not dry:
             write_retry_state(RETRY_STATE_PATH, today, pending=False)
