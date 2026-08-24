@@ -141,6 +141,10 @@ _HOST_NAME_ALIASES = {
     "maciek buchert": "Maciej Buchert",
     "miłoszu": "Miłosz",
     "steve’a ballmera": "Steve Ballmer",
+    "steve \"woz\" wozniak": "Steve \"Woz\" Wozniak",
+    "steve 'woz' wozniak": "Steve \"Woz\" Wozniak",
+    "steve “woz” wozniak": "Steve \"Woz\" Wozniak",
+    "steve wozniak": "Steve \"Woz\" Wozniak",
     "michała „nozbe” śliwińskiego": "Michał Śliwiński",
 }
 _DESCRIPTION_PERSON_ALIASES = {
@@ -1455,7 +1459,7 @@ def serialize_parse_result(result: HostParseResult) -> str:
 # ── Historical audit/apply workflow ──────────────────────────────────────────
 
 AUDIT_SCHEMA_VERSION = 1
-PARSER_VERSION = "nadgryzieni-hosts/1.8"
+PARSER_VERSION = "nadgryzieni-hosts/1.9"
 AUDIT_USER_AGENT = "Nadgryzieni-host-audit/1.0"
 UNRESOLVED_STATUSES = frozenset({"unavailable", "ambiguous", "manual_review"})
 DEFAULT_HOST_CACHE_PATH = Path(os.environ.get(

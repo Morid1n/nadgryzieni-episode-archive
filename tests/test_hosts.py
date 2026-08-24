@@ -50,6 +50,9 @@ class HostNameNormalizationTests(unittest.TestCase):
         self.assertEqual(normalize_host_name("Norbi"), "NPC")
         self.assertEqual(normalize_host_name("Miłoszu"), "Miłosz")
         self.assertEqual(normalize_host_name("Steve’a Ballmera"), "Steve Ballmer")
+        self.assertEqual(normalize_host_name('Steve \'Woz\' Wozniak'), 'Steve "Woz" Wozniak')
+        self.assertEqual(normalize_host_name('Steve “Woz” Wozniak'), 'Steve "Woz" Wozniak')
+        self.assertEqual(normalize_host_name('Steve Wozniak'), 'Steve "Woz" Wozniak')
         self.assertEqual(
             normalize_host_name("Michała „Nozbe” Śliwińskiego"),
             "Michał Śliwiński",

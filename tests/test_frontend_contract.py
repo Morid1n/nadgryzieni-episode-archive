@@ -34,6 +34,15 @@ class FrontendHostsContractTests(unittest.TestCase):
         self.assertIn("episode.hosts.join(', ')", self.script)
         self.assertNotIn("innerHTML = episode.hosts", self.script)
 
+    def test_hosts_summary_sorts_by_count_then_first_name_then_surname(self):
+        self.assertIn("function hostNameSortKey(value)", self.script)
+        self.assertIn("hostCollator.compare(leftKey.firstName, rightKey.firstName)", self.script)
+        self.assertIn("hostCollator.compare(leftKey.surname, rightKey.surname)", self.script)
+        self.assertIn(
+            "b.count - a.count || compareHostNames(a.name, b.name)",
+            self.script,
+        )
+
     def test_hosts_summary_has_responsive_styles(self):
         self.assertIn(".hosts-summary", self.style)
         self.assertIn(".host-summary-list", self.style)
