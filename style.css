@@ -626,6 +626,7 @@ html[data-theme="dark"] .theme-icon::after {
 
 .latest-release-item-title {
     color: var(--ink);
+    font-family: var(--font-body);
     font-size: 0.96rem;
     font-weight: 700;
     letter-spacing: -0.025em;
@@ -1110,6 +1111,19 @@ html[data-theme="dark"] .theme-icon::after {
     min-width: 5px;
     flex: 1;
     align-items: end;
+}
+
+.year-bar-count {
+    position: absolute;
+    bottom: calc(var(--bar-height) + 8px);
+    left: 50%;
+    z-index: 1;
+    color: var(--muted-strong);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    font-weight: 600;
+    line-height: 1;
+    transform: translateX(-50%);
 }
 
 .year-bar-fill {
@@ -2043,7 +2057,7 @@ html[data-theme="dark"] .theme-icon::after {
     padding: clamp(24px, 4vw, 40px);
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-lg);
-    background: linear-gradient(120deg, var(--surface-strong), var(--surface));
+    background: var(--surface);
     box-shadow: var(--shadow-sm);
 }
 
@@ -2055,7 +2069,10 @@ html[data-theme="dark"] .theme-icon::after {
     max-width: 820px;
     margin: 8px 0 6px;
     color: var(--ink);
+    font-family: var(--font-body);
     font-size: clamp(1.5rem, 3vw, 2.45rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
     line-height: 1.08;
     text-wrap: balance;
 }

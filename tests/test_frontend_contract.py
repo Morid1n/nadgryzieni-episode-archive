@@ -70,11 +70,51 @@ class FrontendUpcomingContractTests(unittest.TestCase):
         self.assertIn("Europe/Warsaw", self.script)
         self.assertIn("upcomingEvent.hidden = true", self.script)
         self.assertIn("upcomingEventLink.textContent", self.script)
+        self.assertIn("url.origin !== 'https://www.youtube.com'", self.script)
+        self.assertIn("typeof event.url !== 'string'", self.script)
+        self.assertIn("event.url.trim() !== event.url", self.script)
+        self.assertIn("/[?#]$/.test(event.url)", self.script)
+        self.assertIn("/^https:\\/\\/www\\.youtube\\.com\\/watch\\?v=([A-Za-z0-9_-]{6,20})$/", self.script)
+        self.assertIn("url.username || url.password", self.script)
+        self.assertIn("url.port", self.script)
+        self.assertIn("queryEntries.length !== 1", self.script)
+        self.assertIn("url.hash", self.script)
 
     def test_upcoming_card_has_responsive_styles(self):
         self.assertIn(".upcoming-event", self.style)
         self.assertIn(".upcoming-event-card", self.style)
         self.assertIn(".upcoming-event-link", self.style)
+
+    def test_upcoming_card_uses_latest_release_surface_background(self):
+        latest_start = self.style.index("\n.latest-release {\n    position: relative;\n    min-height: 380px;") + 1
+        latest_block = self.style[latest_start:self.style.index("}", latest_start)]
+        upcoming_start = self.style.index(".upcoming-event-card {")
+        upcoming_block = self.style[upcoming_start:self.style.index("}", upcoming_start)]
+        self.assertIn("background: var(--surface);", latest_block)
+        self.assertIn("background: var(--surface);", upcoming_block)
+        self.assertNotIn("linear-gradient", upcoming_block)
+
+    def test_upcoming_title_matches_recent_episode_typography_without_resizing(self):
+        latest_title_start = self.style.index(".latest-release-item-title {")
+        latest_title_block = self.style[latest_title_start:self.style.index("}", latest_title_start)]
+        upcoming_title_start = self.style.index(".upcoming-event-copy h2 {")
+        upcoming_title_block = self.style[upcoming_title_start:self.style.index("}", upcoming_title_start)]
+        for declaration in (
+            "font-family: var(--font-body);",
+            "font-weight: 700;",
+            "letter-spacing: -0.025em;",
+        ):
+            self.assertIn(declaration, latest_title_block)
+            self.assertIn(declaration, upcoming_title_block)
+        self.assertIn("font-size: clamp(1.5rem, 3vw, 2.45rem);", upcoming_title_block)
+
+    def test_year_bars_render_values_above_bars_and_keep_tooltips(self):
+        self.assertIn(".year-bar-count", self.style)
+        self.assertIn("bottom: calc(var(--bar-height) + 8px);", self.style)
+        self.assertIn("countLabel.className = 'year-bar-count';", self.script)
+        self.assertIn("countLabel.textContent = integerFormatter.format(count);", self.script)
+        self.assertIn("bar.setAttribute('aria-label', `${year}: ${count} odcinków`);", self.script)
+        self.assertIn("bar.title = `${year}: ${count} odcinków`;", self.script)
 
 
 if __name__ == "__main__":

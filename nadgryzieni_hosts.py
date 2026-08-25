@@ -12,12 +12,13 @@ import hashlib
 import json
 import os
 import re
-import shutil
 import ssl
+import stat
 import sys
 import tempfile
 import time
 import unicodedata
+import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from email.message import Message
@@ -27,7 +28,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit, urlunsplit
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, HTTPSHandler, Request, build_opener, urlopen
 
 
 class HostNameError(ValueError):
@@ -170,7 +171,7 @@ _DESCRIPTION_NAME_SEQUENCE = (
 _DESCRIPTION_AFTER_IS_RE = re.compile(
     rf"(?iu)(?:gość|gościem|gości|goście|gośćmi|gościa|guest(?:s)?)"
     rf"[^.!?]{{0,180}}?\bjest\b\s+(?:to\s+)?"
-    rf"(?P<name>{_DESCRIPTION_NAME_TOKEN}(?:\s+{_DESCRIPTION_NAME_TOKEN}){{0,3}})"
+    rf"(?P<names>{_DESCRIPTION_NAME_SEQUENCE})"
 )
 _DESCRIPTION_BEFORE_IS_RE = re.compile(
     rf"(?iu)(?P<name>{_DESCRIPTION_NAME_TOKEN}(?:\s+{_DESCRIPTION_NAME_TOKEN}){{0,3}})"
@@ -178,7 +179,7 @@ _DESCRIPTION_BEFORE_IS_RE = re.compile(
 )
 _DESCRIPTION_AFTER_DASH_RE = re.compile(
     rf"(?iu)(?:gość|gościem|gości|goście|gośćmi|gościa|guest(?:s)?)"
-    rf"[^!?]{{0,240}}?[–—-]\s*"
+    rf"(?:(?![.!?]\s+).){{0,240}}?[–—-]\s*"
     rf"(?P<name>{_DESCRIPTION_NAME_TOKEN}(?:\s+{_DESCRIPTION_NAME_TOKEN}){{0,3}})"
 )
 _DESCRIPTION_ROLE_RE = re.compile(
@@ -208,8 +209,8 @@ _DESCRIPTION_SPECIAL_COLON_RE = re.compile(
     rf"(?P<name>{_DESCRIPTION_NAME_TOKEN}(?:\s+{_DESCRIPTION_NAME_TOKEN}){{0,3}})"
 )
 _DESCRIPTION_PREVIOUS_EPISODE_RE = re.compile(
-    r"(?iu)\b(?:ostatni(?:ego|ej)?|poprzedni(?:ego|ej)?|last|previous)\s+"
-    r"(?:odcinka|episode)\b"
+    r"(?iu)\b(?:ostatni(?:ego|ej|im|m)?|poprzedni(?:ego|ej|im|m)?|last|previous)\s+"
+    r"(?:odcinka|odcinku|episode)\b"
 )
 _DESCRIPTION_CONTEXT_WORDS = frozenset(
     {
@@ -239,11 +240,118 @@ _DESCRIPTION_CONTEXT_WORDS = frozenset(
         "własny",
     }
 )
+_DESCRIPTION_NON_PERSON_TOKENS = frozenset(
+    {
+        "amazon",
+        "android",
+        "aperture",
+        "apple",
+        "chatgpt",
+        "chrome",
+        "facebook",
+        "firefox",
+        "github",
+        "google",
+        "intel",
+        "iphone",
+        "ipad",
+        "linux",
+        "macbook",
+        "microsoft",
+        "mozilla",
+        "nvidia",
+        "openai",
+        "patreon",
+        "playstation",
+        "silicon",
+        "samsung",
+        "sidebar",
+        "sony",
+        "spacex",
+        "tesla",
+        "twitter",
+        "youtube",
+    }
+)
+_DESCRIPTION_NON_PERSON_PHRASES = frozenset(
+    {
+        "open source",
+        "retro rocket network",
+    }
+)
+
+
+_SECRET_KEY_PATTERN = (
+    r"authorization|api[_-]?key|access[_-]?token|client[_-]?secret|"
+    r"refresh[_-]?token|private[_-]?key|password|passwd|secret|token|"
+    r"credential|credentials"
+)
+
+
+def _sanitize_public_text(value: str) -> str:
+    """Redact credential-bearing URLs, remotes, headers, and values."""
+    redacted = str(value)
+    redacted = re.sub(
+        r"(?i)(?:https?|ssh|git(?:\+ssh)?)\s*:(?:\\?/){2}[^\s<>\"']+",
+        "[REDACTED_URL]",
+        redacted,
+    )
+    redacted = re.sub(
+        r"(?i)\b[^/\s@]+@[^/\s:]+:[^\s]+",
+        "[REDACTED_REMOTE]",
+        redacted,
+    )
+    redacted = re.sub(
+        r"(?im)(\bauthorization\b(?:\s*[:=]\s*|\s+))[^\r\n]*",
+        r"\1[REDACTED]",
+        redacted,
+    )
+    redacted = re.sub(
+        r"(?im)(\bpassword\s+for\b)[^\r\n]*",
+        r"\1 [REDACTED]",
+        redacted,
+    )
+    redacted = re.sub(
+        r'''(?im)(\\*["']?\b(?:''' + _SECRET_KEY_PATTERN + r''')[A-Za-z0-9_-]*\\*["']?\s*[:=]\s*)(?:\\*"(?:\\.|[^"\\])*"\\*|\\*'(?:\\.|[^'\\])*'\\*|\\*\[[^\r\n\]]*\]\\*|[^\s,;}\]]+)''',
+        r"\1[REDACTED]",
+        redacted,
+    )
+    redacted = re.sub(
+        rf"(?im)(\b(?:{_SECRET_KEY_PATTERN})[A-Za-z0-9_-]*\s+)(?!for\b)[^\r\n]*",
+        r"\1[REDACTED]",
+        redacted,
+    )
+    redacted = re.sub(
+        r'''(?im)(\b(?:bearer|basic)\s+)(?:"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[A-Za-z0-9._~+/=-]+)''',
+        r"\1[REDACTED]",
+        redacted,
+    )
+    redacted = re.sub(r"(?iu)\bnorbert\s+cała\b", "NPC", redacted)
+    return redacted[:500]
 
 
 def _safe_description_evidence(value: str) -> str:
     value = " ".join(unicodedata.normalize("NFKC", value).split()).strip()
-    return re.sub(r"(?iu)\bnorbert\s+cała\b", "NPC", value)[:500]
+    return _sanitize_public_text(value)
+
+
+_SECRET_KEY_NAME_RE = re.compile(
+    rf"(?i)(?:^|_)(?:{_SECRET_KEY_PATTERN})(?:_|$)"
+)
+
+
+def _is_secret_public_key(value: Any) -> bool:
+    text = unicodedata.normalize("NFKC", str(value))
+    text = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", text)
+    text = re.sub(r"[^A-Za-z0-9]+", "_", text).strip("_")
+    return bool(_SECRET_KEY_NAME_RE.search(text))
+
+
+def _sanitize_public_key(value: Any) -> str:
+    text = str(value)
+    if _is_secret_public_key(text):
+        return "[REDACTED_KEY]"
+    return _safe_description_evidence(text)
 
 
 def normalize_host_name(value: str) -> str:
@@ -411,6 +519,75 @@ def _has_list_ancestor(node: _Node) -> bool:
     return False
 
 
+def _has_list_descendant(node: _Node) -> bool:
+    return any(descendant.tag in {"ul", "ol", "li"} for descendant in _iter_nodes(node))
+
+
+_NON_CONTENT_CLASS_MARKERS = frozenset({
+    "aside",
+    "banner",
+    "blockquote",
+    "citation",
+    "footer",
+    "header",
+    "navigation",
+    "nav",
+    "pullquote",
+    "quote",
+    "related",
+    "share",
+    "sidebar",
+    "side-bar",
+    "social",
+    "widget",
+})
+_NON_CONTENT_ROLES = frozenset({"banner", "complementary", "contentinfo", "navigation", "note"})
+
+
+def _node_is_non_content(node: _Node) -> bool:
+    if node.tag in {"aside", "blockquote", "caption", "figcaption", "footer", "header", "nav"}:
+        return True
+    role = node.attrs.get("role", "").casefold()
+    if role in _NON_CONTENT_ROLES:
+        return True
+    values = _class_tokens(node) + [node.attrs.get("id", "").casefold()]
+    for value in values:
+        if value in _NON_CONTENT_CLASS_MARKERS or "sidebar" in value or "side-bar" in value:
+            return True
+        if any(
+            value.startswith(prefix)
+            for prefix in (
+                "nav-",
+                "nav_",
+                "quote-",
+                "quote_",
+                "related-",
+                "related_",
+                "share-",
+                "share_",
+                "social-",
+                "social_",
+                "widget-",
+                "widget_",
+            )
+        ):
+            return True
+    return False
+
+
+def _has_non_content_context(node: _Node) -> bool:
+    current = node
+    while current is not None:
+        if _node_is_non_content(current):
+            return True
+        current = current.parent
+    return False
+
+
+def _has_non_content_ancestor(node: _Node) -> bool:
+    return _has_non_content_context(node.parent) if node.parent is not None else False
+
+
 def _meaningful_children(node: _Node) -> List[Any]:
     return [
         child
@@ -448,9 +625,13 @@ def _following_unordered_list(heading: _Node) -> Tuple[Optional[_Node], str]:
     first = following[0]
     if not isinstance(first, _Node):
         return None, "host heading is followed by text, not a list"
+    if _has_non_content_context(first):
+        return None, "host heading is followed by a non-content list wrapper"
     list_node = _unwrap_list_wrapper(first)
     if list_node is None:
         return None, "host heading is not immediately followed by an unordered list"
+    if _has_non_content_context(list_node):
+        return None, "host list is inside non-content markup"
     return list_node, ""
 
 
@@ -468,6 +649,10 @@ def _valid_direct_list_items(list_node: _Node) -> Tuple[bool, List[_Node], str]:
         wrapper_children = _meaningful_children(wrapper)
         if len(wrapper_children) == 1 and isinstance(wrapper_children[0], _Node) and wrapper_children[0].tag in {"ul", "ol"}:
             return _valid_direct_list_items(wrapper_children[0])
+    if any(_has_list_descendant(child) for child in children):
+        return False, [], "unordered list contains a nested list"
+    if any(_has_non_content_context(child) for child in children):
+        return False, [], "unordered list contains non-content markup"
     return True, [child for child in children if isinstance(child, _Node)], ""
 
 
@@ -572,7 +757,7 @@ def _description_marker_in_text(value: str) -> bool:
 
 
 def _description_label(node: _Node) -> bool:
-    if node.tag not in _HEADING_TAGS or _has_list_ancestor(node):
+    if node.tag not in _HEADING_TAGS or _has_list_ancestor(node) or _has_non_content_ancestor(node):
         return False
     value = _normalise_marker(_node_text(node), remove_diacritics=True)
     value = value.rstrip(" :：\t")
@@ -582,6 +767,12 @@ def _description_label(node: _Node) -> bool:
 def _description_sentence_names(value: str) -> List[str]:
     if _DESCRIPTION_PREVIOUS_EPISODE_RE.search(value):
         return []
+
+    value = re.sub(
+        r"(?iu)\b(?:dr|prof(?:esor)?|mgr|inż|pan|pani|mr|mrs|ms)\.?\s+(?=[A-ZĄĆĘŁŃÓŚŹŻ])",
+        "",
+        value,
+    )
 
     def candidate_allowed(candidate: str) -> bool:
         tokens = candidate.strip().split()
@@ -594,6 +785,12 @@ def _description_sentence_names(value: str) -> List[str]:
             token in {"gość", "gościem", "goście", "gości", "gościa", "gośćmi", "guest", "guests"}
             for token in normalized_tokens
         ):
+            return False
+        if any(token in _DESCRIPTION_NON_PERSON_TOKENS for token in normalized_tokens):
+            return False
+        if " ".join(normalized_tokens) in _DESCRIPTION_NON_PERSON_PHRASES:
+            return False
+        if candidate.lstrip().startswith(("\"", "„")):
             return False
         return True
 
@@ -680,10 +877,16 @@ def _extract_rrn_description_people(
             if not _description_label(node):
                 continue
             structural_blocks += 1
+            if _has_non_content_context(node):
+                diagnostics.append("description people label is inside non-content context")
+                continue
             marker = " ".join(_node_text(node).split()).strip().rstrip(" :：\t")
             list_node, reason = _following_unordered_list(node)
             if list_node is None:
                 diagnostics.append("description people label has no valid following list: " + reason)
+                continue
+            if _has_non_content_context(list_node):
+                diagnostics.append("description people list is inside non-content context")
                 continue
             valid, items, list_error = _valid_direct_list_items(list_node)
             if not valid:
@@ -691,6 +894,9 @@ def _extract_rrn_description_people(
                 continue
             block_evidence = []
             for item in items:
+                if _has_non_content_context(item):
+                    diagnostics.append("description people list item is inside non-content context")
+                    continue
                 value = _text_before_social_link(item)
                 if not value:
                     diagnostics.append("description people list contains an empty entry")
@@ -700,7 +906,13 @@ def _extract_rrn_description_people(
             evidence.append({"marker": _safe_description_evidence(marker), "entries": " | ".join(block_evidence)})
 
         for node in _iter_nodes(root):
-            if node.tag != "p" or _has_list_ancestor(node) or _description_label(node):
+            if (
+                node.tag != "p"
+                or _has_list_ancestor(node)
+                or _has_list_descendant(node)
+                or _has_non_content_context(node)
+                or _description_label(node)
+            ):
                 continue
             text = " ".join(_node_text(node).split()).strip()
             if not _description_marker_in_text(text):
@@ -724,7 +936,8 @@ def _extract_rrn_description_people(
         entries, source_url, diagnostics
     )
     if structural_blocks > 1:
-        diagnostics.append("multiple description people blocks found; verify deduplication")
+        diagnostics.append("multiple description people blocks found; refusing ambiguous extraction")
+        people = []
     if unsafe_marker:
         people = []
     if not people and not structural_blocks and not direct_markers:
@@ -773,6 +986,9 @@ def _source_url_or_error(source_url: str) -> Tuple[str, Optional[str]]:
     if not source_url:
         return "", None
     try:
+        parsed = urlsplit(source_url.strip())
+        if parsed.fragment:
+            source_url = urlunsplit(parsed._replace(fragment=""))
         return canonical_url(source_url), None
     except ValueError as exc:
         return "", "invalid source URL: " + str(exc)
@@ -833,7 +1049,7 @@ def parse_rrn_hosts(
     candidates: List[Tuple[_Node, Optional[_Node], str]] = []
     for root in roots:
         for node in _iter_nodes(root):
-            if _is_hosts_heading(node) and not _has_list_ancestor(node):
+            if _is_hosts_heading(node) and not _has_list_ancestor(node) and not _has_non_content_ancestor(node):
                 list_node, reason = _following_unordered_list(node)
                 candidates.append((node, list_node, reason))
 
@@ -982,12 +1198,14 @@ def _extract_patreon_description_people(
     evidence: List[Dict[str, str]] = []
     direct_markers = 0
     unsafe_marker = False
+    description_blocks = 0
     for index, node in enumerate(content):
         if not isinstance(node, Mapping) or node.get("type") != "paragraph":
             continue
         text = " ".join(_pm_node_text(node).split()).strip()
         normalized = _normalise_marker(text, remove_diacritics=True).rstrip(" :：\t")
         if _DESCRIPTION_PERSON_LABEL_RE.fullmatch(normalized):
+            description_blocks += 1
             if index + 1 >= len(content) or not isinstance(content[index + 1], Mapping):
                 diagnostics.append("description people paragraph has no following bulletList")
                 continue
@@ -1009,6 +1227,13 @@ def _extract_patreon_description_people(
                     child for child in item_content
                     if isinstance(child, Mapping) and child.get("type") == "paragraph"
                 ] if isinstance(item_content, list) else []
+                if isinstance(item_content, list) and any(
+                    isinstance(child, Mapping) and child.get("type") in {"bulletList", "orderedList"}
+                    for child in item_content
+                ):
+                    unsafe_marker = True
+                    diagnostics.append("description people listItem contains a nested list")
+                    continue
                 if not paragraphs:
                     diagnostics.append("description people listItem lacks a paragraph")
                     continue
@@ -1036,6 +1261,10 @@ def _extract_patreon_description_people(
                 "description people marker has no unambiguous name: "
                 + _safe_description_evidence(text)[:300]
             )
+    if description_blocks > 1:
+        diagnostics.append("multiple description people blocks found; refusing ambiguous extraction")
+        entries = []
+        unsafe_marker = True
     people, excluded, diagnostics = _normalise_description_entries(
         entries, source_url, diagnostics
     )
@@ -1059,6 +1288,12 @@ def _merge_patreon_description_people(
         content, result.source_url
     )
     result.diagnostics.extend(diagnostics)
+    if any("multiple description people blocks" in diagnostic for diagnostic in diagnostics):
+        result.status = "ambiguous"
+        result.hosts = []
+        result.excluded_hosts = []
+        result.provenance = {}
+        return result
     existing_keys = {host_dedupe_key(host) for host in result.hosts}
     for person in people:
         key = host_dedupe_key(person)
@@ -1173,6 +1408,15 @@ def parse_patreon_post_payload(payload: Any, source_url: str = "") -> HostParseR
             for child in item_content
             if isinstance(child, Mapping) and child.get("type") == "paragraph"
         ]
+        if any(
+            isinstance(child, Mapping) and child.get("type") in {"bulletList", "orderedList"}
+            for child in item_content
+        ):
+            return HostParseResult(
+                "parse_error",
+                diagnostics=["Patreon listItem contains a nested list"],
+                source_url=canonical_source,
+            )
         if not paragraphs or any(
             not isinstance(child, Mapping)
             or child.get("type") not in {"paragraph", "bulletList", "orderedList"}
@@ -1202,11 +1446,16 @@ def canonical_url(value: str) -> str:
 
     if not isinstance(value, str) or not value.strip():
         raise ValueError("URL is empty")
-    parts = urlsplit(value.strip())
+    raw_value = value.strip()
+    parts = urlsplit(raw_value)
     if parts.scheme.casefold() != "https":
         raise ValueError("HTTPS URL required")
     if parts.username or parts.password:
         raise ValueError("URL credentials are not permitted")
+    if "?" in raw_value or parts.query:
+        raise ValueError("URL query is not permitted")
+    if "#" in raw_value or parts.fragment:
+        raise ValueError("URL fragment is not permitted")
     try:
         hostname = parts.hostname
         port = parts.port
@@ -1381,6 +1630,11 @@ def retry_after_seconds(value: str, now: Optional[datetime] = None) -> Optional[
     return max(0.0, (when - current).total_seconds())
 
 
+class _NoRedirectHandler(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
 def fetch_https_html(
     url: str,
     expected_url: str = "",
@@ -1409,7 +1663,13 @@ def fetch_https_html(
         },
     )
     context = create_ssl_context()
-    open_fn = opener or urlopen
+    if opener is None:
+        no_redirect_opener = build_opener(_NoRedirectHandler(), HTTPSHandler(context=context))
+
+        def open_fn(request: Request, *, context: ssl.SSLContext, timeout: float):
+            return no_redirect_opener.open(request, timeout=timeout)
+    else:
+        open_fn = opener
     last_diagnostics: List[str] = []
     for attempt in range(retries + 1):
         response = None
@@ -1538,7 +1798,7 @@ def serialize_parse_result(result: HostParseResult) -> str:
 # ── Historical audit/apply workflow ──────────────────────────────────────────
 
 AUDIT_SCHEMA_VERSION = 1
-PARSER_VERSION = "nadgryzieni-hosts/1.9"
+PARSER_VERSION = "nadgryzieni-hosts/2.0"
 AUDIT_USER_AGENT = "Nadgryzieni-host-audit/1.0"
 UNRESOLVED_STATUSES = frozenset({"unavailable", "ambiguous", "manual_review"})
 DEFAULT_HOST_CACHE_PATH = Path(os.environ.get(
@@ -1556,8 +1816,12 @@ def _pipeline_module() -> Any:
 def _load_current_rows() -> Tuple[Any, List[Dict[str, Any]], Dict[str, Any]]:
     pipeline = _pipeline_module()
     current_data: Dict[str, Any] = {}
-    if pipeline.DATA_JSON_PATH.exists():
-        current_data = json.loads(pipeline.DATA_JSON_PATH.read_text(encoding="utf-8"))
+    current_data_bytes = pipeline._read_bytes_secure(
+        pipeline.DATA_JSON_PATH,
+        pipeline.REPO_DIR.parent,
+    )
+    if current_data_bytes is not None:
+        current_data = json.loads(current_data_bytes.decode("utf-8"))
     rows, _ = pipeline.parse_archive(pipeline.ARCHIVE_PATH)
     pipeline.attach_existing_data(rows, current_data)
     for row in rows:
@@ -1618,7 +1882,8 @@ def _robots_allowed(url: str, cache: Dict[str, bool]) -> bool:
     robots_url = origin + "/robots.txt"
     request = Request(robots_url, headers={"User-Agent": AUDIT_USER_AGENT, "Accept": "text/plain"})
     try:
-        with urlopen(request, context=create_ssl_context(), timeout=15) as response:
+        opener = build_opener(_NoRedirectHandler(), HTTPSHandler(context=create_ssl_context()))
+        with opener.open(request, timeout=15) as response:
             status = getattr(response, "status", None) or response.getcode()
             if status == 404:
                 cache[origin] = True
@@ -1661,7 +1926,10 @@ def _direct_audit_entry(
     pipeline = _pipeline_module()
     url = str(row.get("url") or "").strip()
     source = "rrn" if _is_rrn_url(url) else "patreon" if _is_patreon_url(url) else "manual"
-    source_url = url
+    try:
+        source_url = canonical_url(url) if url else ""
+    except ValueError:
+        source_url = ""
     base: Dict[str, Any] = {
         "record_key": row["record_key"],
         "episode": str(row.get("episode", "")),
@@ -1739,44 +2007,253 @@ def _direct_audit_entry(
     return base
 
 
-def _load_host_cache(path: Path) -> Dict[str, Any]:
-    if not path.exists():
-        return {}
+def _reject_symlink_components(path: Path, stop_at: Path) -> None:
+    current = Path(path)
+    boundary = Path(stop_at)
+    if boundary not in {current, *current.parents}:
+        boundary = current.parent.parent
+    while True:
+        if current.is_symlink():
+            raise RuntimeError(f"Refusing unsafe symlink path component: {current}")
+        if current == boundary:
+            return
+        parent = current.parent
+        if parent == current:
+            return
+        current = parent
+
+
+def _read_cache_bytes(path: Path) -> bytes | None:
+    path_abs = Path(os.path.abspath(os.fspath(path)))
+    root_abs = Path(os.path.abspath(os.fspath(path.parent.parent)))
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+        path_abs.relative_to(root_abs)
+    except ValueError as exc:
+        raise RuntimeError(f"Host cache path is outside its root: {path_abs}") from exc
+    _reject_symlink_components(path_abs, root_abs)
+    flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
+    parent_fd = os.open(root_abs, flags)
+    try:
+        for component in path_abs.parent.relative_to(root_abs).parts:
+            if component in {"", "."}:
+                continue
+            next_fd = os.open(component, flags, dir_fd=parent_fd)
+            os.close(parent_fd)
+            parent_fd = next_fd
+        try:
+            descriptor = os.open(
+                path_abs.name,
+                os.O_RDONLY
+                | getattr(os, "O_NOFOLLOW", 0)
+                | getattr(os, "O_NONBLOCK", 0),
+                dir_fd=parent_fd,
+            )
+        except FileNotFoundError:
+            return None
+        if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+            os.close(descriptor)
+            raise RuntimeError("Host cache is not a regular file")
+        with os.fdopen(descriptor, "rb") as source:
+            return source.read()
+    finally:
+        os.close(parent_fd)
+
+
+def _load_host_cache(path: Path) -> Dict[str, Any]:
+    try:
+        content = _read_cache_bytes(path)
+        if content is None:
+            return {}
+        payload = json.loads(content.decode("utf-8"))
+    except RuntimeError:
+        raise
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return {}
+    if not isinstance(payload, dict):
         return {}
     if payload.get("schema_version") != AUDIT_SCHEMA_VERSION or payload.get("parser_version") != PARSER_VERSION:
         return {}
     return payload.get("records", {}) if isinstance(payload.get("records"), dict) else {}
 
 
+def _atomic_cache_write(path: Path, content: bytes, root: Path) -> None:
+    path_abs = Path(os.path.abspath(os.fspath(path)))
+    root_abs = Path(os.path.abspath(os.fspath(root)))
+    try:
+        path_abs.relative_to(root_abs)
+    except ValueError as exc:
+        raise RuntimeError(f"Host cache path is outside its root: {path_abs}") from exc
+    _reject_symlink_components(path_abs, root_abs)
+    flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
+    parent_fd = os.open(root_abs, flags)
+    temporary_name = None
+    try:
+        for component in path_abs.parent.relative_to(root_abs).parts:
+            if component in {"", "."}:
+                continue
+            try:
+                next_fd = os.open(component, flags, dir_fd=parent_fd)
+            except FileNotFoundError:
+                os.mkdir(component, 0o700, dir_fd=parent_fd)
+                next_fd = os.open(component, flags, dir_fd=parent_fd)
+            os.close(parent_fd)
+            parent_fd = next_fd
+        try:
+            existing_stat = os.stat(path_abs.name, dir_fd=parent_fd, follow_symlinks=False)
+        except FileNotFoundError:
+            existing_stat = None
+        if existing_stat is not None:
+            if stat.S_ISLNK(existing_stat.st_mode):
+                raise RuntimeError(f"Refusing symlink host-cache destination: {path_abs}")
+            if not stat.S_ISREG(existing_stat.st_mode):
+                raise RuntimeError(f"Unsafe host-cache destination: {path_abs}")
+        create_flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
+        for _ in range(10):
+            candidate = f".{path_abs.name}.{uuid.uuid4().hex}.tmp"
+            try:
+                descriptor = os.open(candidate, create_flags, 0o600, dir_fd=parent_fd)
+                temporary_name = candidate
+                break
+            except FileExistsError:
+                continue
+        else:
+            raise RuntimeError("Could not allocate a unique host-cache temporary file")
+        with os.fdopen(descriptor, "wb") as temporary:
+            temporary.write(content)
+            temporary.flush()
+            os.fchmod(temporary.fileno(), 0o600)
+            os.fsync(temporary.fileno())
+        os.replace(temporary_name, path_abs.name, src_dir_fd=parent_fd, dst_dir_fd=parent_fd)
+        os.fsync(parent_fd)
+        temporary_name = None
+    finally:
+        if temporary_name is not None:
+            try:
+                os.unlink(temporary_name, dir_fd=parent_fd)
+            except FileNotFoundError:
+                pass
+        os.close(parent_fd)
+
+
 def _save_host_cache(path: Path, records: Mapping[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "schema_version": AUDIT_SCHEMA_VERSION,
         "parser_version": PARSER_VERSION,
         "records": {key: records[key] for key in sorted(records)},
     }
-    temporary = path.with_name(path.name + ".tmp")
-    temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
+    _atomic_cache_write(
+        path,
+        (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8"),
+        path.parent.parent,
+    )
+
+
+def _sanitize_public_value(value: Any) -> Any:
+    if isinstance(value, dict):
+        sanitized = {}
+        for key, child in value.items():
+            safe_key = _sanitize_public_key(key)
+            sanitized[safe_key] = "[REDACTED]" if safe_key == "[REDACTED_KEY]" else _sanitize_public_value(child)
+        return sanitized
+    if isinstance(value, list):
+        return [_sanitize_public_value(child) for child in value]
+    if isinstance(value, str):
+        return _safe_description_evidence(value)
+    return value
+
+
+def _safe_report_source_url(value: Any) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    try:
+        return canonical_url(text)
+    except ValueError:
+        return ""
+
+
+def _sanitize_audit_report(report: Mapping[str, Any]) -> Dict[str, Any]:
+    original_records = report.get("records") if isinstance(report, Mapping) else None
+    safe_record_urls: Dict[str, str] = {}
+    safe_provenance_urls: Dict[str, str] = {}
+    provenance_has_source_url: set[str] = set()
+    if isinstance(original_records, Mapping):
+        for key, original_record in original_records.items():
+            if not isinstance(original_record, Mapping):
+                continue
+            record_key = str(key)
+            safe_record_urls[record_key] = _safe_report_source_url(
+                original_record.get("hosts_source_url")
+            )
+            original_provenance = original_record.get("provenance")
+            if isinstance(original_provenance, Mapping) and "source_url" in original_provenance:
+                provenance_has_source_url.add(record_key)
+                safe_provenance_urls[record_key] = _safe_report_source_url(
+                    original_provenance.get("source_url")
+                )
+
+    sanitized = _sanitize_public_value(dict(report))
+    if not isinstance(sanitized, dict):
+        raise ValueError("Host audit report is not an object")
+    records = sanitized.get("records")
+    if isinstance(records, dict):
+        for record_key, safe_url in safe_record_urls.items():
+            record = records.get(record_key)
+            if not isinstance(record, dict):
+                continue
+            record["hosts_source_url"] = safe_url
+            if record_key in provenance_has_source_url:
+                provenance = record.get("provenance")
+                if isinstance(provenance, dict):
+                    provenance["source_url"] = safe_provenance_urls.get(record_key, "")
+    fetch_targets = report.get("fetch_targets") if isinstance(report, Mapping) else None
+    if isinstance(fetch_targets, list):
+        sanitized["fetch_targets"] = [
+            safe_url
+            for value in fetch_targets
+            for safe_url in [_safe_report_source_url(value)]
+            if safe_url
+        ]
+    return sanitized
+
+
+def _safe_public_url(value: Any) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    try:
+        return canonical_url(text)
+    except ValueError as exc:
+        raise RuntimeError("Unsafe cached provenance URL") from exc
 
 
 def _cache_projection(result: Mapping[str, Any]) -> Dict[str, Any]:
+    source_url = _safe_public_url(result.get("hosts_source_url", ""))
+    provenance = _sanitize_public_value(dict(result.get("provenance", {})))
+    if not isinstance(provenance, dict):
+        raise RuntimeError("Cached provenance is not an object")
+    if "source_url" in provenance:
+        provenance["source_url"] = source_url
     return {
         "hosts": [normalize_host_name(host) for host in result.get("hosts", [])],
         "hosts_status": result.get("hosts_status"),
         "hosts_source": result.get("hosts_source", "rrn"),
-        "hosts_source_url": result.get("hosts_source_url", ""),
-        "provenance": dict(result.get("provenance", {})),
+        "hosts_source_url": source_url,
+        "provenance": provenance,
         "diagnostics": list(result.get("diagnostics", [])),
         "fetch": dict(result.get("fetch", {})),
     }
 
 
 def _cached_direct_entry(row: Mapping[str, Any], cached: Mapping[str, Any]) -> Dict[str, Any]:
-    source_url = str(cached.get("hosts_source_url") or row.get("url") or "")
+    source_url = _safe_public_url(cached.get("hosts_source_url") or row.get("url") or "")
+    provenance = _sanitize_public_value(dict(cached.get("provenance", {
+        "kind": "direct_source",
+        "source_url": source_url,
+    })))
+    if not isinstance(provenance, dict):
+        raise RuntimeError("Cached provenance is not an object")
+    provenance["source_url"] = source_url
     return {
         "record_key": row["record_key"],
         "episode": str(row.get("episode", "")),
@@ -1787,10 +2264,7 @@ def _cached_direct_entry(row: Mapping[str, Any], cached: Mapping[str, Any]) -> D
         "hosts_status": cached.get("hosts_status", "manual_review"),
         "hosts_source": cached.get("hosts_source", "rrn"),
         "hosts_source_url": source_url,
-        "provenance": dict(cached.get("provenance", {
-            "kind": "direct_source",
-            "source_url": source_url,
-        })),
+        "provenance": provenance,
         "diagnostics": list(cached.get("diagnostics", [])),
         "fetch": dict(cached.get("fetch", {})),
     }
@@ -1802,7 +2276,25 @@ def audit_repository(
     cache_path: Path = DEFAULT_HOST_CACHE_PATH,
     refresh: bool = False,
 ) -> Dict[str, Any]:
-    """Audit all current records and write a body-free, reproducible report."""
+    """Audit all current records while holding the shared publication lock."""
+    pipeline = _pipeline_module()
+    lock_owned_here = not pipeline._pipeline_lock_owned_by_current_thread()
+    if lock_owned_here and not pipeline.acquire_pipeline_lock():
+        raise RuntimeError("Another Nadgryzieni publication is active")
+    try:
+        return _audit_repository_locked(output, rate_limit, cache_path, refresh)
+    finally:
+        if lock_owned_here:
+            pipeline.release_pipeline_lock()
+
+
+def _audit_repository_locked(
+    output: Path,
+    rate_limit: float = 0.25,
+    cache_path: Path = DEFAULT_HOST_CACHE_PATH,
+    refresh: bool = False,
+) -> Dict[str, Any]:
+    """Locked implementation of :func:`audit_repository`."""
     pipeline, rows, _ = _load_current_rows()
     fetch_cache: Dict[str, FetchResult] = {}
     robots_cache: Dict[str, bool] = {}
@@ -1913,7 +2405,13 @@ def audit_repository(
     }
     if len(results) != len(rows):
         raise ValueError("Host audit did not produce one result per record")
-    output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    report = _sanitize_audit_report(report)
+    pipeline._atomic_write_text(
+        output,
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+        root=output.parent.parent,
+        mode=0o600,
+    )
     return report
 
 
@@ -1979,57 +2477,79 @@ def apply_audit(audit_path: Path, dry_run: bool = False, write: bool = False) ->
     """Apply a matching audit through staged archive/data/manifest outputs."""
     if dry_run == write:
         raise ValueError("Choose exactly one of --dry-run or --write")
-    report = json.loads(audit_path.read_text(encoding="utf-8"))
-    pipeline, rows, _ = _load_current_rows()
-    _validate_audit_against_current(report, rows)
-    audit_records = report["records"]
-    for row in rows:
-        result = dict(audit_records[row["record_key"]])
-        row.update({
-            "hosts": list(result.get("hosts", [])),
-            "hosts_status": result.get("hosts_status", ""),
-            "hosts_source": result.get("hosts_source", ""),
-            "hosts_source_url": result.get("hosts_source_url", ""),
-            "hosts_provenance": result.get("provenance"),
-        })
-    manifest = pipeline.manifest_from_rows(rows, strict=True)
-    for key, result in audit_records.items():
-        entry = manifest["records"][key]
-        if result.get("diagnostics"):
-            entry["diagnostics"] = list(result["diagnostics"])
-        entry["audit"] = {
-            "parser_version": report.get("parser_version"),
-            "dataset_fingerprint": report.get("dataset_fingerprint"),
+    pipeline = _pipeline_module()
+    audit_content = pipeline._read_bytes_secure(audit_path, audit_path.parent.parent)
+    if audit_content is None:
+        raise FileNotFoundError(audit_path)
+    raw_report = json.loads(audit_content.decode("utf-8"))
+    if not isinstance(raw_report, Mapping):
+        raise ValueError("Host audit report is not an object")
+    report = _sanitize_audit_report(raw_report)
+
+    def prepare_application(current_pipeline: Any, rows: List[Dict[str, Any]]) -> Tuple[dict, dict, dict]:
+        _validate_audit_against_current(report, rows)
+        audit_records = report["records"]
+        for row in rows:
+            result = dict(audit_records[row["record_key"]])
+            row.update({
+                "hosts": list(result.get("hosts", [])),
+                "hosts_status": result.get("hosts_status", ""),
+                "hosts_source": result.get("hosts_source", ""),
+                "hosts_source_url": result.get("hosts_source_url", ""),
+                "hosts_provenance": result.get("provenance"),
+            })
+        manifest = current_pipeline.manifest_from_rows(rows, strict=True)
+        for key, result in audit_records.items():
+            entry = manifest["records"][key]
+            if result.get("diagnostics"):
+                entry["diagnostics"] = list(result["diagnostics"])
+            entry["audit"] = {
+                "parser_version": report.get("parser_version"),
+                "dataset_fingerprint": report.get("dataset_fingerprint"),
+            }
+        _publishable_manifest(manifest)
+        data = current_pipeline.generate_data_json(rows)
+        current_pipeline.validate_generated_data(data, rows)
+        stats = {
+            "records": len(rows),
+            "verified": sum(1 for row in rows if row.get("hosts_status") == "verified"),
+            "not_listed": sum(1 for row in rows if row.get("hosts_status") == "not_listed"),
+            "fetch_targets": report.get("fetch_target_count", 0),
+            "mode": "dry-run" if dry_run else "write",
         }
-    _publishable_manifest(manifest)
-    data = pipeline.generate_data_json(rows)
-    pipeline.validate_generated_data(data, rows)
-    stats = {
-        "records": len(rows),
-        "verified": sum(1 for row in rows if row.get("hosts_status") == "verified"),
-        "not_listed": sum(1 for row in rows if row.get("hosts_status") == "not_listed"),
-        "fetch_targets": report.get("fetch_target_count", 0),
-        "mode": "dry-run" if dry_run else "write",
-    }
+        return manifest, data, stats
+
     if dry_run:
+        pipeline, rows, _ = _load_current_rows()
+        manifest, data, stats = prepare_application(pipeline, rows)
         pipeline.write_archive(rows, dry=True)
         pipeline.write_data_json(data, dry=True)
-        pipeline.write_host_metadata(manifest, dry=True)
+        pipeline.write_host_metadata(manifest, dry=True, record_rows=rows)
         pipeline.update_readme(data, dry=True)
         return stats
 
-    repo = pipeline.REPO_DIR
-    stage_dir = Path(tempfile.mkdtemp(prefix=".nadgryzieni-hosts-stage-", dir=str(repo.parent)))
+    lock_pipeline = pipeline
+    if not lock_pipeline.acquire_pipeline_lock():
+        raise RuntimeError("Another Nadgryzieni publication is active")
+    stage_dir = None
     try:
+        pipeline, rows, _ = _load_current_rows()
+        manifest, data, stats = prepare_application(pipeline, rows)
+        repo = pipeline.REPO_DIR
+        stage_dir = Path(tempfile.mkdtemp(prefix=".nadgryzieni-hosts-stage-", dir=str(repo.parent)))
+        assert stage_dir is not None
         staged_archive = stage_dir / pipeline.ARCHIVE_PATH.name
         staged_data = stage_dir / pipeline.DATA_JSON_PATH.name
         staged_manifest = stage_dir / pipeline.HOST_METADATA_PATH.name
         staged_readme = stage_dir / pipeline.README_PATH.name
         pipeline.write_archive(rows, target_path=staged_archive)
         pipeline.write_data_json(data, target_path=staged_data)
-        pipeline.write_host_metadata(manifest, path=staged_manifest)
+        pipeline.write_host_metadata(manifest, path=staged_manifest, record_rows=rows)
         pipeline.update_readme(data, target_path=staged_readme)
-        staged_data_payload = json.loads(staged_data.read_text(encoding="utf-8"))
+        staged_data_content = pipeline._read_bytes_secure(staged_data, repo.parent)
+        if staged_data_content is None:
+            raise FileNotFoundError(staged_data)
+        staged_data_payload = json.loads(staged_data_content.decode("utf-8"))
         pipeline.validate_generated_data(staged_data_payload, rows)
         staged_rows, _ = pipeline.parse_archive(staged_archive)
         if len(staged_rows) != len(rows):
@@ -2040,9 +2560,13 @@ def apply_audit(audit_path: Path, dry_run: bool = False, write: bool = False) ->
             (pipeline.HOST_METADATA_PATH, staged_manifest),
             (pipeline.README_PATH, staged_readme),
         ])
+        pipeline.sync_to_obsidian(dry=False)
     finally:
-        shutil.rmtree(stage_dir, ignore_errors=True)
-    pipeline.sync_to_obsidian(dry=False)
+        try:
+            if stage_dir is not None:
+                pipeline._remove_directory_verified(stage_dir, root=pipeline.REPO_DIR.parent)
+        finally:
+            lock_pipeline.release_pipeline_lock()
     return stats
 
 

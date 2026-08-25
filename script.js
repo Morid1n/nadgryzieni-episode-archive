@@ -1,7 +1,7 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 132;
+const DATA_VERSION = 134;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 const YEARLY_STATS_START = 2021;
@@ -83,14 +83,26 @@ function renderUpcomingEvent(payload) {
         return;
     }
 
+    if (typeof event.url !== 'string' || event.url.trim() !== event.url || /[?#]$/.test(event.url)) {
+        return;
+    }
+    const canonicalUrlMatch = event.url.match(/^https:\/\/www\.youtube\.com\/watch\?v=([A-Za-z0-9_-]{6,20})$/);
+    if (!canonicalUrlMatch || canonicalUrlMatch[1] !== videoId) {
+        return;
+    }
+
     let url;
     try {
         url = new URL(event.url);
     } catch (_error) {
         return;
     }
-    if (url.protocol !== 'https:' || !['youtube.com', 'www.youtube.com'].includes(url.hostname)
-        || url.pathname !== '/watch' || url.searchParams.get('v') !== videoId) {
+    const queryEntries = [...url.searchParams.entries()];
+    if (url.protocol !== 'https:' || url.origin !== 'https://www.youtube.com'
+        || url.hostname !== 'www.youtube.com' || url.username || url.password
+        || (url.port && url.port !== '443') || url.pathname !== '/watch'
+        || url.hash || queryEntries.length !== 1 || queryEntries[0][0] !== 'v'
+        || queryEntries[0][1] !== videoId) {
         return;
     }
 
@@ -442,14 +454,21 @@ function renderYearBars() {
     years.forEach((year) => {
         const bar = document.createElement('div');
         bar.className = 'year-bar';
-        bar.title = `${year}: ${counts[year]} odcinków`;
+        const count = counts[year];
+        bar.title = `${year}: ${count} odcinków`;
+        bar.setAttribute('aria-label', `${year}: ${count} odcinków`);
+        const barHeight = Math.max(4, (count / max) * 100);
+        bar.style.setProperty('--bar-height', `${barHeight}%`);
+        const countLabel = document.createElement('span');
+        countLabel.className = 'year-bar-count';
+        countLabel.textContent = integerFormatter.format(count);
         const fill = document.createElement('span');
         fill.className = 'year-bar-fill';
-        fill.style.height = `${Math.max(4, (counts[year] / max) * 100)}%`;
+        fill.style.height = `${barHeight}%`;
         const label = document.createElement('span');
         label.className = 'year-bar-label';
         label.textContent = year;
-        bar.append(fill, label);
+        bar.append(countLabel, fill, label);
         container.appendChild(bar);
     });
 }
