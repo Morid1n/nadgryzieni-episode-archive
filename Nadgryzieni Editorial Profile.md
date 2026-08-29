@@ -113,7 +113,7 @@ If a page cannot be extracted, the collector must not invent a summary. It may r
 
 ## Exceptional-topic discovery lanes
 
-The Volonaut Airbike is an example of the desired **editorial quality**, not a literal search category: a tangible, unusual product or project with credible evidence, clear real-world status, a strong visual or human story, and enough engineering, design, safety, ownership, or practical trade-offs to sustain a conversation.
+The Volonaut Airbike is an example of the desired **editorial quality**, not a literal search category: a tangible, unusual product or project with credible evidence, clear real-world status, a strong visual or human story, and enough engineering, design, safety, ownership, or practical trade-offs to sustain a conversation. Ollee Watch is a complementary archetype: a clever, accessible retrofit that adds surprising modern capabilities to a familiar object while preserving the simplicity, identity, and qualities people already value. Search for the underlying qualities, not only airbikes, watches, or those product categories.
 
 The discovery workflow should deliberately search five adjacent lanes:
 
@@ -132,6 +132,8 @@ Use three evidence tiers:
 1. **Primary/authoritative:** official technical documentation, project and research-lab pages, regulators, standards bodies, papers, trials, and original demonstrations.
 2. **Independent specialist:** substantive hands-on, engineering, design, mobility, health, or science reporting.
 3. **Discovery-only:** broad aggregators, social/video discovery, crowdfunding, Product Hunt, and similar lead sources. Every exceptional lead requires reachable corroborating evidence on a different hostname from its canonical page; a tier-3 lead must be promoted to tier-1 or tier-2 evidence before selection.
+
+Actively inspect current Kickstarter Design & Tech, Product Design, Wearables, maker/tool, mobility, and science-adjacent campaigns. Crowdfunding is a discovery surface, not proof: funding totals and popularity do not establish merit. A qualifying campaign needs a concrete, visible functioning prototype; a plausible creator/manufacturing/delivery story; explicit risks; and independent technical, hands-on, or otherwise authoritative corroboration. Prefer products with a clear demonstration and a rich engineering, design, ownership, repairability, cultural, or human-use discussion angle. Reject render-only concepts, speculative feature lists, campaign roundups, affiliate promotion, and campaigns whose only story is the amount raised.
 
 The deterministic feed registry currently enables only:
 
