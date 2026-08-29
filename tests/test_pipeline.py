@@ -142,16 +142,20 @@ class PipelineHardeningTests(unittest.TestCase):
         self.assertEqual(merged[0]["episode"], "600.5")
         self.assertEqual(merged[0]["url"], "https://www.patreon.com/iMagazinePL/posts/600-afterparty-123456")
 
-    def test_retry_state_is_only_due_for_the_next_scheduled_window(self):
+    def test_retry_state_is_due_only_on_sunday_and_tuesday_after_friday_primary(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             state_path = Path(temp_dir) / "retry-state.json"
-            primary_date = date(2026, 8, 8)
+            primary_date = date(2026, 8, 14)  # Friday
             pipeline.write_retry_state(state_path, primary_date, pending=True, pending_commit="a" * 40)
-            self.assertTrue(pipeline.retry_is_due(state_path, primary_date + timedelta(days=3)))
-            self.assertFalse(pipeline.retry_is_due(state_path, primary_date + timedelta(days=2)))
-            self.assertFalse(pipeline.retry_is_due(state_path, primary_date + timedelta(days=4)))
+            self.assertTrue(pipeline.retry_is_due(state_path, date(2026, 8, 16)))  # Sunday
+            self.assertTrue(pipeline.retry_is_due(state_path, date(2026, 8, 18)))  # Tuesday
+            self.assertFalse(pipeline.retry_is_due(state_path, date(2026, 8, 15)))
+            self.assertFalse(pipeline.retry_is_due(state_path, date(2026, 8, 17)))
+            self.assertFalse(pipeline.retry_is_due(state_path, date(2026, 8, 19)))
             pipeline.write_retry_state(state_path, primary_date, pending=False)
-            self.assertFalse(pipeline.retry_is_due(state_path, primary_date + timedelta(days=3)))
+            self.assertFalse(pipeline.retry_is_due(state_path, date(2026, 8, 16)))
+            pipeline.write_retry_state(state_path, date(2026, 8, 8), pending=True, pending_commit="b" * 40)
+            self.assertFalse(pipeline.retry_is_due(state_path, date(2026, 8, 10)))
 
     def test_retry_state_writer_rejects_symlink_destination_and_uses_utc(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -161,11 +165,11 @@ class PipelineHardeningTests(unittest.TestCase):
             destination = root / "retry-state.json"
             destination.symlink_to(outside)
             with self.assertRaisesRegex(RuntimeError, "symlink"):
-                pipeline.write_retry_state(destination, date(2026, 8, 8), pending=True, pending_commit="a" * 40)
+                pipeline.write_retry_state(destination, date(2026, 8, 7), pending=True, pending_commit="a" * 40)
             self.assertEqual(outside.read_text(encoding="utf-8"), "untouched")
 
             destination.unlink()
-            pipeline.write_retry_state(destination, date(2026, 8, 8), pending=True, pending_commit="a" * 40)
+            pipeline.write_retry_state(destination, date(2026, 8, 7), pending=True, pending_commit="a" * 40)
             payload = json.loads(destination.read_text(encoding="utf-8"))
             self.assertTrue(payload["updated_at"].endswith("Z"))
             self.assertTrue(pipeline.retry_is_due(destination, date(2026, 8, 11)))
@@ -836,6 +840,45 @@ class PipelineHardeningTests(unittest.TestCase):
             self.assertEqual(pipeline.run_pipeline(), 0)
         validate_data.assert_called_once()
         load_manifest.assert_called_once()
+
+    def test_new_records_validate_against_existing_host_manifest_before_enrichment(self):
+        existing_row = {
+            "counter": "1",
+            "episode": "602",
+            "title": "602: Existing episode",
+            "date": "2026-08-21",
+            "duration": "1:00:00",
+            "url": "https://retrorocketnetwork.pl/602-existing-episode",
+        }
+        new_item = {
+            "episode_number": "603",
+            "title": "603: New episode",
+            "date": "2026-08-28",
+            "duration": "2:44:21",
+            "url": "https://retrorocketnetwork.pl/603-new-episode",
+        }
+
+        class StopAfterManifestLoad(Exception):
+            pass
+
+        def load_existing_manifest(*, record_rows=None, **_kwargs):
+            rows = record_rows or []
+            self.assertEqual([row["episode"] for row in rows], ["602"])
+            raise StopAfterManifestLoad
+
+        with patch.object(pipeline, "acquire_pipeline_lock", return_value=True), patch.object(
+            pipeline, "release_pipeline_lock"
+        ), patch.object(pipeline, "_recover_publication_journal"), patch.object(
+            pipeline, "fetch_rss", return_value=b"<rss/>"
+        ), patch.object(pipeline, "parse_rss_items", return_value=[new_item]), patch.object(
+            pipeline, "parse_archive", return_value=([existing_row], "")
+        ), patch.object(pipeline, "attach_existing_data"), patch.object(
+            pipeline, "resolve_existing_source_url", return_value=new_item["url"]
+        ), patch.object(pipeline, "merge_patreon_episodes", return_value=[]), patch.object(
+            pipeline, "_entry_exists_verified", return_value=True
+        ), patch.object(pipeline, "load_host_metadata", side_effect=load_existing_manifest):
+            with self.assertRaises(StopAfterManifestLoad):
+                pipeline.run_pipeline()
 
     def test_main_recovers_journal_before_retry_noop_exit(self):
         with patch.object(pipeline, "acquire_pipeline_lock", return_value=True), patch.object(

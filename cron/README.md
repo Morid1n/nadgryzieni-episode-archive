@@ -2,10 +2,10 @@
 
 The active jobs are Hermes cron jobs:
 
-- `nadgryzieni-primary.sh`: Saturday 04:00 local time, covering Friday night → Saturday morning. The Hermes job is browser-assisted: it inspects the rendered Patreon posts page, registers newly visible Afterparty metadata through `register-patreon-post.py`, then invokes this deterministic wrapper.
-- `nadgryzieni-retry.sh`: Tuesday 04:00 local time, covering Monday evening → Tuesday morning. This remains script-only and is state-gated.
+- `nadgryzieni-primary.sh`: Friday 17:00 local time. The Hermes job is browser-assisted: it inspects the rendered Patreon posts page, registers newly visible Afterparty metadata through `register-patreon-post.py`, then invokes this deterministic wrapper.
+- `nadgryzieni-retry.sh`: Sunday and Tuesday 04:00 local time. This remains script-only and is state-gated.
 
-The retry wrapper invokes the pipeline only when the previous Saturday run completed successfully and found no new episode. A successful retry clears the marker, so it is attempted at most once for that Saturday run.
+The retry wrapper invokes the pipeline only when the previous Friday run completed successfully and found no new episode. A successful retry clears the marker; if the Sunday attempt fails, the Tuesday tick remains eligible, while a successful Sunday attempt makes Tuesday a no-op.
 
 Both wrappers invoke the repository-root `nadgryzieni_pipeline.py`. The pipeline keeps its retry marker and process lock outside Git at:
 

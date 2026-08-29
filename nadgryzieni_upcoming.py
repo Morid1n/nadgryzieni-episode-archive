@@ -4,8 +4,10 @@
 The site-facing upcoming event is deliberately separate from the archived
 episode dataset. The scheduled job runs frequently enough to observe the
 04:30 UTC window on both sides of DST, but performs network discovery only in
-that UTC window and only once per UTC day. Once an event is found, discovery is
-held until the next Saturday 04:30 UTC probe.
+that UTC window and only once per UTC day. It reads the public channel without
+following redirects and falls back to local `yt-dlp` metadata when YouTube
+returns a consent redirect. Once an event is found, discovery is held until the
+next Saturday 04:30 UTC probe.
 """
 
 from __future__ import annotations
@@ -16,8 +18,10 @@ import html
 import json
 import os
 import re
+import shutil
 import ssl
 import stat
+import subprocess
 import sys
 import tempfile
 import uuid
@@ -38,7 +42,9 @@ STATE_DIR = Path(os.environ.get(
 STATE_PATH = STATE_DIR / "nadgryzieni-upcoming-state.json"
 ARTIFACT_PATH = REPO_DIR / "upcoming.json"
 YOUTUBE_LIVE_URL = "https://www.youtube.com/@imagazinepl/live"
+YOUTUBE_CHANNEL_ID = "UCVB4SaFwzxe4gGxsSaotmrw"
 MAX_RESPONSE_BYTES = 4 * 1024 * 1024
+YTDLP_TIMEOUT_SECONDS = 90
 PROBE_HOUR_UTC = 4
 PROBE_MINUTE_UTC = 30
 PROBE_WINDOW_MINUTES = 5
@@ -259,10 +265,136 @@ def fetch_text(url: str) -> str:
         raise RuntimeError(f"YouTube discovery failed: {type(exc).__name__}") from exc
 
 
-def discover_stream(now: datetime | None = None, fetcher: Callable[[str], str] = fetch_text) -> Stream:
+def parse_ytdlp_streams(payload: object, now: datetime | None = None) -> list[Stream]:
     current = as_utc(now or datetime.now(timezone.utc))
-    page = fetcher(YOUTUBE_LIVE_URL)
-    candidates = parse_scheduled_streams(page, now=current)
+    if isinstance(payload, (str, bytes, bytearray)):
+        try:
+            payload = json.loads(payload)
+        except (TypeError, ValueError):
+            return []
+
+    records: list[object] = []
+    if isinstance(payload, dict):
+        records.append(payload)
+        entries = payload.get("entries")
+        if isinstance(entries, list):
+            records.extend(entries)
+    elif isinstance(payload, list):
+        records.extend(payload)
+
+    candidates: list[Stream] = []
+    seen: set[str] = set()
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        if record.get("live_status") != "is_upcoming":
+            continue
+        channel_id = record.get("channel_id")
+        if channel_id is not None and channel_id != YOUTUBE_CHANNEL_ID:
+            continue
+        video_id = record.get("id")
+        title = record.get("title")
+        timestamp = record.get("release_timestamp")
+        if not isinstance(video_id, str) or video_id in seen:
+            continue
+        if (
+            not isinstance(title, str)
+            or not title.strip()
+            or isinstance(timestamp, bool)
+            or not isinstance(timestamp, (int, str))
+        ):
+            continue
+        try:
+            start_utc = datetime.fromtimestamp(int(timestamp), tz=timezone.utc)
+        except (TypeError, ValueError, OverflowError, OSError):
+            continue
+        if start_utc <= current:
+            continue
+        try:
+            stream = Stream(video_id=video_id, title=title.strip(), start_utc=start_utc)
+            _validated_stream_fields(stream)
+        except ValueError:
+            continue
+        seen.add(video_id)
+        candidates.append(stream)
+    return sorted(candidates, key=lambda stream: stream.start_utc)
+
+
+def discover_ytdlp_streams(
+    now: datetime,
+    runner: Callable[[], object] | None = None,
+) -> list[Stream]:
+    current = as_utc(now)
+    if runner is None:
+        executable = shutil.which("yt-dlp")
+        if executable is None:
+            for candidate in (
+                "/opt/homebrew/bin/yt-dlp",
+                "/usr/local/bin/yt-dlp",
+                str(Path.home() / ".hermes" / "hermes-agent" / "venv" / "bin" / "yt-dlp"),
+                str(Path(sys.executable).with_name("yt-dlp")),
+            ):
+                if os.path.isfile(candidate) and os.access(candidate, os.X_OK):
+                    executable = candidate
+                    break
+        if executable is None:
+            raise RuntimeError("yt-dlp fallback executable is unavailable")
+        try:
+            completed = subprocess.run(
+                [
+                    executable,
+                    "--ignore-no-formats",
+                    "--flat-playlist",
+                    "--dump-single-json",
+                    "--skip-download",
+                    "--no-warnings",
+                    YOUTUBE_LIVE_URL,
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=YTDLP_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise RuntimeError("yt-dlp fallback timed out") from exc
+        except OSError as exc:
+            raise RuntimeError("yt-dlp fallback failed") from exc
+        if completed.returncode != 0:
+            raise RuntimeError("yt-dlp fallback returned a nonzero status")
+        output = completed.stdout or ""
+        if len(output.encode("utf-8", errors="replace")) > MAX_RESPONSE_BYTES:
+            raise RuntimeError("yt-dlp fallback response exceeded the size limit")
+        try:
+            payload = json.loads(output)
+        except (TypeError, ValueError) as exc:
+            raise RuntimeError("yt-dlp fallback returned invalid JSON") from exc
+    else:
+        payload = runner()
+
+    streams = parse_ytdlp_streams(payload, now=current)
+    if not streams:
+        raise SkipRun("YouTube has no upcoming scheduled live stream")
+    return streams
+
+
+def discover_stream(
+    now: datetime | None = None,
+    fetcher: Callable[[str], str] | None = None,
+    fallback_fetcher: Callable[[datetime], list[Stream]] | None = None,
+) -> Stream:
+    current = as_utc(now or datetime.now(timezone.utc))
+    primary_fetcher = fetch_text if fetcher is None else fetcher
+    try:
+        page = primary_fetcher(YOUTUBE_LIVE_URL)
+    except RuntimeError:
+        if fetcher is not None and fallback_fetcher is None:
+            raise
+        fallback = discover_ytdlp_streams if fallback_fetcher is None else fallback_fetcher
+        candidates = fallback(current)
+    else:
+        candidates = parse_scheduled_streams(page, now=current)
     if not candidates:
         raise SkipRun("YouTube has no upcoming scheduled live stream")
     stream = candidates[0]

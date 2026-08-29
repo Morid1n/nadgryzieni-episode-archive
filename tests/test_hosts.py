@@ -666,6 +666,48 @@ class PatreonParserTests(unittest.TestCase):
         self.assertEqual(result.provenance, {})
 
 
+class HostFetchTests(unittest.TestCase):
+    def test_rrn_fetch_uses_deterministic_trailing_slash_without_changing_identity(self):
+        requests = []
+
+        class Response:
+            status = 200
+            headers = Message()
+
+            def __init__(self, url):
+                self.url = url
+                self.headers["Content-Type"] = "text/html; charset=UTF-8"
+
+            def getcode(self):
+                return self.status
+
+            def geturl(self):
+                return self.url
+
+            def read(self, _limit):
+                return b"<article><h1>603: New</h1><p>safe source</p></article>"
+
+            def close(self):
+                pass
+
+        def open_fn(request, *, context, timeout):
+            del context, timeout
+            requests.append(request.full_url)
+            return Response(request.full_url)
+
+        result = hosts.fetch_https_html(
+            "https://retrorocketnetwork.pl/603-new",
+            expected_title="603: New",
+            expected_episode="603",
+            retries=0,
+            opener=open_fn,
+        )
+
+        self.assertEqual(result.status, "ok")
+        self.assertEqual(result.source_url, "https://retrorocketnetwork.pl/603-new")
+        self.assertEqual(requests, ["https://retrorocketnetwork.pl/603-new/"])
+
+
 class AuditSafetyTests(unittest.TestCase):
     def test_public_sanitizer_redacts_secret_like_keys_and_values(self):
         sanitized = hosts._sanitize_public_value({

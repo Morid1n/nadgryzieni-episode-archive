@@ -1655,8 +1655,9 @@ def fetch_https_html(
     if max_bytes <= 0:
         return FetchResult("fetch_error", source_url=source_url, diagnostics=["body limit must be positive"])
     retries = max(0, int(retries))
+    request_url = _rrn_request_url(source_url)
     request = Request(
-        source_url,
+        request_url,
         headers={
             "Accept": "text/html,application/xhtml+xml;q=0.9",
             "User-Agent": "Nadgryzieni-host-audit/1.0",
@@ -1867,6 +1868,13 @@ def _is_rrn_url(url: str) -> bool:
         "retrorocketnetwork.pl",
         "www.retrorocketnetwork.pl",
     }
+
+
+def _rrn_request_url(canonical: str) -> str:
+    parts = urlsplit(canonical)
+    if not _is_rrn_url(canonical) or len(parts.path) <= 1:
+        return canonical
+    return urlunsplit((parts.scheme, parts.netloc, parts.path.rstrip("/") + "/", parts.query, ""))
 
 
 def _is_patreon_url(url: str) -> bool:

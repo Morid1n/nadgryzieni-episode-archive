@@ -2,7 +2,7 @@
 """
 nadgryzieni_pipeline.py — Weekly automation pipeline for the Nadgryzieni episode archive.
 
-Runs every Saturday (scheduled via Hermes cronjob). Does the following:
+Runs every Friday at 17:00 local time (scheduled via Hermes cronjob). Conditional retries run on Sunday and Tuesday at 04:00 local time. Does the following:
 
 1. Fetches the RSS feed and parses episode items.
 2. Compares against the existing repo archive to find new episodes.
@@ -3091,7 +3091,7 @@ def write_retry_state(
     pending: bool,
     pending_commit: str | None = None,
 ) -> None:
-    """Atomically persist whether the next Tuesday retry should run."""
+    """Atomically persist whether the next Sunday or Tuesday retry should run."""
     if pending:
         if not isinstance(pending_commit, str) or not re.fullmatch(r"[0-9a-f]{40}", pending_commit):
             raise ValueError("A pending retry requires the exact local commit SHA")
@@ -3148,13 +3148,19 @@ def _read_retry_state(path: Path) -> dict | None:
 
 
 def retry_is_due(path: Path, today: date | None = None) -> bool:
-    """Return true only for the Tuesday window immediately after a no-new Saturday run."""
+    """Return true only for Sunday or Tuesday after a pending Friday run."""
     payload = _read_retry_state(path)
     if payload is None:
         return False
     primary_date = date.fromisoformat(payload["primary_date"])
     today = today or datetime.now(timezone.utc).date()
-    return bool(payload.get("pending")) and today - primary_date == timedelta(days=3)
+    days_after_primary = (today - primary_date).days
+    return (
+        bool(payload.get("pending"))
+        and primary_date.weekday() == 4
+        and today.weekday() in {1, 6}
+        and days_after_primary in {2, 4}
+    )
 
 
 def _pipeline_lock_owned_by_current_thread() -> bool:
@@ -3659,7 +3665,7 @@ def run_pipeline(dry: bool = False, force: bool = False, refresh_hosts: bool = F
             "host_metadata.json is missing; run `python3 nadgryzieni_hosts.py audit ...` "
             "and apply the verified audit before the weekly pipeline"
         )
-    host_manifest = load_host_metadata(record_rows=all_rows)
+    host_manifest = load_host_metadata(record_rows=existing_rows)
     refresh_keys = {row["record_key"] for row in all_rows} if refresh_hosts else {
         build_record_key(row) for row in new_episodes
     }
@@ -3836,7 +3842,7 @@ def main() -> int:
     try:
         _recover_publication_journal()
         if run_kind == "retry" and not dry and not retry_is_due(RETRY_STATE_PATH, today):
-            log.info("No pending Saturday run; skipping conditional retry.")
+            log.info("No pending Friday run; skipping conditional retry.")
             return 0
         return _run_main_locked(
             dry=dry,

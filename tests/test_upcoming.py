@@ -117,6 +117,77 @@ class UpcomingDiscoveryTests(unittest.TestCase):
                 )
             self.assertEqual(outside.read_text(encoding="utf-8"), "untouched")
 
+    def test_ytdlp_payload_produces_verified_upcoming_stream(self):
+        now = datetime(2026, 8, 29, 8, 50, tzinfo=timezone.utc)
+        start = int(datetime(2026, 9, 5, 7, 0, tzinfo=timezone.utc).timestamp())
+        payload = {
+            "id": "KBbg4XWl13E",
+            "title": "604: Rozmowy (nie tylko) o tech | Nadgryzieni",
+            "channel_id": "UCVB4SaFwzxe4gGxsSaotmrw",
+            "live_status": "is_upcoming",
+            "release_timestamp": start,
+        }
+
+        streams = upcoming.discover_ytdlp_streams(now, runner=lambda: payload)
+
+        self.assertEqual(len(streams), 1)
+        self.assertEqual(streams[0].video_id, "KBbg4XWl13E")
+        self.assertEqual(streams[0].title, "604: Rozmowy (nie tylko) o tech | Nadgryzieni")
+        self.assertEqual(streams[0].start_utc, datetime(2026, 9, 5, 7, 0, tzinfo=timezone.utc))
+
+    def test_ytdlp_fallback_finds_hermes_venv_without_path_entry(self):
+        now = datetime(2026, 8, 29, 8, 50, tzinfo=timezone.utc)
+        start = int(datetime(2026, 9, 5, 7, 0, tzinfo=timezone.utc).timestamp())
+        payload = {
+            "id": "KBbg4XWl13E",
+            "title": "604: Rozmowy (nie tylko) o tech | Nadgryzieni",
+            "channel_id": "UCVB4SaFwzxe4gGxsSaotmrw",
+            "live_status": "is_upcoming",
+            "release_timestamp": start,
+        }
+        expected_executable = str(Path.home() / ".hermes" / "hermes-agent" / "venv" / "bin" / "yt-dlp")
+        completed = SimpleNamespace(returncode=0, stdout=json.dumps(payload))
+
+        def is_expected_file(path):
+            return path == expected_executable
+
+        with patch.object(upcoming.sys, "executable", "/usr/bin/python3"), patch.object(
+            upcoming.shutil, "which", return_value=None
+        ), patch.object(
+            upcoming.os.path, "isfile", side_effect=is_expected_file
+        ), patch.object(upcoming.os, "access", return_value=True), patch.object(
+            upcoming.subprocess, "run", return_value=completed
+        ) as run:
+            streams = upcoming.discover_ytdlp_streams(now)
+
+        self.assertEqual([stream.video_id for stream in streams], ["KBbg4XWl13E"])
+        self.assertEqual(run.call_args.args[0][0], expected_executable)
+
+    def test_discover_stream_uses_fallback_after_channel_page_redirect(self):
+        now = datetime(2026, 8, 29, 8, 50, tzinfo=timezone.utc)
+        expected = upcoming.Stream(
+            video_id="KBbg4XWl13E",
+            title="604: Rozmowy (nie tylko) o tech | Nadgryzieni",
+            start_utc=datetime(2026, 9, 5, 7, 0, tzinfo=timezone.utc),
+        )
+        calls = []
+
+        def page_fetcher(_url):
+            raise RuntimeError("YouTube discovery failed: HTTPError")
+
+        def fallback_fetcher(when):
+            calls.append(when)
+            return [expected]
+
+        result = upcoming.discover_stream(
+            now=now,
+            fetcher=page_fetcher,
+            fallback_fetcher=fallback_fetcher,
+        )
+
+        self.assertEqual(result, expected)
+        self.assertEqual(calls, [now])
+
     def test_parse_scheduled_streams_extracts_title_and_future_event(self):
         now = datetime(2026, 8, 24, 4, 30, tzinfo=timezone.utc)
         start = int((now + timedelta(days=4, hours=3)).timestamp())
