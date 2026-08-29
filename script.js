@@ -1,7 +1,7 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 135;
+const DATA_VERSION = 136;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 const YEARLY_STATS_START = 2021;
@@ -326,11 +326,9 @@ function getLatestRelease() {
 
     const paired = Boolean(
         previous
-        && latest.date
-        && latest.date === previous.date
         && getReleaseBaseId(latest) === getReleaseBaseId(previous)
         && [latest, previous].some(isAfterparty)
-        && [latest, previous].some((episode) => !isAfterparty(episode)),
+        && [latest, previous].some((episode) => episode?.category === 'main'),
     );
     const episodes = paired ? [previous, latest].sort((a, b) => Number(isAfterparty(a)) - Number(isAfterparty(b))) : [latest];
     return { episodes, paired };

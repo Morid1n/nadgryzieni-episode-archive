@@ -902,10 +902,11 @@ class PipelineHardeningTests(unittest.TestCase):
     def test_archive_upcoming_and_woz_invariants_are_preserved(self):
         data = json.loads((REPO_DIR / "data.json").read_text(encoding="utf-8"))
         upcoming = json.loads((REPO_DIR / "upcoming.json").read_text(encoding="utf-8"))
-        self.assertEqual(len(data["episodes"]), 576)
-        self.assertNotIn("603", {str(row.get("episode")) for row in data["episodes"]})
-        self.assertEqual(upcoming["event"]["video_id"], "fRAaGylDNM8")
-        self.assertEqual(upcoming["event"]["scheduled_start_utc"], "2026-08-28T07:00:00Z")
+        episode_ids = {str(row.get("episode")) for row in data["episodes"]}
+        self.assertEqual(len(data["episodes"]), 578)
+        self.assertTrue({"603", "603.5"}.issubset(episode_ids))
+        self.assertEqual(upcoming["event"]["video_id"], "KBbg4XWl13E")
+        self.assertEqual(upcoming["event"]["scheduled_start_utc"], "2026-09-05T07:00:00Z")
         episode_72 = next(row for row in data["episodes"] if str(row["episode"]) == "72")
         self.assertIn('Steve "Woz" Wozniak', episode_72["hosts"])
 
