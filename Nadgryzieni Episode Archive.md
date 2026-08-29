@@ -576,3 +576,5 @@
 | 574 | 601.5 | 601: (Afterparty) Podcasty z kotami opanowują YT, MacBook Air i ChatGPT Business                             | 2026-08-14   | 0:46:23  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 575 | 602   | 602: Pojechałem na Odyseję do IMAX 70 mm w Pradze                                                            | 2026-08-21   | 2:51:07  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 576 | 602.5 | 602: (Afterparty) Jedni będą walczyć o przetrwanie, inni będą robić filmy                                    | 2026-08-21   | 1:28:50  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 577 | 603   | 603: Steve Jobs i NeXT, nowy trailer GTA 6 oraz nowe Mac mini i Studio z M6 i M5 Ultra                       | 2026-08-28   | 2:44:21  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 578 | 603.5 | 603: (Afterparty) Poradnik początkującego gracza                                                             | 2026-08-29   | 0:59:05  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
