@@ -1,3 +1,5 @@
+import json
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -48,6 +50,77 @@ class FrontendHostsContractTests(unittest.TestCase):
         self.assertIn(".host-summary-list", self.style)
         self.assertIn(".episode-hosts", self.style)
         self.assertIn(".hosts-summary-heading", self.style)
+
+
+class FrontendSignalsBehaviorTests(unittest.TestCase):
+    def test_longest_and_shortest_cards_render_titles_without_a_second_number_prefix(self):
+        script = (REPO_DIR / "script.js").read_text(encoding="utf-8")
+        episodes = [
+            {
+                "episode": "421",
+                "title": "421: Dużo nowego info o Apple Vision Pro i recenzja Diablo 4",
+                "date": "2023-06-10",
+                "duration": "3:00:00",
+                "minutes": 180,
+                "category": "main",
+            },
+            {
+                "episode": "12",
+                "title": "Nadgryzieni – 12 – Krótki odcinek",
+                "date": "2010-01-10",
+                "duration": "0:10:00",
+                "minutes": 10,
+                "category": "main",
+            },
+        ]
+        harness = f"""
+const vm = require('vm');
+const source = {json.dumps(script)};
+const elements = Object.fromEntries([
+    '#longest-duration', '#longest-title', '#longest-meta',
+    '#shortest-duration', '#shortest-title', '#shortest-meta',
+    '#busiest-year', '#busiest-year-count', '#chart-range',
+].map((selector) => [selector, {{ textContent: '' }}]));
+const context = {{
+    console, URL, Intl, Date, setTimeout, clearTimeout,
+    fetch: async () => ({{ ok: true, json: async () => ({{ episodes: [] }}) }}),
+    document: {{
+        documentElement: {{ dataset: {{}} }},
+        querySelector: (selector) => elements[selector] || null,
+        querySelectorAll: () => [],
+    }},
+    window: {{
+        matchMedia: () => ({{ matches: false, addEventListener() {{}}, addListener() {{}} }}),
+        addEventListener() {{}},
+    }},
+}};
+context.globalThis = context;
+context.__episodes = {json.dumps(episodes)};
+vm.runInNewContext(
+    source + '\\nnormalizedEpisodes = normalizeEpisodes(globalThis.__episodes); renderSignals();',
+    context,
+    {{ timeout: 5000 }},
+);
+console.log(JSON.stringify({{
+    longest: elements['#longest-title'].textContent,
+    shortest: elements['#shortest-title'].textContent,
+}}));
+"""
+        completed = subprocess.run(
+            ["node"],
+            input=harness,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        self.assertEqual(
+            json.loads(completed.stdout),
+            {
+                "longest": "421: Dużo nowego info o Apple Vision Pro i recenzja Diablo 4",
+                "shortest": "Nadgryzieni – 12 – Krótki odcinek",
+            },
+        )
 
 
 class FrontendUpcomingContractTests(unittest.TestCase):

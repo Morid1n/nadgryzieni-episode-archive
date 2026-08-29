@@ -47,6 +47,7 @@ import unicodedata
 
 from nadgryzieni_hosts import (
     _sanitize_public_value as _sanitize_host_public_value,
+    apply_record_host_corrections,
     canonical_url,
     normalize_host_name,
 )
@@ -1563,8 +1564,11 @@ HOST_UNRESOLVED_STATUSES = {"unavailable", "ambiguous", "manual_review"}
 HOST_SOURCES = {"rrn", "patreon", "paired_rrn", "manual"}
 HOST_ALIAS_POLICY = {
     "mode": "conservative",
-    "description": "Only NFKC, whitespace and case-insensitive deduplication are automatic; the reviewed legacy Norbert alias is normalized to the public canonical name NPC on every parser and update path.",
-    "aliases": {"legacy_norbert_alias": "NPC"},
+    "description": "Only NFKC, whitespace and case-insensitive deduplication are automatic; reviewed legacy aliases are normalized to the public canonical names NPC and Thomas Voland on every parser and update path.",
+    "aliases": {
+        "legacy_norbert_alias": "NPC",
+        "legacy_thomas_alias": "Thomas Voland",
+    },
 }
 HOST_SENTINEL = "Brak danych"
 
@@ -1579,6 +1583,7 @@ def effective_host_alias_policy(stored: dict | None = None) -> dict:
         str(key): str(value)
         for key, value in stored_aliases.items()
         if not re.search(r"(?iu)\bnorbert\s+cała\b", f"{key} {value}")
+        and not re.search(r"(?iu)\b(?:tomek\s+pluszczyk|thomas\s+voland)\b", f"{key} {value}")
     }
     aliases.update(HOST_ALIAS_POLICY["aliases"])
     policy.update({
@@ -1777,6 +1782,7 @@ def validate_host_entry(
         )
     if record_key and entry.get("record_key") not in (None, "", record_key):
         raise ValueError(f"Host metadata record-key mismatch for {record_key}")
+    entry = apply_record_host_corrections(record_key, entry)
     hosts = entry.get("hosts")
     if not isinstance(hosts, list):
         raise ValueError(f"Host metadata for {record_key or 'record'} has no hosts list")

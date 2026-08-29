@@ -34,12 +34,47 @@ class HostSchemaTests(unittest.TestCase):
         }, "rk_alias")
         self.assertEqual(normalized["hosts"], ["NPC"])
 
-    def test_public_alias_policy_does_not_publish_legacy_full_name(self):
+    def test_manifest_validation_normalizes_tomek_pluszczyk_alias(self):
+        normalized = pipeline.validate_host_entry({
+            "hosts": ["Tomek Pluszczyk"],
+            "hosts_status": "verified",
+            "hosts_source": "rrn",
+            "hosts_source_url": "https://retrorocketnetwork.pl/host-test/",
+        }, "rk_alias")
+        self.assertEqual(normalized["hosts"], ["Thomas Voland"])
+
+    def test_manifest_validation_removes_ballmer_from_episode_30_only(self):
+        source_url = "https://retrorocketnetwork.pl/nadgryzieni-30-steve-ballmer-dzwoni-do-sadu"
+        normalized = pipeline.validate_host_entry({
+            "hosts": ["Steve Ballmer"],
+            "hosts_status": "verified",
+            "hosts_source": "rrn",
+            "hosts_source_url": source_url,
+            "provenance": {
+                "kind": "direct_source",
+                "source_url": source_url,
+                "description_evidence": ["Steve Ballmer"],
+            },
+        }, "rk_304f2d0f5a58d8938c47836e")
+        self.assertEqual(normalized["hosts"], [])
+        self.assertEqual(normalized["hosts_status"], "not_listed")
+        self.assertEqual(
+            normalized["provenance"]["host_corrections"][0]["basis"],
+            "user_confirmed_not_host",
+        )
+
+    def test_public_alias_policy_does_not_publish_legacy_full_names(self):
         policy = pipeline.effective_host_alias_policy({
-            "aliases": {"Norbert Cała": "NPC", "other": "Other"},
+            "aliases": {
+                "Norbert Cała": "NPC",
+                "Tomek Pluszczyk": "Tomek Pluszczyk",
+                "other": "Other",
+            },
         })
         serialized = json.dumps(policy, ensure_ascii=False)
         self.assertNotIn("Norbert Cała", serialized)
+        self.assertNotIn("Tomek Pluszczyk", serialized)
+        self.assertIn("Thomas Voland", serialized)
         self.assertEqual(policy["aliases"].get("other"), "Other")
 
     def test_generated_data_normalizes_norbert_cala_alias(self):

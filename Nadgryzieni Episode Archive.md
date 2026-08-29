@@ -29,7 +29,7 @@
 | 27  | 27    | 27: Zajarany jak szczerbaty na suchara                                                                       | 2011-04-14   | 1:02:49  | Brak danych                        |
 | 28  | 28    | 28: Jak idziecie do burdelu to zostawcie iPhone’a w domu                                                     | 2011-04-21   | 54:45    | Brak danych                        |
 | 29  | 29    | 29: Sony popełniło totalny fuckup                                                                            | 2011-04-28   | 1:19:58  | Brak danych                        |
-| 30  | 30    | 30: Miss FaceTime oraz gość specjalny – Steve Ballmer                                                        | 2011-05-06   | 1:28:26  | Steve Ballmer                      |
+| 30  | 30    | 30: Miss FaceTime oraz gość specjalny – Steve Ballmer                                                        | 2011-05-06   | 1:28:26  | Brak danych                        |
 | 31  | 31    | 31: (Ekstra) Audycja Podcasty i podcasterzy z Polskiego Radia Wrocław                                        | 2011-05-09   | 16:28    | Brak danych                        |
 | 32  | 32    | 32: Justin Bieber, Mac i Blondynka                                                                           | 2011-05-19   | 57:39    | Brak danych                        |
 | 33  | 33    | 33: Apple ani nie zaprzecza, ani nie potwierdza                                                              | 2011-05-24   | 1:34:12  | Brak danych                        |
@@ -263,7 +263,7 @@
 | 261 | 294   | 294: To będzie bardzo zły odcinek, który teraz nagrywamy (Epizod 1)                                          | 2019-12-22   | 1:55:29  | Jan Mazurczak; Wojtek Pietrusiewicz |
 | 262 | 295   | 295: Nie rób ze mnie takiego potwora; naprawdę jest tak źle? (Epizod 2)                                      | 2020-01-09   | 1:39:43  | Jan Mazurczak; Wojtek Pietrusiewicz |
 | 263 | 296   | 296: Nasze dygresje mają dygresje (Epizod 3)                                                                 | 2020-01-17   | 1:47:42  | Jan Mazurczak; Wojtek Pietrusiewicz |
-| 264 | 297   | 297: NLEstation 2020, sekret budowy hackintosha, Mac i eGPU, VR, monitory do grania i do grafiki             | 2020-01-26   | 3:32:44  | Tomek Pluszczyk; Wojtek Pietrusiewicz |
+| 264 | 297   | 297: NLEstation 2020, sekret budowy hackintosha, Mac i eGPU, VR, monitory do grania i do grafiki             | 2020-01-26   | 3:32:44  | Thomas Voland; Wojtek Pietrusiewicz |
 | 265 | 298   | 298: Swift Playgrounds, App Store, macOS Catalina i deweloperzy (Epizod 4)                                   | 2020-02-14   | 1:33:54  | Jan Mazurczak; Wojtek Pietrusiewicz |
 | 266 | 299   | 299: (Prawie) Wszystko o klawiaturach mechanicznych                                                          | 2020-02-21   | 1:57:08  | Krzysiek Kołacz; Wojtek Pietrusiewicz |
 | 267 | 300   | 300: Zapowiedź Zapowiedzi Reaktywacji                                                                        | 2021-03-10   | 9:10     | Thomas Voland; Wojtek Pietrusiewicz |

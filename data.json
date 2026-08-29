@@ -123,6 +123,13 @@
             "marker": "prose",
             "evidence": "Dzisiejszym tematem Nadgryzionych będzie nasza wycieczka do Londynu w dniu premiery iPhone 4. Poza dyskusją na temat samego pobytu tam oraz jak wyglądała procedura zakupu, poruszymy też temat zasięgu oraz ogólnego wrażenia z użytkowania telefonu. Gościem (mam nadzieję, że co raz częściej pojawiającym się) jest Norbi — maniak świata iPod i iPhone."
           }
+        ],
+        "description_identity_corrections": [
+          {
+            "source_name": "Norbi",
+            "canonical_name": "NPC",
+            "basis": "reviewed_host_alias"
+          }
         ]
       }
     },
@@ -600,10 +607,8 @@
       "category": "main",
       "year": 2011,
       "url": "https://retrorocketnetwork.pl/nadgryzieni-30-miss-facetime-oraz-gosc-specjalny-steve-ballmer",
-      "hosts": [
-        "Steve Ballmer"
-      ],
-      "hosts_status": "verified",
+      "hosts": [],
+      "hosts_status": "not_listed",
       "hosts_source": "rrn",
       "hosts_source_url": "https://retrorocketnetwork.pl/nadgryzieni-30-miss-facetime-oraz-gosc-specjalny-steve-ballmer",
       "hosts_provenance": {
@@ -613,6 +618,20 @@
           {
             "marker": "prose",
             "evidence": "Na koniec odcinka zapraszam do wysłuchania gościa specjalnego — Steve’a Ballmera z Microsoftu — będzie dla Was rapował. Deserem mam nadzieję, że będą bloopers z tego odcinka — przy okazji Skype dzisiaj trochę nam wariował, więc nie było lekko i już dawno nie miałem tyle pracy przy montażu."
+          }
+        ],
+        "description_identity_corrections": [
+          {
+            "source_name": "Steve’a Ballmera",
+            "canonical_name": "Steve Ballmer",
+            "basis": "reviewed_host_alias"
+          }
+        ],
+        "host_corrections": [
+          {
+            "action": "exclude",
+            "name": "Steve Ballmer",
+            "basis": "user_confirmed_not_host"
           }
         ]
       }
@@ -1652,7 +1671,7 @@
         "description_evidence": [
           {
             "marker": "prose",
-            "evidence": "Witamy w kolejnym odcinku. Dzisiaj rozpoczynamy iPhone’owo i iPodowo z Norbim, który porusza poważny temat w sposób humorystyczny. W drugiej części dołącza Dominik, a ja poruszam tematy konkurencji w sposób poważny, pomimo że temat też jest taki. Na koniec z kolei, a w zasadzie na ponad godzinę, dołącza do nas gość specjalny – Zdzisiek z TP-Linka – który nie tylko opowiada Wam o swoich planowanych nowościach (a jest kilka ciekawych rzeczy), ale również, do spółki z Dominikiem, zdradzają sekrety "
+            "evidence": "Witamy w kolejnym odcinku. Dzisiaj rozpoczynamy iPhone’owo i iPodowo z Norbim, który porusza poważny temat w sposób humorystyczny. W drugiej części dołącza Dominik, a ja poruszam tematy konkurencji w sposób poważny, pomimo że temat też jest taki. Na koniec z kolei, a w zasadzie na ponad godzinę, dołącza do nas gość specjalny – Zdzisiek z TP-Linka – który nie tylko opowiada Wam o swoich planowanych nowościach (a jest kilka ciekawych rzeczy), ale również, do spółki z Dominikiem, zdradzają sekrety"
           }
         ],
         "description_identity_corrections": [
@@ -2843,6 +2862,13 @@
             "marker": "prose",
             "evidence": "Dzisiaj mamy gościa specjalnego — Michała „Nozbe” Śliwińskiego, który właśnie wydał, wspólnie z Augustu Pinaudem, książkę pt. „#iPadOnly.” W związku z tym przepytujemy Michała pod kątem pracy na iPadzie. Na deser omawiamy szczegółowo najnowsze plotki na temat iPhone’a 5S. Zapraszamy!"
           }
+        ],
+        "description_identity_corrections": [
+          {
+            "source_name": "Michała „Nozbe” Śliwińskiego",
+            "canonical_name": "Michał Śliwiński",
+            "basis": "reviewed_host_alias"
+          }
         ]
       }
     },
@@ -3192,6 +3218,13 @@
           {
             "marker": "prose",
             "evidence": "Nagraliśmy po pierwsze 150 odcinek, który wcale takowym nie jest, bo licząc wszelkie poboczne odmiany jest to nr 161, ale nie zmienia to faktu, że jesteśmy w połowie drogi do numeru 200. Niesamowite. Po drugie, odcinek jest wyjątkowy, bo dzisiaj za gościa robi Norbert. Po trzecie, w trakcie nagrywania odcinka miała miejsce premiera iPada 4... ponowna zresztą. Po czwarte, odcinek jest świetny. Tak uważamy my. Wy macie prawo myśleć inaczej. Będziemy Was ignorowali jeśli tak będzie. Po piąte... hmm"
+          }
+        ],
+        "description_identity_corrections": [
+          {
+            "source_name": "Norbert",
+            "canonical_name": "NPC",
+            "basis": "reviewed_host_alias"
           }
         ]
       }
@@ -5316,6 +5349,13 @@
             "marker": "prose",
             "evidence": "Dzisiejszym specjalnym gościem Nadgryzionych jest Maciek Buchert, z którym rozmawiamy m.in. na temat toksyczności i negatywnych zachowań, głównie w grach komputerowych, ale nie tylko."
           }
+        ],
+        "description_identity_corrections": [
+          {
+            "source_name": "Maciek Buchert",
+            "canonical_name": "Maciej Buchert",
+            "basis": "reviewed_host_alias"
+          }
         ]
       }
     },
@@ -5440,7 +5480,7 @@
       "year": 2020,
       "url": "https://retrorocketnetwork.pl/nadgryzieni-297-nlestation-2020-sekret-budowy-hackintosha-mac-i-egpu-vr-monitory-do-grania-i-do-grafiki",
       "hosts": [
-        "Tomek Pluszczyk",
+        "Thomas Voland",
         "Wojtek Pietrusiewicz"
       ],
       "hosts_status": "verified",
@@ -5453,6 +5493,13 @@
           {
             "marker": "prose",
             "evidence": "Dzisiaj nagraliśmy prawdopodobnie najdłuższy odcinek w historii Nadgryzionych, zupełnie przypadkowo. Gościem jest Tomek Pluszczyk, specjalista m.in. od monitorów graficznych, którego zainteresował NLEstation 2020. Rozmawiamy więc o hackintoshach, o Macach i eGPU, o monitorach do grania i do grafiki oraz o wirtualnej rzeczywistości. Pamiętajcie, że nie musicie słuchać całości za jednym razem – jest przycisk pauzy, a Wasz program do odtwarzania podcastów zapamięta gdzie skończyliście."
+          }
+        ],
+        "description_identity_corrections": [
+          {
+            "source_name": "Tomek Pluszczyk",
+            "canonical_name": "Thomas Voland",
+            "basis": "reviewed_host_alias"
           }
         ]
       }

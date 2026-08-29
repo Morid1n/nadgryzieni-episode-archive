@@ -1,7 +1,7 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 136;
+const DATA_VERSION = 137;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 const YEARLY_STATS_START = 2021;
@@ -423,10 +423,10 @@ function renderSignals() {
     const busiest = Object.entries(countsByYear).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
 
     setText('#longest-duration', minutesLabel(longest.y));
-    setText('#longest-title', `${longest.episodeId} · ${longest.title}`);
+    setText('#longest-title', longest.title);
     setText('#longest-meta', `${formatDate(longest.date)} · ${longest.duration || minutesToTime(longest.y)}`);
     setText('#shortest-duration', minutesLabel(shortest.y));
-    setText('#shortest-title', `${shortest.episodeId} · ${shortest.title}`);
+    setText('#shortest-title', shortest.title);
     setText('#shortest-meta', `${formatDate(shortest.date)} · ${shortest.duration || minutesToTime(shortest.y)}`);
     setText('#busiest-year', busiest?.[0] || '—');
     setText('#busiest-year-count', busiest ? `${integerFormatter.format(busiest[1])} odcinków` : '—');

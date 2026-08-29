@@ -66,6 +66,66 @@ class HostNameNormalizationTests(unittest.TestCase):
             "Michał Śliwiński",
         )
 
+    def test_tomek_pluszczyk_is_published_as_thomas_voland(self):
+        self.assertEqual(normalize_host_name("Tomek Pluszczyk"), "Thomas Voland")
+        self.assertEqual(
+            host_dedupe_key("Tomek Pluszczyk"),
+            host_dedupe_key("Thomas Voland"),
+        )
+
+    def test_user_confirmed_non_host_is_removed_only_from_episode_30(self):
+        source_url = "https://retrorocketnetwork.pl/nadgryzieni-30-steve-ballmer-dzwoni-do-sadu"
+        entry = {
+            "hosts": ["Steve Ballmer"],
+            "hosts_status": "verified",
+            "hosts_source": "rrn",
+            "hosts_source_url": source_url,
+            "provenance": {
+                "kind": "direct_source",
+                "source_url": source_url,
+                "description_evidence": ["Steve Ballmer"],
+            },
+        }
+
+        corrected = hosts.apply_record_host_corrections(
+            "rk_304f2d0f5a58d8938c47836e",
+            entry,
+        )
+
+        self.assertEqual(corrected["hosts"], [])
+        self.assertEqual(corrected["hosts_status"], "not_listed")
+        self.assertEqual(
+            corrected["provenance"]["description_evidence"],
+            ["Steve Ballmer"],
+        )
+        self.assertEqual(
+            corrected["provenance"]["host_corrections"],
+            [{
+                "action": "exclude",
+                "name": "Steve Ballmer",
+                "basis": "user_confirmed_not_host",
+            }],
+        )
+
+    def test_user_confirmed_host_override_preserves_woz_on_full_refresh(self):
+        source_url = "https://retrorocketnetwork.pl/nadgryzieni-71-woz"
+        corrected = hosts.apply_record_host_corrections(
+            "rk_b145e50a91b3e5e88ae300b4",
+            {
+                "hosts": [],
+                "hosts_status": "not_listed",
+                "hosts_source": "rrn",
+                "hosts_source_url": source_url,
+                "provenance": {"kind": "direct_source", "source_url": source_url},
+                "diagnostics": ["no structural Prowadzący block found"],
+            },
+        )
+        self.assertEqual(corrected["hosts"], ['Steve "Woz" Wozniak'])
+        self.assertEqual(corrected["hosts_status"], "verified")
+        self.assertEqual(corrected["hosts_source"], "manual")
+        self.assertEqual(corrected["provenance"]["kind"], "manual_user_confirmation")
+        self.assertEqual(corrected["provenance"]["basis"], "explicit_user_confirmation")
+
     def test_host_cache_rejects_symlink_destination(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -134,6 +194,33 @@ class HostNameNormalizationTests(unittest.TestCase):
             {"hosts": ["Norbert Cała"], "hosts_status": "verified", "hosts_source": "rrn"},
         )
         self.assertEqual(cached["hosts"], ["NPC"])
+    def test_cached_ballmer_entry_is_corrected_before_future_update(self):
+        source_url = "https://retrorocketnetwork.pl/nadgryzieni-30-steve-ballmer-dzwoni-do-sadu"
+        cached = _cached_direct_entry(
+            {
+                "record_key": "rk_304f2d0f5a58d8938c47836e",
+                "episode": "30",
+                "title": "Nadgryzieni – 30 – Steve Ballmer dzwoni do sądu",
+                "url": source_url,
+            },
+            {
+                "hosts": ["Steve Ballmer"],
+                "hosts_status": "verified",
+                "hosts_source": "rrn",
+                "hosts_source_url": source_url,
+                "provenance": {
+                    "kind": "direct_source",
+                    "source_url": source_url,
+                    "description_evidence": ["Steve Ballmer"],
+                },
+            },
+        )
+        self.assertEqual(cached["hosts"], [])
+        self.assertEqual(cached["hosts_status"], "not_listed")
+        self.assertEqual(
+            cached["provenance"]["host_corrections"][0]["basis"],
+            "user_confirmed_not_host",
+        )
 
 
 class RrnParserTests(unittest.TestCase):
@@ -352,6 +439,29 @@ class RrnParserTests(unittest.TestCase):
             expected_url="https://example.test/guest-name-after-dash",
         )
         self.assertEqual(result.hosts, ['Zdzisław Kaczyk'])
+        self.assertEqual(
+            result.provenance["description_identity_corrections"],
+            [{
+                "source_name": "Zdzisiek",
+                "canonical_name": "Zdzisław Kaczyk",
+                "basis": "user_confirmed_identity",
+            }],
+        )
+
+    def test_description_extraction_records_reviewed_tomek_alias(self):
+        result = parse_rrn_hosts(
+            """<article><p>Gościem jest Tomek Pluszczyk.</p></article>""",
+            expected_url="https://example.test/guest-thomas-alias",
+        )
+        self.assertEqual(result.hosts, ["Thomas Voland"])
+        self.assertEqual(
+            result.provenance["description_identity_corrections"],
+            [{
+                "source_name": "Tomek Pluszczyk",
+                "canonical_name": "Thomas Voland",
+                "basis": "reviewed_host_alias",
+            }],
+        )
 
     def test_description_extraction_normalizes_zbyszek_identity(self):
         result = parse_rrn_hosts(
@@ -743,6 +853,49 @@ class AuditSafetyTests(unittest.TestCase):
         ):
             self.assertNotIn(key, encoded)
 
+    def test_fresh_rrn_audit_applies_user_confirmed_ballmer_exclusion(self):
+        source_url = "https://retrorocketnetwork.pl/nadgryzieni-30-steve-ballmer-dzwoni-do-sadu"
+        parsed = hosts.HostParseResult(
+            status="verified",
+            hosts=["Steve Ballmer"],
+            provenance={
+                "kind": "direct_source",
+                "source_url": source_url,
+                "description_evidence": ["Steve Ballmer"],
+            },
+        )
+        fetched = hosts.FetchResult(
+            status="ok",
+            body="<html></html>",
+            source_url=source_url,
+            final_url=source_url,
+            status_code=200,
+            content_type="text/html",
+        )
+        with patch.object(hosts, "_robots_allowed", return_value=True), patch.object(
+            hosts, "parse_rrn_hosts", return_value=parsed
+        ):
+            result = hosts._direct_audit_entry(
+                {
+                    "record_key": "rk_304f2d0f5a58d8938c47836e",
+                    "episode": "30",
+                    "title": "Nadgryzieni – 30 – Steve Ballmer dzwoni do sądu",
+                    "date": "2010-09-01",
+                    "duration": "1:00:00",
+                    "url": source_url,
+                },
+                {source_url: fetched},
+                {},
+                [0.0],
+                0.0,
+            )
+        self.assertEqual(result["hosts"], [])
+        self.assertEqual(result["hosts_status"], "not_listed")
+        self.assertEqual(
+            result["provenance"]["host_corrections"][0]["basis"],
+            "user_confirmed_not_host",
+        )
+
     def test_non_rrn_credential_url_is_not_published_in_audit_result(self):
         result = hosts._direct_audit_entry(
             {
@@ -761,6 +914,25 @@ class AuditSafetyTests(unittest.TestCase):
         self.assertEqual(result["hosts_source_url"], "")
         self.assertEqual(result["provenance"]["source_url"], "")
         self.assertNotIn("SECRET_SENTINEL", json.dumps(result))
+
+    def test_audit_sanitizer_preserves_archive_identity_fields_exactly(self):
+        report = {
+            "records": {
+                "rk_46ca0c8b21032518b834aeca": {
+                    "record_key": "rk_46ca0c8b21032518b834aeca",
+                    "episode": "529",
+                    "title": "529: Przenosiny z 1Password na Apple Passwords / iCloud Keychain",
+                    "date": "2025-05-02",
+                    "duration": "2:17:05",
+                    "hosts_source_url": "https://retrorocketnetwork.pl/529-test",
+                    "provenance": {"source_url": "https://retrorocketnetwork.pl/529-test"},
+                },
+            },
+        }
+        sanitized = hosts._sanitize_audit_report(report)
+        record = sanitized["records"]["rk_46ca0c8b21032518b834aeca"]
+        for field in ("record_key", "episode", "title", "date", "duration"):
+            self.assertEqual(record[field], report["records"][record["record_key"]][field])
 
     def test_audit_report_preserves_safe_canonical_source_urls(self):
         report = {
@@ -804,6 +976,7 @@ class AuditSafetyTests(unittest.TestCase):
             pipeline.DATA_JSON_PATH = repo / "data.json"
             pipeline.HOST_METADATA_PATH = repo / "host_metadata.json"
             pipeline.README_PATH = repo / "README.md"
+            pipeline.STATS_PATH = repo / "statistics.md"
             rows_locked = [{"record_key": "rk", "episode": "1", "title": "1: Test", "host_marker": "locked"}]
             report = {
                 "records": {"rk": {"hosts": [], "hosts_status": "not_listed", "hosts_source": "rrn", "hosts_source_url": "https://example.invalid/episode-1", "provenance": {}}},
@@ -816,6 +989,7 @@ class AuditSafetyTests(unittest.TestCase):
             pipeline.acquire_pipeline_lock.side_effect = lambda: events.append("acquire") or True
             pipeline.manifest_from_rows.return_value = manifest
             pipeline.generate_data_json.return_value = {}
+            pipeline.generate_statistics.return_value = "statistics\n"
             pipeline.parse_archive.return_value = (rows_locked, "")
             audit_path = root / "audit.json"
             audit_path.write_text(json.dumps(report), encoding="utf-8")
@@ -830,6 +1004,8 @@ class AuditSafetyTests(unittest.TestCase):
                 hosts.apply_audit(audit_path, dry_run=False, write=True)
         self.assertEqual(events[:2], ["acquire", "load"])
         self.assertIs(pipeline.generate_data_json.call_args.args[0], rows_locked)
+        destinations = [pair[0] for pair in pipeline.atomic_replace_group.call_args.args[0]]
+        self.assertIn(pipeline.STATS_PATH, destinations)
 
     def test_apply_audit_dry_run_validates_manifest_with_record_rows(self):
         pipeline = Mock()

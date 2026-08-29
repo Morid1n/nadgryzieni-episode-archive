@@ -136,6 +136,7 @@ _SOCIAL_WORDS = frozenset(
     }
 )
 _HOST_NAME_ALIASES = {
+    "tomek pluszczyk": "Thomas Voland",
     "norbert cała": "NPC",
     "norbert": "NPC",
     "norbi": "NPC",
@@ -377,6 +378,94 @@ def host_dedupe_key(value: str) -> str:
     """Return the canonical, case-insensitive key for one host name."""
 
     return normalize_host_name(value).casefold()
+
+
+_RECORD_HOST_OVERRIDES = {
+    "rk_b145e50a91b3e5e88ae300b4": {
+        "hosts": ['Steve "Woz" Wozniak'],
+        "hosts_status": "verified",
+        "hosts_source": "manual",
+        "hosts_source_url": "https://retrorocketnetwork.pl/nadgryzieni-71-woz",
+        "provenance": {
+            "kind": "manual_user_confirmation",
+            "source_url": "https://retrorocketnetwork.pl/nadgryzieni-71-woz",
+            "basis": "explicit_user_confirmation",
+            "note": 'User confirmed that Steve "Woz" Wozniak appeared in this episode; the source page did not expose a structural Prowadzący block.',
+        },
+        "diagnostics": [
+            "host added from explicit user confirmation; structural Prowadzący block was not available",
+        ],
+    },
+}
+
+
+_RECORD_HOST_EXCLUSIONS = {
+    "rk_304f2d0f5a58d8938c47836e": {
+        host_dedupe_key("Steve Ballmer"): {
+            "action": "exclude",
+            "name": "Steve Ballmer",
+            "basis": "user_confirmed_not_host",
+        },
+    },
+}
+
+
+def apply_record_host_corrections(record_key: str, entry: dict) -> dict:
+    """Apply reviewed aliases and record-scoped host exclusions idempotently."""
+
+    corrected = dict(entry)
+    raw_hosts = corrected.get("hosts")
+    if not isinstance(raw_hosts, list):
+        return corrected
+
+    hosts = []
+    seen = set()
+    for raw_host in raw_hosts:
+        if not isinstance(raw_host, str):
+            hosts.append(raw_host)
+            continue
+        normalized = normalize_host_name(raw_host)
+        key = host_dedupe_key(normalized)
+        if key not in seen:
+            seen.add(key)
+            hosts.append(normalized)
+
+    exclusions = _RECORD_HOST_EXCLUSIONS.get(str(record_key), {})
+    applied = []
+    if exclusions:
+        retained = []
+        for host in hosts:
+            key = host_dedupe_key(host) if isinstance(host, str) else ""
+            correction = exclusions.get(key)
+            if correction is None:
+                retained.append(host)
+            elif correction not in applied:
+                applied.append(dict(correction))
+        hosts = retained
+
+    corrected["hosts"] = hosts
+    override = _RECORD_HOST_OVERRIDES.get(str(record_key))
+    if override is not None:
+        corrected.update({
+            key: dict(value) if isinstance(value, dict) else list(value) if isinstance(value, list) else value
+            for key, value in override.items()
+        })
+        return corrected
+
+    if applied:
+        if corrected.get("hosts_status") == "verified" and not hosts:
+            corrected["hosts_status"] = "not_listed"
+        provenance = corrected.get("provenance")
+        if isinstance(provenance, dict):
+            provenance = dict(provenance)
+            existing = provenance.get("host_corrections")
+            corrections = list(existing) if isinstance(existing, list) else []
+            for correction in applied:
+                if correction not in corrections:
+                    corrections.append(correction)
+            provenance["host_corrections"] = corrections
+            corrected["provenance"] = provenance
+    return corrected
 
 
 def _normalize_description_person_name(value: str) -> str:
@@ -835,18 +924,42 @@ def _normalise_description_entries(
     entries: Sequence[Tuple[str, bool]],
     source_url: str,
     diagnostics: Optional[List[str]] = None,
-) -> Tuple[List[str], List[str], List[str]]:
+) -> Tuple[List[str], List[str], List[str], List[Dict[str, str]]]:
     diagnostics = list(diagnostics or [])
     people: List[str] = []
     excluded: List[str] = []
+    corrections: List[Dict[str, str]] = []
+    correction_keys = set()
     people_keys = set()
     excluded_keys = set()
     for raw_value, struck in entries:
         try:
-            value = _normalize_description_person_name(raw_value)
+            source_name = " ".join(unicodedata.normalize("NFKC", raw_value).split())
+            alias_normalized = normalize_host_name(source_name)
+            value = _DESCRIPTION_PERSON_ALIASES.get(alias_normalized.casefold(), alias_normalized)
         except HostNameError as exc:
             diagnostics.append("description person entry rejected: " + str(exc))
-            return [], excluded, diagnostics
+            return [], excluded, diagnostics, corrections
+        if source_name.casefold() != alias_normalized.casefold():
+            correction = {
+                "source_name": source_name,
+                "canonical_name": alias_normalized,
+                "basis": "reviewed_host_alias",
+            }
+            correction_key = tuple(correction.values())
+            if correction_key not in correction_keys:
+                corrections.append(correction)
+                correction_keys.add(correction_key)
+        if alias_normalized.casefold() != value.casefold():
+            correction = {
+                "source_name": alias_normalized,
+                "canonical_name": value,
+                "basis": "user_confirmed_identity",
+            }
+            correction_key = tuple(correction.values())
+            if correction_key not in correction_keys:
+                corrections.append(correction)
+                correction_keys.add(correction_key)
         key = host_dedupe_key(value)
         if struck:
             if key not in excluded_keys:
@@ -856,7 +969,7 @@ def _normalise_description_entries(
         if key not in people_keys:
             people.append(value)
             people_keys.add(key)
-    return people, excluded, diagnostics
+    return people, excluded, diagnostics, corrections
 
 
 def _extract_rrn_description_people(
@@ -932,14 +1045,16 @@ def _extract_rrn_description_people(
                     + _safe_description_evidence(text)[:300]
                 )
 
-    people, excluded, diagnostics = _normalise_description_entries(
+    people, excluded, diagnostics, identity_corrections = _normalise_description_entries(
         entries, source_url, diagnostics
     )
     if structural_blocks > 1:
         diagnostics.append("multiple description people blocks found; refusing ambiguous extraction")
         people = []
+        identity_corrections = []
     if unsafe_marker:
         people = []
+        identity_corrections = []
     if not people and not structural_blocks and not direct_markers:
         all_content = " ".join(_node_text(root) for root in roots)
         if _description_marker_in_text(all_content):
@@ -951,6 +1066,8 @@ def _extract_rrn_description_people(
             "source_url": source_url,
             "description_evidence": evidence,
         }
+        if identity_corrections:
+            provenance["description_identity_corrections"] = identity_corrections
     return people, excluded, diagnostics, provenance
 
 
@@ -1265,11 +1382,12 @@ def _extract_patreon_description_people(
         diagnostics.append("multiple description people blocks found; refusing ambiguous extraction")
         entries = []
         unsafe_marker = True
-    people, excluded, diagnostics = _normalise_description_entries(
+    people, excluded, diagnostics, identity_corrections = _normalise_description_entries(
         entries, source_url, diagnostics
     )
     if unsafe_marker:
         people = []
+        identity_corrections = []
     if not people and not direct_markers and not evidence:
         return [], excluded, diagnostics, {}
     provenance = {
@@ -1277,6 +1395,8 @@ def _extract_patreon_description_people(
         "source_url": source_url,
         "description_evidence": evidence,
     } if evidence else {}
+    if provenance and identity_corrections:
+        provenance["description_identity_corrections"] = identity_corrections
     return people, excluded, diagnostics, provenance
 
 
@@ -1799,7 +1919,7 @@ def serialize_parse_result(result: HostParseResult) -> str:
 # ── Historical audit/apply workflow ──────────────────────────────────────────
 
 AUDIT_SCHEMA_VERSION = 1
-PARSER_VERSION = "nadgryzieni-hosts/2.0"
+PARSER_VERSION = "nadgryzieni-hosts/2.2"
 AUDIT_USER_AGENT = "Nadgryzieni-host-audit/1.0"
 UNRESOLVED_STATUSES = frozenset({"unavailable", "ambiguous", "manual_review"})
 DEFAULT_HOST_CACHE_PATH = Path(os.environ.get(
@@ -2012,7 +2132,7 @@ def _direct_audit_entry(
     }
     if parsed.status not in {"verified", "not_listed"}:
         base["diagnostics"].append("structural parser did not produce a publishable result")
-    return base
+    return apply_record_host_corrections(str(row["record_key"]), base)
 
 
 def _reject_symlink_components(path: Path, stop_at: Path) -> None:
@@ -2184,12 +2304,17 @@ def _sanitize_audit_report(report: Mapping[str, Any]) -> Dict[str, Any]:
     original_records = report.get("records") if isinstance(report, Mapping) else None
     safe_record_urls: Dict[str, str] = {}
     safe_provenance_urls: Dict[str, str] = {}
+    safe_identity_fields: Dict[str, Dict[str, Any]] = {}
     provenance_has_source_url: set[str] = set()
     if isinstance(original_records, Mapping):
         for key, original_record in original_records.items():
             if not isinstance(original_record, Mapping):
                 continue
             record_key = str(key)
+            safe_identity_fields[record_key] = {
+                field: original_record.get(field)
+                for field in ("record_key", "episode", "title", "date", "duration")
+            }
             safe_record_urls[record_key] = _safe_report_source_url(
                 original_record.get("hosts_source_url")
             )
@@ -2209,6 +2334,7 @@ def _sanitize_audit_report(report: Mapping[str, Any]) -> Dict[str, Any]:
             record = records.get(record_key)
             if not isinstance(record, dict):
                 continue
+            record.update(safe_identity_fields.get(record_key, {}))
             record["hosts_source_url"] = safe_url
             if record_key in provenance_has_source_url:
                 provenance = record.get("provenance")
@@ -2262,7 +2388,7 @@ def _cached_direct_entry(row: Mapping[str, Any], cached: Mapping[str, Any]) -> D
     if not isinstance(provenance, dict):
         raise RuntimeError("Cached provenance is not an object")
     provenance["source_url"] = source_url
-    return {
+    entry = {
         "record_key": row["record_key"],
         "episode": str(row.get("episode", "")),
         "title": str(row.get("title", "")),
@@ -2276,6 +2402,7 @@ def _cached_direct_entry(row: Mapping[str, Any], cached: Mapping[str, Any]) -> D
         "diagnostics": list(cached.get("diagnostics", [])),
         "fetch": dict(cached.get("fetch", {})),
     }
+    return apply_record_host_corrections(str(row["record_key"]), entry)
 
 
 def audit_repository(
@@ -2494,7 +2621,7 @@ def apply_audit(audit_path: Path, dry_run: bool = False, write: bool = False) ->
         raise ValueError("Host audit report is not an object")
     report = _sanitize_audit_report(raw_report)
 
-    def prepare_application(current_pipeline: Any, rows: List[Dict[str, Any]]) -> Tuple[dict, dict, dict]:
+    def prepare_application(current_pipeline: Any, rows: List[Dict[str, Any]]) -> Tuple[dict, dict, str, dict]:
         _validate_audit_against_current(report, rows)
         audit_records = report["records"]
         for row in rows:
@@ -2518,6 +2645,7 @@ def apply_audit(audit_path: Path, dry_run: bool = False, write: bool = False) ->
         _publishable_manifest(manifest)
         data = current_pipeline.generate_data_json(rows)
         current_pipeline.validate_generated_data(data, rows)
+        statistics_markdown = current_pipeline.generate_statistics(rows)
         stats = {
             "records": len(rows),
             "verified": sum(1 for row in rows if row.get("hosts_status") == "verified"),
@@ -2525,15 +2653,24 @@ def apply_audit(audit_path: Path, dry_run: bool = False, write: bool = False) ->
             "fetch_targets": report.get("fetch_target_count", 0),
             "mode": "dry-run" if dry_run else "write",
         }
-        return manifest, data, stats
+        return manifest, data, statistics_markdown, stats
 
     if dry_run:
         pipeline, rows, _ = _load_current_rows()
-        manifest, data, stats = prepare_application(pipeline, rows)
+        manifest, data, statistics_markdown, stats = prepare_application(pipeline, rows)
         pipeline.write_archive(rows, dry=True)
         pipeline.write_data_json(data, dry=True)
         pipeline.write_host_metadata(manifest, dry=True, record_rows=rows)
         pipeline.update_readme(data, dry=True)
+        dry_stats_path = pipeline.STATS_PATH.with_name(
+            f"{pipeline.STATS_PATH.stem}.dry{pipeline.STATS_PATH.suffix}"
+        )
+        pipeline._atomic_write_text(
+            dry_stats_path,
+            statistics_markdown,
+            root=pipeline.REPO_DIR.parent,
+            mode=0o644,
+        )
         return stats
 
     lock_pipeline = pipeline
@@ -2542,7 +2679,7 @@ def apply_audit(audit_path: Path, dry_run: bool = False, write: bool = False) ->
     stage_dir = None
     try:
         pipeline, rows, _ = _load_current_rows()
-        manifest, data, stats = prepare_application(pipeline, rows)
+        manifest, data, statistics_markdown, stats = prepare_application(pipeline, rows)
         repo = pipeline.REPO_DIR
         stage_dir = Path(tempfile.mkdtemp(prefix=".nadgryzieni-hosts-stage-", dir=str(repo.parent)))
         assert stage_dir is not None
@@ -2550,10 +2687,17 @@ def apply_audit(audit_path: Path, dry_run: bool = False, write: bool = False) ->
         staged_data = stage_dir / pipeline.DATA_JSON_PATH.name
         staged_manifest = stage_dir / pipeline.HOST_METADATA_PATH.name
         staged_readme = stage_dir / pipeline.README_PATH.name
+        staged_stats = stage_dir / pipeline.STATS_PATH.name
         pipeline.write_archive(rows, target_path=staged_archive)
         pipeline.write_data_json(data, target_path=staged_data)
         pipeline.write_host_metadata(manifest, path=staged_manifest, record_rows=rows)
         pipeline.update_readme(data, target_path=staged_readme)
+        pipeline._atomic_write_text(
+            staged_stats,
+            statistics_markdown,
+            root=stage_dir.parent,
+            mode=0o644,
+        )
         staged_data_content = pipeline._read_bytes_secure(staged_data, repo.parent)
         if staged_data_content is None:
             raise FileNotFoundError(staged_data)
@@ -2567,6 +2711,7 @@ def apply_audit(audit_path: Path, dry_run: bool = False, write: bool = False) ->
             (pipeline.DATA_JSON_PATH, staged_data),
             (pipeline.HOST_METADATA_PATH, staged_manifest),
             (pipeline.README_PATH, staged_readme),
+            (pipeline.STATS_PATH, staged_stats),
         ])
         pipeline.sync_to_obsidian(dry=False)
     finally:
