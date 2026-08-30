@@ -209,5 +209,53 @@ class FrontendLineOnlyChartContractTests(unittest.TestCase):
         self.assertIn("type: 'line'", self.script)
 
 
+class FrontendTooltipPointerCoordinateTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.script = (REPO_DIR / "script.js").read_text(encoding="utf-8")
+
+    def test_pointer_plugin_scales_chart_coordinates_to_canvas_css_pixels(self):
+        plugin_start = self.script.index("const chartTooltipPointerPlugin = {")
+        plugin_end = self.script.index("\n};", plugin_start) + len("\n};")
+        plugin = self.script[plugin_start:plugin_end]
+        self.assertIn("canvasRect.width / chart.width", plugin)
+        self.assertIn("canvasRect.height / chart.height", plugin)
+
+    def test_pointer_plugin_prefers_current_native_client_coordinates(self):
+        plugin_start = self.script.index("const chartTooltipPointerPlugin = {")
+        plugin_end = self.script.index("\n};", plugin_start) + len("\n};")
+        plugin_source = self.script[plugin_start:plugin_end]
+        harness = f"""
+const vm = require('vm');
+const source = {json.dumps(plugin_source)} + '\\nglobalThis.plugin = chartTooltipPointerPlugin;';
+const context = {{ globalThis: {{}} }};
+context.globalThis = context;
+vm.runInNewContext(source, context, {{ timeout: 5000 }});
+const chart = {{
+    canvas: {{ getBoundingClientRect: () => ({{ left: 100, top: 200, width: 13005, height: 540 }}) }},
+    width: 8670,
+    height: 540,
+}};
+context.plugin.beforeEvent(chart, {{
+    event: {{
+        type: 'mousemove',
+        x: 100,
+        y: 80,
+        native: {{ clientX: 450, clientY: 280 }},
+    }},
+}});
+console.log(JSON.stringify(chart.$tooltipPointer));
+"""
+        completed = subprocess.run(
+            ["node"],
+            input=harness,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        self.assertEqual(json.loads(completed.stdout), {"clientX": 450, "clientY": 280})
+
+
 if __name__ == "__main__":
     unittest.main()

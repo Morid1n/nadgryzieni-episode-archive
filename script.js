@@ -1,7 +1,7 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 142;
+const DATA_VERSION = 143;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 const YEARLY_STATS_START = 2021;
@@ -692,8 +692,12 @@ function positionChartTooltip(chart) {
     const wrapperRect = chartWrapper.getBoundingClientRect();
     const scrollRect = scrollContainer.getBoundingClientRect();
     const pointer = chart.$tooltipPointer;
-    const pointX = pointer ? pointer.clientX : canvasRect.left + chartTooltip.caretX;
-    const pointY = pointer ? pointer.clientY : canvasRect.top + chartTooltip.caretY;
+    const pointX = pointer
+        ? pointer.clientX
+        : canvasRect.left + chartTooltip.caretX * (canvasRect.width / chart.width);
+    const pointY = pointer
+        ? pointer.clientY
+        : canvasRect.top + chartTooltip.caretY * (canvasRect.height / chart.height);
     const edgePadding = 8;
     const horizontalGap = 12;
     let tooltipSize = tooltip._chartTooltipSize;
@@ -761,11 +765,19 @@ const chartTooltipPointerPlugin = {
             chart.$tooltipPointer = null;
             return;
         }
+        const nativeEvent = event.native;
+        const nativeTouch = nativeEvent?.touches?.[0] ?? nativeEvent?.changedTouches?.[0];
+        const clientX = nativeTouch?.clientX ?? nativeEvent?.clientX;
+        const clientY = nativeTouch?.clientY ?? nativeEvent?.clientY;
+        if (Number.isFinite(clientX) && Number.isFinite(clientY)) {
+            chart.$tooltipPointer = { clientX, clientY };
+            return;
+        }
         if (Number.isFinite(event.x) && Number.isFinite(event.y)) {
             const canvasRect = chart.canvas.getBoundingClientRect();
             chart.$tooltipPointer = {
-                clientX: canvasRect.left + event.x,
-                clientY: canvasRect.top + event.y,
+                clientX: canvasRect.left + event.x * (canvasRect.width / chart.width),
+                clientY: canvasRect.top + event.y * (canvasRect.height / chart.height),
             };
         }
     },
