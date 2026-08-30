@@ -1039,8 +1039,6 @@ html[data-theme="dark"] .theme-icon::after {
 }
 
 .chart-wrapper.line-mode {
-    width: 100%;
-    min-width: 8550px;
     height: 540px;
 }
 
@@ -1985,7 +1983,6 @@ html[data-theme="dark"] .theme-icon::after {
     }
 
     .chart-wrapper.line-mode {
-        min-width: 8550px;
         height: 430px;
     }
 

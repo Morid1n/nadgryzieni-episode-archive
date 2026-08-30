@@ -1,10 +1,11 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 137;
+const DATA_VERSION = 138;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 const YEARLY_STATS_START = 2021;
+const CHART_EPISODE_SPACING = 22.5;
 
 let chartInstance = null;
 let chartData = null;
@@ -665,12 +666,8 @@ function setChartLayout(isLineMode) {
         return;
     }
     chartWrapper.classList.toggle('line-mode', isLineMode);
-    if (isLineMode) {
-        const minimumWidth = normalizedEpisodes.length * 15;
-        chartWrapper.style.width = `${Math.max(scrollContainer.clientWidth, minimumWidth)}px`;
-    } else {
-        chartWrapper.style.width = '';
-    }
+    const minimumWidth = normalizedEpisodes.length * CHART_EPISODE_SPACING;
+    chartWrapper.style.width = `${Math.max(scrollContainer.clientWidth, minimumWidth)}px`;
 }
 
 function episodeTickLabel(value) {
@@ -686,7 +683,7 @@ function updateModeControls() {
     });
     setText('#chart-hint', chartMode === 'line'
         ? 'Wykres liniowy pokazuje kolejność wszystkich odcinków. Przewijaj w poziomie, aby zobaczyć pełną linię.'
-        : 'Najedź na punkt, aby zobaczyć szczegóły odcinka. Identyfikatory zachowują wartości ułamkowe i specjalne.');
+        : 'Wykres punktowy zachowuje większe odstępy między odcinkami. Najedź na punkt, aby zobaczyć szczegóły, i przewijaj w poziomie, aby zobaczyć pełny wykres; identyfikatory zachowują wartości ułamkowe i specjalne.');
 }
 
 function renderChart() {
@@ -764,7 +761,7 @@ function renderChart() {
                         color: colors.axis,
                         font: { size: 10 },
                         autoSkip: true,
-                        maxTicksLimit: isLineMode ? 60 : 12,
+                        maxTicksLimit: 60,
                         callback: episodeTickLabel,
                     },
                     title: { display: true, text: 'Kolejność odcinków', color: colors.axis, font: { size: 12, weight: 600 } },
@@ -925,8 +922,8 @@ function bindInteractions() {
     });
 
     window.addEventListener('resize', () => {
-        if (chartMode === 'line' && normalizedEpisodes.length) {
-            setChartLayout(true);
+        if (normalizedEpisodes.length) {
+            setChartLayout(chartMode === 'line');
             chartInstance?.resize();
         }
     });
