@@ -1,7 +1,7 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 139;
+const DATA_VERSION = 140;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 const YEARLY_STATS_START = 2021;
@@ -674,7 +674,7 @@ function hideChartTooltip() {
     const tooltip = $('#chart-tooltip');
     if (tooltip) {
         tooltip.hidden = true;
-        tooltip.replaceChildren();
+        tooltip.classList.remove('is-below');
     }
 }
 
@@ -691,12 +691,19 @@ function positionChartTooltip(chart) {
     const canvasRect = chart.canvas.getBoundingClientRect();
     const wrapperRect = chartWrapper.getBoundingClientRect();
     const scrollRect = scrollContainer.getBoundingClientRect();
-    const pointX = canvasRect.left + chartTooltip.caretX;
-    const pointY = canvasRect.top + chartTooltip.caretY;
+    const pointer = chart.$tooltipPointer;
+    const pointX = pointer ? pointer.clientX : canvasRect.left + chartTooltip.caretX;
+    const pointY = pointer ? pointer.clientY : canvasRect.top + chartTooltip.caretY;
     const edgePadding = 8;
     const horizontalGap = 12;
-    const tooltipWidth = tooltip.offsetWidth;
-    const tooltipHeight = tooltip.offsetHeight;
+    let tooltipSize = tooltip._chartTooltipSize;
+    if (!tooltipSize) {
+        const rect = tooltip.getBoundingClientRect();
+        tooltipSize = { width: rect.width, height: rect.height };
+        tooltip._chartTooltipSize = tooltipSize;
+    }
+    const tooltipWidth = tooltipSize.width;
+    const tooltipHeight = tooltipSize.height;
     const minimumLeft = scrollRect.left + edgePadding;
     const maximumLeft = Math.max(minimumLeft, scrollRect.right - tooltipWidth - edgePadding);
     const left = Math.min(maximumLeft, Math.max(minimumLeft, pointX - tooltipWidth / 2));
@@ -707,9 +714,14 @@ function positionChartTooltip(chart) {
         : below + tooltipHeight <= scrollRect.bottom - edgePadding
             ? below
             : Math.max(scrollRect.top + edgePadding, Math.min(above, scrollRect.bottom - tooltipHeight - edgePadding));
+    const caretOffset = Math.max(0, Math.min(tooltipWidth, pointX - left));
+    const transform = `translate3d(${left - wrapperRect.left}px, ${top - wrapperRect.top}px, 0)`;
 
-    tooltip.style.left = `${left - wrapperRect.left}px`;
-    tooltip.style.top = `${top - wrapperRect.top}px`;
+    if (tooltip.style.transform !== transform) {
+        tooltip.style.transform = transform;
+    }
+    tooltip.style.setProperty('--chart-tooltip-caret-x', `${caretOffset}px`);
+    tooltip.classList.toggle('is-below', top > pointY);
 }
 
 function renderExternalTooltip({ chart, tooltip }) {
@@ -720,21 +732,53 @@ function renderExternalTooltip({ chart, tooltip }) {
         return;
     }
 
-    const title = document.createElement('strong');
-    title.className = 'chart-tooltip-heading';
-    title.textContent = `Odcinek: ${raw.episodeId}`;
-    const episodeTitle = document.createElement('span');
-    episodeTitle.className = 'chart-tooltip-title';
-    episodeTitle.textContent = raw.title;
-    const details = document.createElement('span');
-    details.className = 'chart-tooltip-details';
-    const date = formatDate(raw.date);
-    details.textContent = date === '—'
-        ? `Czas: ${minutesToTime(raw.y)}`
-        : `Czas: ${minutesToTime(raw.y)} · Data: ${date}`;
-    tooltipElement.replaceChildren(title, episodeTitle, details);
+    const contentKey = JSON.stringify([raw.episodeId, raw.title, raw.y, raw.date]);
+    if (tooltipElement._contentKey !== contentKey) {
+        const title = document.createElement('strong');
+        title.className = 'chart-tooltip-heading';
+        title.textContent = `Odcinek: ${raw.episodeId}`;
+        const episodeTitle = document.createElement('span');
+        episodeTitle.className = 'chart-tooltip-title';
+        episodeTitle.textContent = raw.title;
+        const details = document.createElement('span');
+        details.className = 'chart-tooltip-details';
+        const date = formatDate(raw.date);
+        details.textContent = date === '—'
+            ? `Czas: ${minutesToTime(raw.y)}`
+            : `Czas: ${minutesToTime(raw.y)} · Data: ${date}`;
+        tooltipElement.replaceChildren(title, episodeTitle, details);
+        tooltipElement._contentKey = contentKey;
+        tooltipElement._chartTooltipSize = null;
+    }
     tooltipElement.hidden = false;
     positionChartTooltip(chart);
+}
+
+function bindChartTooltipPointer(chart) {
+    const canvas = chart.canvas;
+    const rememberPointer = (event) => {
+        const source = event.touches?.[0] || event.changedTouches?.[0] || event;
+        if (Number.isFinite(source.clientX) && Number.isFinite(source.clientY)) {
+            chart.$tooltipPointer = { clientX: source.clientX, clientY: source.clientY };
+        }
+    };
+    const clearPointer = () => {
+        chart.$tooltipPointer = null;
+    };
+    canvas.addEventListener('mousemove', rememberPointer, true);
+    canvas.addEventListener('touchstart', rememberPointer, { capture: true, passive: true });
+    canvas.addEventListener('touchmove', rememberPointer, { capture: true, passive: true });
+    canvas.addEventListener('mouseout', clearPointer, true);
+    canvas.addEventListener('touchend', clearPointer, true);
+    canvas.addEventListener('touchcancel', clearPointer, true);
+    chart.$removeTooltipPointerTracking = () => {
+        canvas.removeEventListener('mousemove', rememberPointer, true);
+        canvas.removeEventListener('touchstart', rememberPointer, true);
+        canvas.removeEventListener('touchmove', rememberPointer, true);
+        canvas.removeEventListener('mouseout', clearPointer, true);
+        canvas.removeEventListener('touchend', clearPointer, true);
+        canvas.removeEventListener('touchcancel', clearPointer, true);
+    };
 }
 
 function episodeTickLabel(value) {
@@ -765,6 +809,7 @@ function renderChart() {
     const colors = chartTokens();
     hideChartTooltip();
     setChartLayout(isLineMode);
+    chartInstance?.$removeTooltipPointerTracking?.();
     chartInstance?.destroy();
 
     Chart.defaults.font.family = 'Manrope, sans-serif';
@@ -795,6 +840,11 @@ function renderChart() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            animation: { duration: 350, easing: 'easeOutQuart' },
+            transitions: {
+                active: { animation: { duration: 0 } },
+                resize: { animation: { duration: 0 } },
+            },
             interaction: { intersect: false, mode: 'nearest' },
             plugins: {
                 legend: { display: false },
@@ -869,6 +919,7 @@ function renderChart() {
             },
         }],
     });
+    bindChartTooltipPointer(chartInstance);
 }
 
 function createEpisodeCard(episode) {
@@ -1002,6 +1053,10 @@ function bindInteractions() {
         if (normalizedEpisodes.length) {
             setChartLayout(chartMode === 'line');
             chartInstance?.resize();
+            const tooltip = $('#chart-tooltip');
+            if (tooltip) {
+                tooltip._chartTooltipSize = null;
+            }
             if (chartInstance?.tooltip?.opacity) {
                 positionChartTooltip(chartInstance);
             }

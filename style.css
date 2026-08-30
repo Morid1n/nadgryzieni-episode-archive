@@ -1050,6 +1050,8 @@ html[data-theme="dark"] .theme-icon::after {
 
 .chart-tooltip {
     position: absolute;
+    top: 0;
+    left: 0;
     z-index: 3;
     max-width: min(320px, calc(100vw - 24px));
     padding: 12px 14px;
@@ -1062,6 +1064,24 @@ html[data-theme="dark"] .theme-icon::after {
     font-size: 0.74rem;
     line-height: 1.4;
     pointer-events: none;
+    will-change: transform;
+}
+
+.chart-tooltip::after {
+    position: absolute;
+    bottom: -6px;
+    left: var(--chart-tooltip-caret-x, 50%);
+    width: 11px;
+    height: 11px;
+    background: var(--chart-tooltip-bg);
+    content: '';
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.chart-tooltip.is-below::after {
+    top: -6px;
+    bottom: auto;
+    transform: translateX(-50%) rotate(225deg);
 }
 
 .chart-tooltip-heading,
