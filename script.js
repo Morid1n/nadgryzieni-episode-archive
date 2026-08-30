@@ -1,7 +1,7 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 140;
+const DATA_VERSION = 141;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 const YEARLY_STATS_START = 2021;
@@ -754,32 +754,22 @@ function renderExternalTooltip({ chart, tooltip }) {
     positionChartTooltip(chart);
 }
 
-function bindChartTooltipPointer(chart) {
-    const canvas = chart.canvas;
-    const rememberPointer = (event) => {
-        const source = event.touches?.[0] || event.changedTouches?.[0] || event;
-        if (Number.isFinite(source.clientX) && Number.isFinite(source.clientY)) {
-            chart.$tooltipPointer = { clientX: source.clientX, clientY: source.clientY };
+const chartTooltipPointerPlugin = {
+    id: 'tooltipPointer',
+    beforeEvent(chart, { event }) {
+        if (event.type === 'mouseout') {
+            chart.$tooltipPointer = null;
+            return;
         }
-    };
-    const clearPointer = () => {
-        chart.$tooltipPointer = null;
-    };
-    canvas.addEventListener('mousemove', rememberPointer, true);
-    canvas.addEventListener('touchstart', rememberPointer, { capture: true, passive: true });
-    canvas.addEventListener('touchmove', rememberPointer, { capture: true, passive: true });
-    canvas.addEventListener('mouseout', clearPointer, true);
-    canvas.addEventListener('touchend', clearPointer, true);
-    canvas.addEventListener('touchcancel', clearPointer, true);
-    chart.$removeTooltipPointerTracking = () => {
-        canvas.removeEventListener('mousemove', rememberPointer, true);
-        canvas.removeEventListener('touchstart', rememberPointer, true);
-        canvas.removeEventListener('touchmove', rememberPointer, true);
-        canvas.removeEventListener('mouseout', clearPointer, true);
-        canvas.removeEventListener('touchend', clearPointer, true);
-        canvas.removeEventListener('touchcancel', clearPointer, true);
-    };
-}
+        if (Number.isFinite(event.x) && Number.isFinite(event.y)) {
+            const canvasRect = chart.canvas.getBoundingClientRect();
+            chart.$tooltipPointer = {
+                clientX: canvasRect.left + event.x,
+                clientY: canvasRect.top + event.y,
+            };
+        }
+    },
+};
 
 function episodeTickLabel(value) {
     const plotIndex = Math.round(Number(value));
@@ -809,7 +799,6 @@ function renderChart() {
     const colors = chartTokens();
     hideChartTooltip();
     setChartLayout(isLineMode);
-    chartInstance?.$removeTooltipPointerTracking?.();
     chartInstance?.destroy();
 
     Chart.defaults.font.family = 'Manrope, sans-serif';
@@ -895,7 +884,7 @@ function renderChart() {
                 },
             },
         },
-        plugins: [{
+        plugins: [chartTooltipPointerPlugin, {
             id: 'avgLine',
             afterDraw(chart) {
                 const average = getAverageDuration(chartData);
@@ -919,7 +908,6 @@ function renderChart() {
             },
         }],
     });
-    bindChartTooltipPointer(chartInstance);
 }
 
 function createEpisodeCard(episode) {
