@@ -952,49 +952,6 @@ html[data-theme="dark"] .theme-icon::after {
     line-height: 1.65;
 }
 
-.chart-controls {
-    display: flex;
-    min-width: max-content;
-    align-items: center;
-    gap: 10px;
-}
-
-.chart-controls-label {
-    color: var(--muted);
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-.chart-mode-buttons {
-    display: flex;
-    gap: 5px;
-    padding: 4px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--surface-soft);
-}
-
-.mode-button {
-    min-height: 34px;
-    padding: 7px 13px;
-    border: 1px solid transparent;
-    border-radius: 999px;
-    background: transparent;
-    color: var(--muted-strong);
-    font-size: 0.7rem;
-    font-weight: 800;
-    transition: color 0.2s ease, background-color 0.2s ease;
-}
-
-.mode-button:hover,
-.mode-button:focus-visible,
-.mode-button.is-active {
-    background: var(--ink);
-    color: var(--bg);
-}
 
 .chart-meta-row {
     margin-top: 35px;
@@ -2021,11 +1978,6 @@ html[data-theme="dark"] .theme-icon::after {
     .signal-card,
     .pattern-card {
         margin-top: 10px;
-    }
-
-    .chart-controls {
-        width: max-content;
-        margin-top: 26px;
     }
 
     .chart-meta-row {

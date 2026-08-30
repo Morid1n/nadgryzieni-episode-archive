@@ -1,7 +1,7 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 141;
+const DATA_VERSION = 142;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 const YEARLY_STATS_START = 2021;
@@ -11,7 +11,7 @@ let chartInstance = null;
 let chartData = null;
 let rawEpisodes = [];
 let normalizedEpisodes = [];
-let chartMode = 'line';
+
 const archiveState = {
     query: '',
     year: 'all',
@@ -659,13 +659,13 @@ function chartTokens() {
     };
 }
 
-function setChartLayout(isLineMode) {
+function setChartLayout() {
     const scrollContainer = $('#chart-scroll');
     const chartWrapper = $('#chart-wrapper');
     if (!scrollContainer || !chartWrapper) {
         return;
     }
-    chartWrapper.classList.toggle('line-mode', isLineMode);
+    chartWrapper.classList.add('line-mode');
     const minimumWidth = normalizedEpisodes.length * CHART_EPISODE_SPACING;
     chartWrapper.style.width = `${Math.max(scrollContainer.clientWidth, minimumWidth)}px`;
 }
@@ -776,17 +776,6 @@ function episodeTickLabel(value) {
     return normalizedEpisodes[plotIndex]?.episodeId || '';
 }
 
-function updateModeControls() {
-    $$('.mode-button').forEach((button) => {
-        const isActive = button.dataset.chartMode === chartMode;
-        button.classList.toggle('is-active', isActive);
-        button.setAttribute('aria-pressed', String(isActive));
-    });
-    setText('#chart-hint', chartMode === 'line'
-        ? 'Wykres liniowy pokazuje kolejność wszystkich odcinków. Przewijaj w poziomie, aby zobaczyć pełną linię.'
-        : 'Wykres punktowy zachowuje większe odstępy między odcinkami. Najedź na punkt, aby zobaczyć szczegóły, i przewijaj w poziomie, aby zobaczyć pełny wykres; identyfikatory zachowują wartości ułamkowe i specjalne.');
-}
-
 function renderChart() {
     if (!chartData || !normalizedEpisodes.length || typeof Chart === 'undefined') {
         return;
@@ -795,15 +784,14 @@ function renderChart() {
     if (!canvas) {
         return;
     }
-    const isLineMode = chartMode === 'line';
     const colors = chartTokens();
     hideChartTooltip();
-    setChartLayout(isLineMode);
+    setChartLayout();
     chartInstance?.destroy();
 
     Chart.defaults.font.family = 'Manrope, sans-serif';
     chartInstance = new Chart(canvas.getContext('2d'), {
-        type: isLineMode ? 'line' : 'scatter',
+        type: 'line',
         data: {
             datasets: [{
                 label: 'Długość odcinka',
@@ -817,9 +805,9 @@ function renderChart() {
                 })),
                 backgroundColor: colors.point,
                 borderColor: colors.line,
-                borderWidth: isLineMode ? 2 : 1,
+                borderWidth: 2,
                 tension: 0,
-                pointRadius: isLineMode ? 2.8 : 4,
+                pointRadius: 2.8,
                 pointHoverRadius: 7,
                 pointHoverBorderWidth: 2,
                 pointHoverBorderColor: colors.tooltipText,
@@ -997,13 +985,6 @@ function bindInteractions() {
         applyTheme(nextTheme);
     });
 
-    $$('.mode-button').forEach((button) => {
-        button.addEventListener('click', () => {
-            chartMode = button.dataset.chartMode;
-            updateModeControls();
-            renderChart();
-        });
-    });
 
     $('#episode-search')?.addEventListener('input', (event) => {
         archiveState.query = event.target.value.trim();
@@ -1039,7 +1020,7 @@ function bindInteractions() {
 
     window.addEventListener('resize', () => {
         if (normalizedEpisodes.length) {
-            setChartLayout(chartMode === 'line');
+            setChartLayout();
             chartInstance?.resize();
             const tooltip = $('#chart-tooltip');
             if (tooltip) {
@@ -1070,7 +1051,6 @@ async function loadData() {
         renderYearlyStats();
         populateYearFilter();
         renderArchive();
-        updateModeControls();
         renderChart();
     } catch (error) {
         console.error('Error loading Nadgryzieni data:', error);

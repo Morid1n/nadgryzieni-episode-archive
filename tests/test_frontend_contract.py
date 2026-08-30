@@ -190,5 +190,24 @@ class FrontendUpcomingContractTests(unittest.TestCase):
         self.assertIn("bar.title = `${year}: ${count} odcinków`;", self.script)
 
 
+class FrontendLineOnlyChartContractTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.html = (REPO_DIR / "index.html").read_text(encoding="utf-8")
+        cls.script = (REPO_DIR / "script.js").read_text(encoding="utf-8")
+        cls.style = (REPO_DIR / "style.css").read_text(encoding="utf-8")
+
+    def test_timeline_exposes_only_the_line_chart_without_mode_switching(self):
+        self.assertNotIn('data-chart-mode=', self.html)
+        self.assertNotIn('Punkty', self.html)
+        self.assertNotIn('chartMode', self.script)
+        self.assertNotIn('updateModeControls(', self.script)
+        self.assertNotIn("type: 'scatter'", self.script)
+        self.assertNotIn('.chart-controls', self.style)
+        self.assertNotIn('.chart-mode-buttons', self.style)
+        self.assertNotIn('.mode-button', self.style)
+        self.assertIn("type: 'line'", self.script)
+
+
 if __name__ == "__main__":
     unittest.main()
