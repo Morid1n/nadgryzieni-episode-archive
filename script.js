@@ -1,11 +1,11 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 143;
+const DATA_VERSION = 144;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 const YEARLY_STATS_START = 2021;
-const CHART_EPISODE_SPACING = 22.5;
+const CHART_EPISODE_SPACING = 15;
 
 let chartInstance = null;
 let chartData = null;

@@ -208,6 +208,12 @@ class FrontendLineOnlyChartContractTests(unittest.TestCase):
         self.assertNotIn('.mode-button', self.style)
         self.assertIn("type: 'line'", self.script)
 
+    def test_line_chart_uses_pre_expansion_fifteen_pixel_chronological_spacing(self):
+        self.assertIn("const CHART_EPISODE_SPACING = 15;", self.script)
+        self.assertNotIn("const CHART_EPISODE_SPACING = 22.5;", self.script)
+        self.assertIn("normalizedEpisodes.length * CHART_EPISODE_SPACING", self.script)
+        self.assertEqual(578 * 15, 8670)
+
 
 class FrontendTooltipPointerCoordinateTests(unittest.TestCase):
     @classmethod
