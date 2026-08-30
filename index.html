@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=138">
+    <link rel="stylesheet" href="style.css?v=139">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -191,6 +191,7 @@
                     <div class="chart-scroll" id="chart-scroll">
                         <div class="chart-wrapper" id="chart-wrapper">
                             <canvas id="episode-chart" aria-label="Wykres długości odcinków Nadgryzieni" role="img"></canvas>
+                            <div class="chart-tooltip" id="chart-tooltip" role="tooltip" hidden></div>
                         </div>
                     </div>
                     <p class="chart-hint" id="chart-hint" aria-live="polite">Najedź na punkt, aby zobaczyć szczegóły odcinka.</p>
@@ -361,6 +362,6 @@
             </div>
         </footer>
     </div>
-    <script src="script.js?v=138"></script>
+    <script src="script.js?v=139"></script>
 </body>
 </html>

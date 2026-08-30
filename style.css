@@ -1048,6 +1048,43 @@ html[data-theme="dark"] .theme-icon::after {
     height: 100%;
 }
 
+.chart-tooltip {
+    position: absolute;
+    z-index: 3;
+    max-width: min(320px, calc(100vw - 24px));
+    padding: 12px 14px;
+    border: 1px solid var(--chart-line);
+    border-radius: 10px;
+    background: var(--chart-tooltip-bg);
+    box-shadow: var(--shadow-sm);
+    color: var(--chart-tooltip-text);
+    font-family: var(--font-body);
+    font-size: 0.74rem;
+    line-height: 1.4;
+    pointer-events: none;
+}
+
+.chart-tooltip-heading,
+.chart-tooltip-title,
+.chart-tooltip-details {
+    display: block;
+}
+
+.chart-tooltip-heading {
+    font-weight: 800;
+}
+
+.chart-tooltip-title {
+    margin-top: 3px;
+}
+
+.chart-tooltip-details {
+    margin-top: 8px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+}
+
 .chart-hint {
     margin: 15px 0 0;
     color: var(--muted);

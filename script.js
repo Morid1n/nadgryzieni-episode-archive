@@ -1,7 +1,7 @@
 // ===== Nadgryzieni / archive experience =====
 // The data file remains the source of truth; presentation is layered on top.
 
-const DATA_VERSION = 138;
+const DATA_VERSION = 139;
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)';
 const PAGE_SIZE = 12;
 const YEARLY_STATS_START = 2021;
@@ -670,6 +670,73 @@ function setChartLayout(isLineMode) {
     chartWrapper.style.width = `${Math.max(scrollContainer.clientWidth, minimumWidth)}px`;
 }
 
+function hideChartTooltip() {
+    const tooltip = $('#chart-tooltip');
+    if (tooltip) {
+        tooltip.hidden = true;
+        tooltip.replaceChildren();
+    }
+}
+
+function positionChartTooltip(chart) {
+    const tooltip = $('#chart-tooltip');
+    const scrollContainer = $('#chart-scroll');
+    const chartWrapper = $('#chart-wrapper');
+    const chartTooltip = chart?.tooltip;
+    if (!tooltip || !scrollContainer || !chartWrapper || !chartTooltip || chartTooltip.opacity === 0) {
+        hideChartTooltip();
+        return;
+    }
+
+    const canvasRect = chart.canvas.getBoundingClientRect();
+    const wrapperRect = chartWrapper.getBoundingClientRect();
+    const scrollRect = scrollContainer.getBoundingClientRect();
+    const pointX = canvasRect.left + chartTooltip.caretX;
+    const pointY = canvasRect.top + chartTooltip.caretY;
+    const edgePadding = 8;
+    const horizontalGap = 12;
+    const tooltipWidth = tooltip.offsetWidth;
+    const tooltipHeight = tooltip.offsetHeight;
+    const minimumLeft = scrollRect.left + edgePadding;
+    const maximumLeft = Math.max(minimumLeft, scrollRect.right - tooltipWidth - edgePadding);
+    const left = Math.min(maximumLeft, Math.max(minimumLeft, pointX - tooltipWidth / 2));
+    const above = pointY - tooltipHeight - horizontalGap;
+    const below = pointY + horizontalGap;
+    const top = above >= scrollRect.top + edgePadding
+        ? above
+        : below + tooltipHeight <= scrollRect.bottom - edgePadding
+            ? below
+            : Math.max(scrollRect.top + edgePadding, Math.min(above, scrollRect.bottom - tooltipHeight - edgePadding));
+
+    tooltip.style.left = `${left - wrapperRect.left}px`;
+    tooltip.style.top = `${top - wrapperRect.top}px`;
+}
+
+function renderExternalTooltip({ chart, tooltip }) {
+    const tooltipElement = $('#chart-tooltip');
+    const raw = tooltip.dataPoints?.[0]?.raw;
+    if (!tooltipElement || tooltip.opacity === 0 || !raw) {
+        hideChartTooltip();
+        return;
+    }
+
+    const title = document.createElement('strong');
+    title.className = 'chart-tooltip-heading';
+    title.textContent = `Odcinek: ${raw.episodeId}`;
+    const episodeTitle = document.createElement('span');
+    episodeTitle.className = 'chart-tooltip-title';
+    episodeTitle.textContent = raw.title;
+    const details = document.createElement('span');
+    details.className = 'chart-tooltip-details';
+    const date = formatDate(raw.date);
+    details.textContent = date === '—'
+        ? `Czas: ${minutesToTime(raw.y)}`
+        : `Czas: ${minutesToTime(raw.y)} · Data: ${date}`;
+    tooltipElement.replaceChildren(title, episodeTitle, details);
+    tooltipElement.hidden = false;
+    positionChartTooltip(chart);
+}
+
 function episodeTickLabel(value) {
     const plotIndex = Math.round(Number(value));
     return normalizedEpisodes[plotIndex]?.episodeId || '';
@@ -696,6 +763,7 @@ function renderChart() {
     }
     const isLineMode = chartMode === 'line';
     const colors = chartTokens();
+    hideChartTooltip();
     setChartLayout(isLineMode);
     chartInstance?.destroy();
 
@@ -731,6 +799,9 @@ function renderChart() {
             plugins: {
                 legend: { display: false },
                 tooltip: {
+                    enabled: false,
+                    position: 'nearest',
+                    external: renderExternalTooltip,
                     backgroundColor: colors.tooltipBackground,
                     titleColor: colors.tooltipText,
                     bodyColor: colors.tooltipText,
@@ -921,10 +992,19 @@ function bindInteractions() {
         renderArchive();
     });
 
+    $('#chart-scroll')?.addEventListener('scroll', () => {
+        if (chartInstance?.tooltip?.opacity) {
+            positionChartTooltip(chartInstance);
+        }
+    });
+
     window.addEventListener('resize', () => {
         if (normalizedEpisodes.length) {
             setChartLayout(chartMode === 'line');
             chartInstance?.resize();
+            if (chartInstance?.tooltip?.opacity) {
+                positionChartTooltip(chartInstance);
+            }
         }
     });
 }
