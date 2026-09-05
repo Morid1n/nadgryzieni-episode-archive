@@ -905,8 +905,18 @@ class PipelineHardeningTests(unittest.TestCase):
         episode_ids = {str(row.get("episode")) for row in data["episodes"]}
         self.assertEqual(len(data["episodes"]), 580)
         self.assertTrue({"604", "604.5"}.issubset(episode_ids))
-        self.assertEqual(upcoming["event"]["video_id"], "KBbg4XWl13E")
-        self.assertEqual(upcoming["event"]["scheduled_start_utc"], "2026-09-05T07:00:00Z")
+        self.assertEqual(
+            [event["video_id"] for event in upcoming["events"]],
+            ["BOjDA-SWz1o", "aMhP8OXc1oU", "TJYoiwAnX6I"],
+        )
+        self.assertEqual(
+            [event["scheduled_start_utc"] for event in upcoming["events"]],
+            [
+                "2026-09-09T18:30:00Z",
+                "2026-09-10T15:00:00Z",
+                "2026-09-11T07:00:00Z",
+            ],
+        )
         episode_72 = next(row for row in data["episodes"] if str(row["episode"]) == "72")
         self.assertIn('Steve "Woz" Wozniak', episode_72["hosts"])
 
