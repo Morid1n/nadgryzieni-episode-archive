@@ -1,11 +1,25 @@
 {
-  "schema_version": 1,
-  "updated_at_utc": "2026-09-05T16:16:15Z",
-  "source_url": "https://www.youtube.com/@imagazinepl/live",
-  "event": {
-    "video_id": "BOjDA-SWz1o",
-    "title": "605: iPhone 18 Pro i iPhone Ultra – nasze pierwsze wrażenia po keynote | Nadgryzieni",
-    "scheduled_start_utc": "2026-09-09T18:30:00Z",
-    "url": "https://www.youtube.com/watch?v=BOjDA-SWz1o"
-  }
+  "schema_version": 2,
+  "updated_at_utc": "2026-09-05T16:30:30Z",
+  "source_url": "https://www.youtube.com/@imagazinepl/streams",
+  "events": [
+    {
+      "video_id": "BOjDA-SWz1o",
+      "title": "605: iPhone 18 Pro i iPhone Ultra – nasze pierwsze wrażenia po keynote | Nadgryzieni",
+      "scheduled_start_utc": "2026-09-09T18:30:00Z",
+      "url": "https://www.youtube.com/watch?v=BOjDA-SWz1o"
+    },
+    {
+      "video_id": "aMhP8OXc1oU",
+      "title": "606: Dominika Łada – pierwsze wrażenia na żywo z Apple Park | Nadgryzieni",
+      "scheduled_start_utc": "2026-09-10T15:00:00Z",
+      "url": "https://www.youtube.com/watch?v=aMhP8OXc1oU"
+    },
+    {
+      "video_id": "TJYoiwAnX6I",
+      "title": "607: Rozmowy (nie tylko) o tech | Nadgryzieni",
+      "scheduled_start_utc": "2026-09-11T07:00:00Z",
+      "url": "https://www.youtube.com/watch?v=TJYoiwAnX6I"
+    }
+  ]
 }
