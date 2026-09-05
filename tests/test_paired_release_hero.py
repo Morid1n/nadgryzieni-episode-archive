@@ -122,7 +122,7 @@ console.log(JSON.stringify({{
 
     def test_current_data_renders_the_regular_and_afterparty_pair(self):
         result = self.evaluate_latest_release(self.data["episodes"])
-        self.assertEqual(result, {"paired": True, "episodeIds": ["603", "603.5"]})
+        self.assertEqual(result, {"paired": True, "episodeIds": ["604", "604.5"]})
 
     def test_current_data_contains_the_regular_and_afterparty_pair(self):
         latest_two = self.data["episodes"][-2:]
