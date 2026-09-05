@@ -130,28 +130,22 @@ class FrontendUpcomingContractTests(unittest.TestCase):
         cls.script = (REPO_DIR / "script.js").read_text(encoding="utf-8")
         cls.style = (REPO_DIR / "style.css").read_text(encoding="utf-8")
 
-    def test_upcoming_card_has_separate_semantic_markup(self):
+    def test_upcoming_card_has_semantic_list_markup(self):
         self.assertIn('id="upcoming-event"', self.html)
         self.assertIn('id="upcoming-event-title"', self.html)
-        self.assertIn('id="upcoming-event-time"', self.html)
-        self.assertIn('id="upcoming-event-link"', self.html)
+        self.assertIn('id="upcoming-event-list"', self.html)
+        self.assertIn('aria-label="Nadchodzące transmisje na żywo"', self.html)
         self.assertIn('hidden', self.html)
 
     def test_runtime_loads_and_validates_upcoming_artifact(self):
         self.assertIn("function renderUpcomingEvent(payload)", self.script)
+        self.assertIn("payload?.events", self.script)
+        self.assertIn("upcoming-event-item", self.script)
         self.assertIn("upcoming.json?v=", self.script)
         self.assertIn("Europe/Warsaw", self.script)
         self.assertIn("upcomingEvent.hidden = true", self.script)
-        self.assertIn("upcomingEventLink.textContent", self.script)
-        self.assertIn("url.origin !== 'https://www.youtube.com'", self.script)
-        self.assertIn("typeof event.url !== 'string'", self.script)
-        self.assertIn("event.url.trim() !== event.url", self.script)
-        self.assertIn("/[?#]$/.test(event.url)", self.script)
         self.assertIn("/^https:\\/\\/www\\.youtube\\.com\\/watch\\?v=([A-Za-z0-9_-]{6,20})$/", self.script)
-        self.assertIn("url.username || url.password", self.script)
-        self.assertIn("url.port", self.script)
-        self.assertIn("queryEntries.length !== 1", self.script)
-        self.assertIn("url.hash", self.script)
+        self.assertIn("scheduledStart > new Date()", self.script)
 
     def test_upcoming_card_has_responsive_styles(self):
         self.assertIn(".upcoming-event", self.style)

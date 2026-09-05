@@ -2057,15 +2057,36 @@ html[data-theme="dark"] .theme-icon::after {
 
 .upcoming-event-card {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 28px;
-    align-items: end;
-    padding: clamp(24px, 4vw, 40px);
-    border: 1px solid var(--border-strong);
+    gap: 22px;
+    padding: clamp(22px, 4vw, 38px);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     background: var(--surface);
     box-shadow: var(--shadow-sm);
 }
+
+.upcoming-event-list {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.upcoming-event-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.upcoming-event-item h3,
+.upcoming-event-item time { margin: 0; }
+.upcoming-event-item h3 { color: var(--ink); font-size: 1rem; }
+.upcoming-event-item time { color: var(--muted-strong); font-family: var(--font-mono); font-size: .78rem; }
+
 
 .upcoming-event-copy {
     min-width: 0;

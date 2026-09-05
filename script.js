@@ -63,61 +63,30 @@ function formatDate(date) {
 
 function renderUpcomingEvent(payload) {
     const upcomingEvent = $('#upcoming-event');
-    const upcomingEventTitle = $('#upcoming-event-title');
-    const upcomingEventTime = $('#upcoming-event-time');
-    const upcomingEventLink = $('#upcoming-event-link');
-    if (!upcomingEvent || !upcomingEventTitle || !upcomingEventTime || !upcomingEventLink) {
-        return;
-    }
-
+    const upcomingEventList = $('#upcoming-event-list');
+    if (!upcomingEvent || !upcomingEventList) return;
     upcomingEvent.hidden = true;
-    const event = payload?.event;
-    if (!event || typeof event !== 'object') {
-        return;
+    upcomingEventList.replaceChildren();
+    const rawEvents = Array.isArray(payload?.events) ? payload.events : (payload?.event ? [payload.event] : []);
+    const formatter = new Intl.DateTimeFormat('pl-PL', { dateStyle: 'full', timeStyle: 'short', timeZone: 'Europe/Warsaw' });
+    const events = rawEvents.map((event) => {
+        const title = typeof event?.title === 'string' ? event.title.trim() : '';
+        const videoId = typeof event?.video_id === 'string' ? event.video_id.trim() : '';
+        const scheduledStart = typeof event?.scheduled_start_utc === 'string' ? new Date(event.scheduled_start_utc) : new Date('invalid');
+        const url = typeof event?.url === 'string' ? event.url : '';
+        const match = url.match(/^https:\/\/www\.youtube\.com\/watch\?v=([A-Za-z0-9_-]{6,20})$/);
+        return title && /^[A-Za-z0-9_-]{6,20}$/.test(videoId) && !Number.isNaN(scheduledStart.getTime())
+            && scheduledStart > new Date() && match?.[1] === videoId ? { title, videoId, scheduledStart, url } : null;
+    }).filter(Boolean).sort((a, b) => a.scheduledStart - b.scheduledStart);
+    for (const event of events) {
+        const item = document.createElement('li');
+        item.className = 'upcoming-event-item';
+        const title = document.createElement('h3'); title.textContent = event.title;
+        const time = document.createElement('time'); time.dateTime = event.scheduledStart.toISOString(); time.textContent = formatter.format(event.scheduledStart);
+        const link = document.createElement('a'); link.className = 'upcoming-event-link'; link.href = event.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = 'Otwórz stream ↗';
+        item.append(title, time, link); upcomingEventList.append(item);
     }
-    const title = typeof event.title === 'string' ? event.title.trim() : '';
-    const videoId = typeof event.video_id === 'string' ? event.video_id.trim() : '';
-    const scheduledStart = typeof event.scheduled_start_utc === 'string'
-        ? new Date(event.scheduled_start_utc)
-        : new Date('invalid');
-    if (!title || !/^[A-Za-z0-9_-]{6,20}$/.test(videoId) || Number.isNaN(scheduledStart.getTime()) || scheduledStart <= new Date()) {
-        return;
-    }
-
-    if (typeof event.url !== 'string' || event.url.trim() !== event.url || /[?#]$/.test(event.url)) {
-        return;
-    }
-    const canonicalUrlMatch = event.url.match(/^https:\/\/www\.youtube\.com\/watch\?v=([A-Za-z0-9_-]{6,20})$/);
-    if (!canonicalUrlMatch || canonicalUrlMatch[1] !== videoId) {
-        return;
-    }
-
-    let url;
-    try {
-        url = new URL(event.url);
-    } catch (_error) {
-        return;
-    }
-    const queryEntries = [...url.searchParams.entries()];
-    if (url.protocol !== 'https:' || url.origin !== 'https://www.youtube.com'
-        || url.hostname !== 'www.youtube.com' || url.username || url.password
-        || (url.port && url.port !== '443') || url.pathname !== '/watch'
-        || url.hash || queryEntries.length !== 1 || queryEntries[0][0] !== 'v'
-        || queryEntries[0][1] !== videoId) {
-        return;
-    }
-
-    const upcomingDateFormatter = new Intl.DateTimeFormat('pl-PL', {
-        dateStyle: 'full',
-        timeStyle: 'short',
-        timeZone: 'Europe/Warsaw',
-    });
-    upcomingEventTitle.textContent = title;
-    upcomingEventTime.textContent = upcomingDateFormatter.format(scheduledStart);
-    upcomingEventTime.setAttribute('datetime', event.scheduled_start_utc);
-    upcomingEventLink.href = url.toString();
-    upcomingEventLink.textContent = 'Otwórz stream ↗';
-    upcomingEvent.hidden = false;
+    upcomingEvent.hidden = events.length === 0;
 }
 
 async function loadUpcomingEvent() {

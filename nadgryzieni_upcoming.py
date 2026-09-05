@@ -42,6 +42,7 @@ STATE_DIR = Path(os.environ.get(
 STATE_PATH = STATE_DIR / "nadgryzieni-upcoming-state.json"
 ARTIFACT_PATH = REPO_DIR / "upcoming.json"
 YOUTUBE_LIVE_URL = "https://www.youtube.com/@imagazinepl/live"
+YOUTUBE_STREAMS_URL = "https://www.youtube.com/@imagazinepl/streams"
 YOUTUBE_CHANNEL_ID = "UCVB4SaFwzxe4gGxsSaotmrw"
 MAX_RESPONSE_BYTES = 4 * 1024 * 1024
 YTDLP_TIMEOUT_SECONDS = 90
@@ -49,7 +50,7 @@ PROBE_HOUR_UTC = 4
 PROBE_MINUTE_UTC = 30
 PROBE_WINDOW_MINUTES = 5
 STATE_SCHEMA_VERSION = 1
-ARTIFACT_SCHEMA_VERSION = 1
+ARTIFACT_SCHEMA_VERSION = 2
 MIN_UNIX_TIMESTAMP = 946684800  # 2000-01-01 UTC
 MAX_UNIX_TIMESTAMP = 4102444800  # 2100-01-01 UTC
 
@@ -339,37 +340,44 @@ def discover_ytdlp_streams(
                     break
         if executable is None:
             raise RuntimeError("yt-dlp fallback executable is unavailable")
-        try:
-            completed = subprocess.run(
-                [
-                    executable,
-                    "--ignore-no-formats",
-                    "--flat-playlist",
-                    "--dump-single-json",
-                    "--skip-download",
-                    "--no-warnings",
-                    YOUTUBE_LIVE_URL,
-                ],
-                check=False,
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-                timeout=YTDLP_TIMEOUT_SECONDS,
-            )
-        except subprocess.TimeoutExpired as exc:
-            raise RuntimeError("yt-dlp fallback timed out") from exc
-        except OSError as exc:
-            raise RuntimeError("yt-dlp fallback failed") from exc
-        if completed.returncode != 0:
-            raise RuntimeError("yt-dlp fallback returned a nonzero status")
-        output = completed.stdout or ""
-        if len(output.encode("utf-8", errors="replace")) > MAX_RESPONSE_BYTES:
-            raise RuntimeError("yt-dlp fallback response exceeded the size limit")
-        try:
-            payload = json.loads(output)
-        except (TypeError, ValueError) as exc:
-            raise RuntimeError("yt-dlp fallback returned invalid JSON") from exc
+        def run_json(url: str, *, flat: bool) -> object:
+            command = [executable, "--ignore-no-formats", "--dump-single-json", "--skip-download", "--no-warnings"]
+            if flat:
+                command.append("--flat-playlist")
+            command.append(url)
+            try:
+                completed = subprocess.run(
+                    command,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=YTDLP_TIMEOUT_SECONDS,
+                )
+            except subprocess.TimeoutExpired as exc:
+                raise RuntimeError("yt-dlp fallback timed out") from exc
+            except OSError as exc:
+                raise RuntimeError("yt-dlp fallback failed") from exc
+            output = completed.stdout or ""
+            if completed.returncode != 0 or len(output.encode("utf-8", errors="replace")) > MAX_RESPONSE_BYTES:
+                raise RuntimeError("yt-dlp fallback returned an invalid response")
+            try:
+                return json.loads(output)
+            except (TypeError, ValueError) as exc:
+                raise RuntimeError("yt-dlp fallback returned invalid JSON") from exc
+
+        index = run_json(YOUTUBE_STREAMS_URL, flat=True)
+        entries = index.get("entries") if isinstance(index, dict) else None
+        if not isinstance(entries, list):
+            payload = index
+        else:
+            upcoming_ids = [
+                entry.get("id") for entry in entries
+                if isinstance(entry, dict) and entry.get("live_status") == "is_upcoming"
+                and isinstance(entry.get("id"), str)
+            ]
+            payload = [run_json(f"https://www.youtube.com/watch?v={video_id}", flat=False) for video_id in upcoming_ids[:12]]
     else:
         payload = runner()
 
@@ -383,25 +391,20 @@ def discover_stream(
     now: datetime | None = None,
     fetcher: Callable[[str], str] | None = None,
     fallback_fetcher: Callable[[datetime], list[Stream]] | None = None,
-) -> Stream:
+) -> list[Stream]:
     current = as_utc(now or datetime.now(timezone.utc))
     primary_fetcher = fetch_text if fetcher is None else fetcher
     try:
-        page = primary_fetcher(YOUTUBE_LIVE_URL)
+        primary_candidates = parse_scheduled_streams(primary_fetcher(YOUTUBE_LIVE_URL), now=current)
     except RuntimeError:
-        if fetcher is not None and fallback_fetcher is None:
-            raise
-        fallback = discover_ytdlp_streams if fallback_fetcher is None else fallback_fetcher
-        candidates = fallback(current)
-    else:
-        candidates = parse_scheduled_streams(page, now=current)
+        primary_candidates = []
+    fallback = discover_ytdlp_streams if fallback_fetcher is None else fallback_fetcher
+    candidates = fallback(current) or primary_candidates
     if not candidates:
         raise SkipRun("YouTube has no upcoming scheduled live stream")
-    stream = candidates[0]
-    _validated_stream_fields(stream)
-    if not stream.title:
-        raise SkipRun(f"YouTube stream {stream.video_id} has no readable title")
-    return stream
+    for stream in candidates:
+        _validated_stream_fields(stream)
+    return candidates
 
 
 def next_saturday_probe(now: datetime) -> datetime:
@@ -608,21 +611,27 @@ def _write_json_atomic(path: Path, payload: dict, *, root: Path | None = None, m
         os.close(parent_fd)
 
 
-def artifact_for(stream: Stream | None, now: datetime) -> dict:
-    event = None
-    if stream is not None:
+def artifact_for(streams: Stream | list[Stream] | None, now: datetime) -> dict:
+    """Build a strictly validated chronological list for the public site."""
+    candidates = [] if streams is None else ([streams] if isinstance(streams, Stream) else streams)
+    events = []
+    seen: set[str] = set()
+    for stream in sorted(candidates, key=lambda value: as_utc(value.start_utc) if isinstance(value, Stream) else datetime.max.replace(tzinfo=timezone.utc)):
         video_id, title, start_utc = _validated_stream_fields(stream)
-        event = {
+        if video_id in seen:
+            continue
+        seen.add(video_id)
+        events.append({
             "video_id": video_id,
             "title": title,
             "scheduled_start_utc": iso_utc(start_utc),
             "url": f"https://www.youtube.com/watch?v={video_id}",
-        }
+        })
     return {
         "schema_version": ARTIFACT_SCHEMA_VERSION,
         "updated_at_utc": iso_utc(now),
-        "source_url": YOUTUBE_LIVE_URL,
-        "event": event,
+        "source_url": YOUTUBE_STREAMS_URL,
+        "events": events,
     }
 
 
@@ -677,7 +686,7 @@ def run_cycle(
     now: datetime,
     state_path: Path = STATE_PATH,
     artifact_path: Path = ARTIFACT_PATH,
-    discover: Callable[[datetime], Stream | None] = discover_stream,
+    discover: Callable[[datetime], list[Stream] | None] = discover_stream,
     publish: Callable[[], object] | None = None,
     force: bool = False,
 ) -> dict:
@@ -811,7 +820,7 @@ def _run_cycle_locked(
     now: datetime,
     state_path: Path = STATE_PATH,
     artifact_path: Path = ARTIFACT_PATH,
-    discover: Callable[[datetime], Stream | None] = discover_stream,
+    discover: Callable[[datetime], list[Stream] | None] = discover_stream,
     publish: Callable[[], object] | None = None,
     force: bool = False,
 ) -> dict:
@@ -844,11 +853,13 @@ def _run_cycle_locked(
     if publication_retried:
         return {"status": "publication_retried", "publication_retried": True}
     try:
-        stream = discover(current)
+        streams = discover(current)
     except SkipRun:
-        stream = None
+        streams = None
 
-    if stream is None:
+    if isinstance(streams, Stream):
+        streams = [streams]
+    if not streams:
         artifact_payload = artifact_for(None, current)
         artifact_digest = _payload_digest(artifact_payload)
         if publish:
@@ -877,7 +888,8 @@ def _run_cycle_locked(
             _publish_and_persist_state(publish, new_state, state_path, artifact_digest)
         return {"status": "not_found", "artifact_changed": artifact_changed}
 
-    artifact_payload = artifact_for(stream, current)
+    lead_stream = streams[0]
+    artifact_payload = artifact_for(streams, current)
     artifact_digest = _payload_digest(artifact_payload)
     if publish:
         provisional_state = dict(state)
@@ -894,8 +906,8 @@ def _run_cycle_locked(
         "schema_version": STATE_SCHEMA_VERSION,
         "last_probe_date_utc": probe_date,
         "hold_until_utc": None,
-        "video_id": stream.video_id,
-        "scheduled_start_utc": iso_utc(stream.start_utc),
+        "video_id": lead_stream.video_id,
+        "scheduled_start_utc": iso_utc(lead_stream.start_utc),
         "publish_pending": pending_before_probe or bool(artifact_changed and publish),
     }
     if artifact_changed and publish:
@@ -907,9 +919,9 @@ def _run_cycle_locked(
         _publish_and_persist_state(publish, new_state, state_path, artifact_digest)
     return {
         "status": "found",
-        "video_id": stream.video_id,
-        "title": stream.title,
-        "scheduled_start_utc": iso_utc(stream.start_utc),
+        "video_id": lead_stream.video_id,
+        "events": len(streams),
+        "scheduled_start_utc": iso_utc(lead_stream.start_utc),
         "hold_until_utc": None,
         "artifact_changed": artifact_changed,
     }

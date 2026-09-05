@@ -117,6 +117,21 @@ class UpcomingDiscoveryTests(unittest.TestCase):
                 )
             self.assertEqual(outside.read_text(encoding="utf-8"), "untouched")
 
+    def test_artifact_for_serializes_all_future_streams_in_chronological_order(self):
+        now = datetime(2026, 9, 5, 16, 20, tzinfo=timezone.utc)
+        streams = [
+            upcoming.Stream("TJYoiwAnX6I", "607: Rozmowy", datetime(2026, 9, 11, 7, 0, tzinfo=timezone.utc)),
+            upcoming.Stream("BOjDA-SWz1o", "605: Keynote", datetime(2026, 9, 9, 18, 30, tzinfo=timezone.utc)),
+            upcoming.Stream("aMhP8OXc1oU", "606: Apple Park", datetime(2026, 9, 10, 15, 0, tzinfo=timezone.utc)),
+        ]
+
+        artifact = upcoming.artifact_for(streams, now)
+
+        self.assertEqual([event["video_id"] for event in artifact["events"]], [
+            "BOjDA-SWz1o", "aMhP8OXc1oU", "TJYoiwAnX6I",
+        ])
+        self.assertNotIn("event", artifact)
+
     def test_ytdlp_payload_produces_verified_upcoming_stream(self):
         now = datetime(2026, 8, 29, 8, 50, tzinfo=timezone.utc)
         start = int(datetime(2026, 9, 5, 7, 0, tzinfo=timezone.utc).timestamp())
@@ -185,7 +200,7 @@ class UpcomingDiscoveryTests(unittest.TestCase):
             fallback_fetcher=fallback_fetcher,
         )
 
-        self.assertEqual(result, expected)
+        self.assertEqual(result, [expected])
         self.assertEqual(calls, [now])
 
     def test_parse_scheduled_streams_extracts_title_and_future_event(self):
@@ -292,7 +307,7 @@ class UpcomingDiscoveryTests(unittest.TestCase):
             self.assertEqual(replacement["status"], "found")
             self.assertEqual(publish_calls, ["first", "replacement"])
             payload = json.loads(artifact_path.read_text(encoding="utf-8"))
-            self.assertEqual(payload["event"]["video_id"], "BOjDA-SWz1o")
+            self.assertEqual(payload["events"][0]["video_id"], "BOjDA-SWz1o")
             state = json.loads(state_path.read_text(encoding="utf-8"))
             self.assertIsNone(state["hold_until_utc"])
 
