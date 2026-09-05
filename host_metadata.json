@@ -6746,6 +6746,23 @@
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
       }
     },
+    "rk_9c0dc25eaf17615c7d7269c9": {
+      "record_key": "rk_9c0dc25eaf17615c7d7269c9",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/604-co-apple-pokaze-9-wrzesnia-i-profil-johna-ternusa",
+      "provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_fcf0b4bfb5a4450d35c16bfc",
+        "paired_episode": "604"
+      }
+    },
     "rk_9c2654e1ba8b14adfc0cd1fd": {
       "record_key": "rk_9c2654e1ba8b14adfc0cd1fd",
       "hosts": [
@@ -10743,6 +10760,21 @@
       "audit": {
         "parser_version": "nadgryzieni-hosts/2.2",
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
+      }
+    },
+    "rk_fcf0b4bfb5a4450d35c16bfc": {
+      "record_key": "rk_fcf0b4bfb5a4450d35c16bfc",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/604-co-apple-pokaze-9-wrzesnia-i-profil-johna-ternusa",
+      "provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/604-co-apple-pokaze-9-wrzesnia-i-profil-johna-ternusa"
       }
     },
     "rk_fde117a0e1ed46d8375e3212": {

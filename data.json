@@ -12603,12 +12603,60 @@
         "paired_record_key": "rk_37b9bccf9a67188e0dba6324",
         "paired_episode": "603"
       }
+    },
+    {
+      "record_key": "rk_fcf0b4bfb5a4450d35c16bfc",
+      "episode": "604",
+      "title": "604: Co Apple pokaże 9 września i profil Johna Ternusa",
+      "date": "2026-09-05",
+      "duration": "3:36:47",
+      "minutes": 216.78,
+      "category": "main",
+      "year": 2026,
+      "url": "https://retrorocketnetwork.pl/604-co-apple-pokaze-9-wrzesnia-i-profil-johna-ternusa",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/604-co-apple-pokaze-9-wrzesnia-i-profil-johna-ternusa",
+      "hosts_provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/604-co-apple-pokaze-9-wrzesnia-i-profil-johna-ternusa"
+      }
+    },
+    {
+      "record_key": "rk_9c0dc25eaf17615c7d7269c9",
+      "episode": "604.5",
+      "title": "604: (Afterparty) Tak się nie mówi ani w Polsce, ani w Anglii, ani w Stanach",
+      "date": "2026-09-05",
+      "duration": "1:06:54",
+      "minutes": 66.9,
+      "category": "afterparty",
+      "year": 2026,
+      "url": "https://www.patreon.com/iMagazinePL/posts/604-afterparty-w-168691580",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/604-co-apple-pokaze-9-wrzesnia-i-profil-johna-ternusa",
+      "hosts_provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_fcf0b4bfb5a4450d35c16bfc",
+        "paired_episode": "604"
+      }
     }
   ],
   "stats": {
-    "total_episodes": 578,
-    "total_listening_hours": 991.3,
-    "average_duration": 102.9,
+    "total_episodes": 580,
+    "total_listening_hours": 996.0,
+    "average_duration": 103.0,
     "min_duration": 0.18,
     "max_duration": 288.65
   },
@@ -12662,5 +12710,5 @@
       "color": "#7bdcb5"
     }
   },
-  "average_duration": 102.9
+  "average_duration": 103.0
 }

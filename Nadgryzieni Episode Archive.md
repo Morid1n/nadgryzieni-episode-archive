@@ -578,3 +578,5 @@
 | 576 | 602.5 | 602: (Afterparty) Jedni będą walczyć o przetrwanie, inni będą robić filmy                                    | 2026-08-21   | 1:28:50  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 577 | 603   | 603: Steve Jobs i NeXT, nowy trailer GTA 6 oraz nowe Mac mini i Studio z M6 i M5 Ultra                       | 2026-08-28   | 2:44:21  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 578 | 603.5 | 603: (Afterparty) Poradnik początkującego gracza                                                             | 2026-08-29   | 0:59:05  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 579 | 604   | 604: Co Apple pokaże 9 września i profil Johna Ternusa                                                       | 2026-09-05   | 3:36:47  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 580 | 604.5 | 604: (Afterparty) Tak się nie mówi ani w Polsce, ani w Anglii, ani w Stanach                                 | 2026-09-05   | 1:06:54  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
