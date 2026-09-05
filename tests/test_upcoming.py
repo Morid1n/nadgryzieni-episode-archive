@@ -255,48 +255,46 @@ class UpcomingDiscoveryTests(unittest.TestCase):
             datetime(2026, 9, 5, 4, 30, tzinfo=timezone.utc),
         )
 
-    def test_cycle_holds_after_found_until_next_saturday(self):
-        monday_probe = datetime(2026, 8, 24, 4, 30, tzinfo=timezone.utc)
-        stream = upcoming.Stream(
+    def test_cycle_replaces_a_found_stream_at_the_next_daily_probe(self):
+        first_probe = datetime(2026, 8, 24, 4, 30, tzinfo=timezone.utc)
+        first_stream = upcoming.Stream(
             video_id="fRAaGylDNM8",
             title="603: Steve Jobs i NeXT",
             start_utc=datetime(2026, 8, 28, 7, 0, tzinfo=timezone.utc),
+        )
+        replacement_stream = upcoming.Stream(
+            video_id="BOjDA-SWz1o",
+            title="604: Replacement event",
+            start_utc=datetime(2026, 8, 29, 18, 30, tzinfo=timezone.utc),
         )
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             state_path = root / "state.json"
             artifact_path = root / "upcoming.json"
             publish_calls = []
-            result = upcoming.run_cycle(
-                monday_probe,
+            first = upcoming.run_cycle(
+                first_probe,
                 state_path=state_path,
                 artifact_path=artifact_path,
-                discover=lambda now: stream,
-                publish=lambda: (publish_calls.append(True) or True),
+                discover=lambda _now: first_stream,
+                publish=lambda: (publish_calls.append("first") or True),
             )
-            self.assertEqual(result["status"], "found")
-            self.assertEqual(result["hold_until_utc"], "2026-08-29T04:30:00Z")
-            self.assertEqual(publish_calls, [True])
+            self.assertEqual(first["status"], "found")
+            self.assertIsNone(first["hold_until_utc"])
 
-            def unexpected_discovery(_now):
-                raise AssertionError("discovery must be paused before Saturday")
-
-            paused = upcoming.run_cycle(
-                datetime(2026, 8, 25, 4, 30, tzinfo=timezone.utc),
+            replacement = upcoming.run_cycle(
+                first_probe + timedelta(days=1),
                 state_path=state_path,
                 artifact_path=artifact_path,
-                discover=unexpected_discovery,
+                discover=lambda _now: replacement_stream,
+                publish=lambda: (publish_calls.append("replacement") or True),
             )
-            self.assertEqual(paused["status"], "paused")
-
-            resumed = upcoming.run_cycle(
-                datetime(2026, 8, 29, 4, 30, tzinfo=timezone.utc),
-                state_path=state_path,
-                artifact_path=artifact_path,
-                discover=lambda now: None,
-            )
-            self.assertEqual(resumed["status"], "not_found")
-            self.assertIsNone(__import__("json").loads(artifact_path.read_text())["event"])
+            self.assertEqual(replacement["status"], "found")
+            self.assertEqual(publish_calls, ["first", "replacement"])
+            payload = json.loads(artifact_path.read_text(encoding="utf-8"))
+            self.assertEqual(payload["event"]["video_id"], "BOjDA-SWz1o")
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+            self.assertIsNone(state["hold_until_utc"])
 
     def test_non_probe_tick_does_not_call_discovery(self):
         calls = []
@@ -358,7 +356,7 @@ class UpcomingDiscoveryTests(unittest.TestCase):
             self.assertFalse(reconciled["publish_pending"])
             self.assertNotIn("pending_artifact_sha256", reconciled)
 
-    def test_pending_publication_retries_without_discovery_during_hold(self):
+    def test_pending_publication_retries_without_rediscovery(self):
         probe = datetime(2026, 8, 24, 4, 30, tzinfo=timezone.utc)
         stream = upcoming.Stream(
             video_id="fRAaGylDNM8",
@@ -390,14 +388,14 @@ class UpcomingDiscoveryTests(unittest.TestCase):
                 publish_calls.append("success")
                 return True
 
-            paused = upcoming.run_cycle(
+            retried = upcoming.run_cycle(
                 datetime(2026, 8, 25, 4, 30, tzinfo=timezone.utc),
                 state_path=state_path,
                 artifact_path=artifact_path,
-                discover=lambda _now: self.fail("discovery must remain paused"),
+                discover=lambda _now: self.fail("pending publication must retry without discovery"),
                 publish=successful_publish,
             )
-            self.assertEqual(paused["status"], "paused")
+            self.assertEqual(retried["status"], "publication_retried")
             self.assertEqual(publish_calls, ["failed", "success"])
             self.assertFalse(json.loads(state_path.read_text())["publish_pending"])
 
@@ -440,7 +438,7 @@ class UpcomingDiscoveryTests(unittest.TestCase):
                     discover=lambda _now: self.fail("pending publication must not rediscover"),
                     publish=upcoming.publish_git,
                 )
-            self.assertEqual(retried["status"], "paused")
+            self.assertEqual(retried["status"], "publication_retried")
             self.assertEqual(retry_calls, [pending_commit])
             final_state = json.loads(state_path.read_text(encoding="utf-8"))
             self.assertFalse(final_state["publish_pending"])
@@ -466,7 +464,7 @@ class UpcomingDiscoveryTests(unittest.TestCase):
                 discover=lambda _now: self.fail("pending publication must retry without discovery"),
                 publish=lambda: False,
             )
-            self.assertEqual(retried["status"], "paused")
+            self.assertEqual(retried["status"], "publication_pending")
             self.assertTrue(retried["publication_retried"])
             self.assertTrue(json.loads(state_path.read_text(encoding="utf-8"))["publish_pending"])
 

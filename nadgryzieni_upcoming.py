@@ -6,8 +6,8 @@ episode dataset. The scheduled job runs frequently enough to observe the
 04:30 UTC window on both sides of DST, but performs network discovery only in
 that UTC window and only once per UTC day. It reads the public channel without
 following redirects and falls back to local `yt-dlp` metadata when YouTube
-returns a consent redirect. Once an event is found, discovery is held until the
-next Saturday 04:30 UTC probe.
+returns a consent redirect. A successful discovery remains eligible for the
+next daily probe so a later replacement stream can supersede it.
 """
 
 from __future__ import annotations
@@ -828,14 +828,6 @@ def _run_cycle_locked(
     _validate_state(state)
     publication_retried = _retry_pending_publication(state, state_path, artifact_path, publish)
     pending_before_probe = bool(state.get("publish_pending"))
-    hold_until_raw = state.get("hold_until_utc")
-    if hold_until_raw:
-        hold_until = parse_iso_utc(hold_until_raw)
-        if current < hold_until:
-            result: dict[str, object] = {"status": "paused", "hold_until_utc": iso_utc(hold_until)}
-            if publication_retried:
-                result["publication_retried"] = True
-            return result
 
     probe_date = current.date().isoformat()
     if not force and state.get("last_probe_date_utc") == probe_date:
@@ -885,7 +877,6 @@ def _run_cycle_locked(
             _publish_and_persist_state(publish, new_state, state_path, artifact_digest)
         return {"status": "not_found", "artifact_changed": artifact_changed}
 
-    resume_at = next_saturday_probe(current)
     artifact_payload = artifact_for(stream, current)
     artifact_digest = _payload_digest(artifact_payload)
     if publish:
@@ -902,7 +893,7 @@ def _run_cycle_locked(
     new_state = {
         "schema_version": STATE_SCHEMA_VERSION,
         "last_probe_date_utc": probe_date,
-        "hold_until_utc": iso_utc(resume_at),
+        "hold_until_utc": None,
         "video_id": stream.video_id,
         "scheduled_start_utc": iso_utc(stream.start_utc),
         "publish_pending": pending_before_probe or bool(artifact_changed and publish),
@@ -919,7 +910,7 @@ def _run_cycle_locked(
         "video_id": stream.video_id,
         "title": stream.title,
         "scheduled_start_utc": iso_utc(stream.start_utc),
-        "hold_until_utc": iso_utc(resume_at),
+        "hold_until_utc": None,
         "artifact_changed": artifact_changed,
     }
 
