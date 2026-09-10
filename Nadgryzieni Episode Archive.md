@@ -582,3 +582,4 @@
 | 580 | 604.5 | 604: (Afterparty) Tak się nie mówi ani w Polsce, ani w Anglii, ani w Stanach                                 | 2026-09-05   | 1:06:54  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 581 | 605   | 605: iPhone 18 Pro i iPhone Duo – nasze pierwsze wrażenia po keynote                                         | 2026-09-10   | 2:23:44  | Michał Śliwiński; Wojtek Pietrusiewicz |
 | 582 | 605.5 | 605: (Afterparty) Będziemy mieli ciągle głupią Siri                                                          | 2026-09-10   | 0:50:06  | Michał Śliwiński; Wojtek Pietrusiewicz |
+| 583 | 606   | 606: Dominik Łada – pierwsze wrażenia na żywo z Apple Park                                                   | 2026-09-10   | 59:03    | Dominik Łada; Wojtek Pietrusiewicz |

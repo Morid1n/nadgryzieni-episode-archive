@@ -2253,6 +2253,20 @@
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
       }
     },
+    "rk_34a1c17bd74cc5b6492b3efb": {
+      "record_key": "rk_34a1c17bd74cc5b6492b3efb",
+      "hosts": [
+        "Dominik Łada",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/606-dominik-lada-pierwsze-wrazenia-na-zywo-z-apple-park",
+      "provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/606-dominik-lada-pierwsze-wrazenia-na-zywo-z-apple-park"
+      }
+    },
     "rk_35520941f9429e146f80e429": {
       "record_key": "rk_35520941f9429e146f80e429",
       "hosts": [
