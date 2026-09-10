@@ -580,3 +580,5 @@
 | 578 | 603.5 | 603: (Afterparty) Poradnik początkującego gracza                                                             | 2026-08-29   | 0:59:05  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 579 | 604   | 604: Co Apple pokaże 9 września i profil Johna Ternusa                                                       | 2026-09-05   | 3:36:47  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 580 | 604.5 | 604: (Afterparty) Tak się nie mówi ani w Polsce, ani w Anglii, ani w Stanach                                 | 2026-09-05   | 1:06:54  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 581 | 605   | 605: iPhone 18 Pro i iPhone Duo – nasze pierwsze wrażenia po keynote                                         | 2026-09-10   | 2:23:44  | Michał Śliwiński; Wojtek Pietrusiewicz |
+| 582 | 605.5 | 605: (Afterparty) Będziemy mieli ciągle głupią Siri                                                          | 2026-09-10   | 0:50:06  | Michał Śliwiński; Wojtek Pietrusiewicz |

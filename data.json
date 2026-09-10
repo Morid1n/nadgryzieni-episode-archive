@@ -12651,11 +12651,57 @@
         "paired_record_key": "rk_fcf0b4bfb5a4450d35c16bfc",
         "paired_episode": "604"
       }
+    },
+    {
+      "record_key": "rk_a8ceffae49a1cf1e7124a859",
+      "episode": "605",
+      "title": "605: iPhone 18 Pro i iPhone Duo – nasze pierwsze wrażenia po keynote",
+      "date": "2026-09-10",
+      "duration": "2:23:44",
+      "minutes": 143.73,
+      "category": "main",
+      "year": 2026,
+      "url": "https://retrorocketnetwork.pl/605-iphone-18-pro-i-iphone-duo-nasze-pierwsze-wrazenia-po-keynote",
+      "hosts": [
+        "Michał Śliwiński",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/605-iphone-18-pro-i-iphone-duo-nasze-pierwsze-wrazenia-po-keynote",
+      "hosts_provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/605-iphone-18-pro-i-iphone-duo-nasze-pierwsze-wrazenia-po-keynote"
+      }
+    },
+    {
+      "record_key": "rk_3819321b2a4d82ad3f10079b",
+      "episode": "605.5",
+      "title": "605: (Afterparty) Będziemy mieli ciągle głupią Siri",
+      "date": "2026-09-10",
+      "duration": "0:50:06",
+      "minutes": 50.1,
+      "category": "afterparty",
+      "year": 2026,
+      "url": "https://www.patreon.com/iMagazinePL/posts/605-afterparty-169124512",
+      "hosts": [
+        "Michał Śliwiński",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/605-iphone-18-pro-i-iphone-duo-nasze-pierwsze-wrazenia-po-keynote",
+      "hosts_provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_a8ceffae49a1cf1e7124a859",
+        "paired_episode": "605"
+      }
     }
   ],
   "stats": {
-    "total_episodes": 580,
-    "total_listening_hours": 996.0,
+    "total_episodes": 582,
+    "total_listening_hours": 999.2,
     "average_duration": 103.0,
     "min_duration": 0.18,
     "max_duration": 288.65

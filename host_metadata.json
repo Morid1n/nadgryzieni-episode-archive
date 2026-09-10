@@ -2559,6 +2559,22 @@
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
       }
     },
+    "rk_3819321b2a4d82ad3f10079b": {
+      "record_key": "rk_3819321b2a4d82ad3f10079b",
+      "hosts": [
+        "Michał Śliwiński",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/605-iphone-18-pro-i-iphone-duo-nasze-pierwsze-wrazenia-po-keynote",
+      "provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_a8ceffae49a1cf1e7124a859",
+        "paired_episode": "605"
+      }
+    },
     "rk_38468baaa7adb752fa2cfe6e": {
       "record_key": "rk_38468baaa7adb752fa2cfe6e",
       "hosts": [],
@@ -7204,6 +7220,20 @@
       "audit": {
         "parser_version": "nadgryzieni-hosts/2.2",
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
+      }
+    },
+    "rk_a8ceffae49a1cf1e7124a859": {
+      "record_key": "rk_a8ceffae49a1cf1e7124a859",
+      "hosts": [
+        "Michał Śliwiński",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/605-iphone-18-pro-i-iphone-duo-nasze-pierwsze-wrazenia-po-keynote",
+      "provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/605-iphone-18-pro-i-iphone-duo-nasze-pierwsze-wrazenia-po-keynote"
       }
     },
     "rk_a8d4c079563a036210544dc1": {
