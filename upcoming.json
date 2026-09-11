@@ -1,17 +1,11 @@
 {
   "schema_version": 2,
-  "updated_at_utc": "2026-09-10T04:30:17Z",
+  "updated_at_utc": "2026-09-11T04:30:33Z",
   "source_url": "https://www.youtube.com/@imagazinepl/streams",
   "events": [
     {
-      "video_id": "aMhP8OXc1oU",
-      "title": "606: Dominika Łada – pierwsze wrażenia na żywo z Apple Park | Nadgryzieni",
-      "scheduled_start_utc": "2026-09-10T15:00:00Z",
-      "url": "https://www.youtube.com/watch?v=aMhP8OXc1oU"
-    },
-    {
       "video_id": "TJYoiwAnX6I",
-      "title": "607: iPhone Ultra czy iPhone 18 Pro – którego warto kupić? | Nadgryzieni",
+      "title": "607: iPhone Duo czy iPhone 18 Pro – którego warto kupić? | Nadgryzieni",
       "scheduled_start_utc": "2026-09-11T07:00:00Z",
       "url": "https://www.youtube.com/watch?v=TJYoiwAnX6I"
     }
