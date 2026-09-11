@@ -583,3 +583,5 @@
 | 581 | 605   | 605: iPhone 18 Pro i iPhone Duo – nasze pierwsze wrażenia po keynote                                         | 2026-09-10   | 2:23:44  | Michał Śliwiński; Wojtek Pietrusiewicz |
 | 582 | 605.5 | 605: (Afterparty) Będziemy mieli ciągle głupią Siri                                                          | 2026-09-10   | 0:50:06  | Michał Śliwiński; Wojtek Pietrusiewicz |
 | 583 | 606   | 606: Dominik Łada – pierwsze wrażenia na żywo z Apple Park                                                   | 2026-09-10   | 59:03    | Dominik Łada; Wojtek Pietrusiewicz |
+| 584 | 607   | 607: iPhone Duo czy iPhone 18 Pro – którego warto kupić?                                                     | 2026-09-11   | 2:17:08  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 585 | 607.5 | 607: (Afterparty) Komu innemu bym dał, ale Mecie nie dam                                                     | 2026-09-11   | 1:32:04  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |

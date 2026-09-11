@@ -818,6 +818,23 @@
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
       }
     },
+    "rk_11e20cfd95fcdc04e02ebc96": {
+      "record_key": "rk_11e20cfd95fcdc04e02ebc96",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/607-iphone-duo-czy-iphone-18-pro-ktorego-warto-kupic",
+      "provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_f289cc69bd2df36e5508fed0",
+        "paired_episode": "607"
+      }
+    },
     "rk_11e224da9027b6e75c5f7a0b": {
       "record_key": "rk_11e224da9027b6e75c5f7a0b",
       "hosts": [
@@ -10176,6 +10193,21 @@
       "audit": {
         "parser_version": "nadgryzieni-hosts/2.2",
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
+      }
+    },
+    "rk_f289cc69bd2df36e5508fed0": {
+      "record_key": "rk_f289cc69bd2df36e5508fed0",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/607-iphone-duo-czy-iphone-18-pro-ktorego-warto-kupic",
+      "provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/607-iphone-duo-czy-iphone-18-pro-ktorego-warto-kupic"
       }
     },
     "rk_f31f17dbf04c676d70e26809": {

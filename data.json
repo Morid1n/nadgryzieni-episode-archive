@@ -12719,12 +12719,60 @@
         "kind": "direct_source",
         "source_url": "https://retrorocketnetwork.pl/606-dominik-lada-pierwsze-wrazenia-na-zywo-z-apple-park"
       }
+    },
+    {
+      "record_key": "rk_f289cc69bd2df36e5508fed0",
+      "episode": "607",
+      "title": "607: iPhone Duo czy iPhone 18 Pro – którego warto kupić?",
+      "date": "2026-09-11",
+      "duration": "2:17:08",
+      "minutes": 137.13,
+      "category": "main",
+      "year": 2026,
+      "url": "https://retrorocketnetwork.pl/607-iphone-duo-czy-iphone-18-pro-ktorego-warto-kupic",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/607-iphone-duo-czy-iphone-18-pro-ktorego-warto-kupic",
+      "hosts_provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/607-iphone-duo-czy-iphone-18-pro-ktorego-warto-kupic"
+      }
+    },
+    {
+      "record_key": "rk_11e20cfd95fcdc04e02ebc96",
+      "episode": "607.5",
+      "title": "607: (Afterparty) Komu innemu bym dał, ale Mecie nie dam",
+      "date": "2026-09-11",
+      "duration": "1:32:04",
+      "minutes": 92.07,
+      "category": "afterparty",
+      "year": 2026,
+      "url": "https://www.patreon.com/iMagazinePL/posts/607-afterparty-169240026",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/607-iphone-duo-czy-iphone-18-pro-ktorego-warto-kupic",
+      "hosts_provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_f289cc69bd2df36e5508fed0",
+        "paired_episode": "607"
+      }
     }
   ],
   "stats": {
-    "total_episodes": 583,
-    "total_listening_hours": 1000.2,
-    "average_duration": 102.9,
+    "total_episodes": 585,
+    "total_listening_hours": 1004.0,
+    "average_duration": 103.0,
     "min_duration": 0.18,
     "max_duration": 288.65
   },
@@ -12778,5 +12826,5 @@
       "color": "#7bdcb5"
     }
   },
-  "average_duration": 102.9
+  "average_duration": 103.0
 }
