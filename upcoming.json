@@ -1,13 +1,6 @@
 {
   "schema_version": 2,
-  "updated_at_utc": "2026-09-11T04:30:33Z",
+  "updated_at_utc": "2026-09-12T04:30:02Z",
   "source_url": "https://www.youtube.com/@imagazinepl/streams",
-  "events": [
-    {
-      "video_id": "TJYoiwAnX6I",
-      "title": "607: iPhone Duo czy iPhone 18 Pro – którego warto kupić? | Nadgryzieni",
-      "scheduled_start_utc": "2026-09-11T07:00:00Z",
-      "url": "https://www.youtube.com/watch?v=TJYoiwAnX6I"
-    }
-  ]
+  "events": []
 }
