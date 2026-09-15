@@ -903,19 +903,17 @@ class PipelineHardeningTests(unittest.TestCase):
         data = json.loads((REPO_DIR / "data.json").read_text(encoding="utf-8"))
         upcoming = json.loads((REPO_DIR / "upcoming.json").read_text(encoding="utf-8"))
         episode_ids = {str(row.get("episode")) for row in data["episodes"]}
-        self.assertEqual(len(data["episodes"]), 583)
-        self.assertTrue({"605", "605.5", "606"}.issubset(episode_ids))
-        self.assertEqual(
-            [event["video_id"] for event in upcoming["events"]],
-            ["aMhP8OXc1oU", "TJYoiwAnX6I"],
-        )
-        self.assertEqual(
-            [event["scheduled_start_utc"] for event in upcoming["events"]],
-            [
-                "2026-09-10T15:00:00Z",
-                "2026-09-11T07:00:00Z",
-            ],
-        )
+        self.assertEqual(len(data["episodes"]), 585)
+        self.assertTrue({"605", "605.5", "606", "607", "607.5"}.issubset(episode_ids))
+        self.assertEqual(upcoming["schema_version"], 2)
+        self.assertEqual(upcoming["source_url"], "https://www.youtube.com/@imagazinepl/streams")
+        self.assertIsInstance(upcoming["events"], list)
+        for event in upcoming["events"]:
+            self.assertEqual(
+                set(event),
+                {"video_id", "title", "scheduled_start_utc", "url"},
+            )
+            self.assertEqual(event["url"], f"https://www.youtube.com/watch?v={event['video_id']}")
         episode_72 = next(row for row in data["episodes"] if str(row["episode"]) == "72")
         self.assertIn('Steve "Woz" Wozniak', episode_72["hosts"])
 

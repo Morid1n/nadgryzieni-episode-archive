@@ -120,14 +120,14 @@ console.log(JSON.stringify({{
         )
         self.assertEqual(result, {"paired": False, "episodeIds": ["603.5"]})
 
-    def test_current_data_renders_latest_main_release_without_afterparty(self):
+    def test_current_data_renders_latest_paired_release(self):
         result = self.evaluate_latest_release(self.data["episodes"])
-        self.assertEqual(result, {"paired": False, "episodeIds": ["606"]})
+        self.assertEqual(result, {"paired": True, "episodeIds": ["607", "607.5"]})
 
-    def test_current_data_contains_latest_main_release(self):
+    def test_current_data_contains_latest_afterparty_release(self):
         latest = self.data["episodes"][-1]
-        self.assertEqual(latest["episode"], "606")
-        self.assertEqual(latest["category"], "main")
+        self.assertEqual(latest["episode"], "607.5")
+        self.assertEqual(latest["category"], "afterparty")
         self.assertTrue(latest["url"])
 
 

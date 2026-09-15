@@ -46,10 +46,12 @@ YOUTUBE_STREAMS_URL = "https://www.youtube.com/@imagazinepl/streams"
 YOUTUBE_CHANNEL_ID = "UCVB4SaFwzxe4gGxsSaotmrw"
 MAX_RESPONSE_BYTES = 4 * 1024 * 1024
 YTDLP_TIMEOUT_SECONDS = 90
-PROBE_HOUR_UTC = 4
+PROBE_HOURS_UTC = (4, 10, 16, 22)
+PROBE_HOUR_UTC = PROBE_HOURS_UTC[0]
 PROBE_MINUTE_UTC = 30
 PROBE_WINDOW_MINUTES = 5
-STATE_SCHEMA_VERSION = 1
+STATE_SCHEMA_VERSION = 2
+LEGACY_STATE_SCHEMA_VERSION = 1
 ARTIFACT_SCHEMA_VERSION = 2
 MIN_UNIX_TIMESTAMP = 946684800  # 2000-01-01 UTC
 MAX_UNIX_TIMESTAMP = 4102444800  # 2100-01-01 UTC
@@ -426,7 +428,15 @@ def next_saturday_probe(now: datetime) -> datetime:
 
 def in_probe_window(now: datetime) -> bool:
     current = as_utc(now)
-    return current.hour == PROBE_HOUR_UTC and PROBE_MINUTE_UTC <= current.minute < PROBE_MINUTE_UTC + PROBE_WINDOW_MINUTES
+    return current.hour in PROBE_HOURS_UTC and PROBE_MINUTE_UTC <= current.minute < PROBE_MINUTE_UTC + PROBE_WINDOW_MINUTES
+
+
+def probe_slot_utc(now: datetime) -> str:
+    """Return the canonical UTC slot containing a valid scheduled probe."""
+    current = as_utc(now)
+    if not in_probe_window(current):
+        raise ValueError("Timestamp is outside a scheduled probe slot")
+    return iso_utc(current.replace(minute=PROBE_MINUTE_UTC, second=0, microsecond=0))
 
 
 def _reject_symlink_components(path: Path, stop_at: Path) -> None:
@@ -635,6 +645,29 @@ def artifact_for(streams: Stream | list[Stream] | None, now: datetime) -> dict:
     }
 
 
+def preserve_artifact_timestamp_when_events_match(payload: dict, artifact_path: Path) -> dict:
+    """Keep the last meaningful update time when the event list is unchanged."""
+    artifact_abs, root_abs = _assert_path_within(artifact_path, artifact_path.parent)
+    _reject_symlink_components(artifact_abs, root_abs)
+    existing = _read_json(artifact_path, {}, root=artifact_path.parent)
+    if set(existing) != {"schema_version", "updated_at_utc", "source_url", "events"}:
+        return payload
+    if (
+        existing.get("schema_version") != ARTIFACT_SCHEMA_VERSION
+        or existing.get("source_url") != YOUTUBE_STREAMS_URL
+        or existing.get("events") != payload.get("events")
+    ):
+        return payload
+    try:
+        previous_update = parse_iso_utc(existing["updated_at_utc"])
+        current_update = parse_iso_utc(payload["updated_at_utc"])
+    except (KeyError, TypeError, ValueError):
+        return payload
+    preserved = dict(payload)
+    preserved["updated_at_utc"] = existing["updated_at_utc"]
+    return preserved
+
+
 @contextmanager
 def _exclusive_cycle_lock(state_path: Path):
     """Serialize discovery, state writes, and artifact publication per state file."""
@@ -749,7 +782,7 @@ def _validate_state(state: dict) -> None:
         raise RuntimeError("Upcoming state has an unsupported schema")
     allowed = {
         "schema_version",
-        "last_probe_date_utc",
+        "last_probe_slot_utc",
         "hold_until_utc",
         "publish_pending",
         "pending_artifact_sha256",
@@ -759,14 +792,18 @@ def _validate_state(state: dict) -> None:
     }
     if set(state) - allowed:
         raise RuntimeError("Upcoming state contains unknown fields")
-    if "last_probe_date_utc" in state:
-        probe_date = state["last_probe_date_utc"]
-        if not isinstance(probe_date, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", probe_date):
-            raise RuntimeError("Upcoming state has an invalid UTC probe date")
+    if "last_probe_slot_utc" in state:
         try:
-            datetime.strptime(probe_date, "%Y-%m-%d")
-        except ValueError as exc:
-            raise RuntimeError("Upcoming state has an invalid UTC probe date") from exc
+            probe_slot = parse_iso_utc(state["last_probe_slot_utc"])
+        except (TypeError, ValueError) as exc:
+            raise RuntimeError("Upcoming state has an invalid UTC probe slot") from exc
+        if (
+            probe_slot.hour not in PROBE_HOURS_UTC
+            or probe_slot.minute != PROBE_MINUTE_UTC
+            or probe_slot.second != 0
+            or probe_slot.microsecond != 0
+        ):
+            raise RuntimeError("Upcoming state has an invalid UTC probe slot")
     if "hold_until_utc" in state and state["hold_until_utc"] is not None:
         parse_iso_utc(state["hold_until_utc"])
     if "publish_pending" in state and type(state["publish_pending"]) is not bool:
@@ -792,6 +829,26 @@ def _validate_state(state: dict) -> None:
         scheduled = parse_iso_utc(state["scheduled_start_utc"])
         if not MIN_UNIX_TIMESTAMP <= int(scheduled.timestamp()) <= MAX_UNIX_TIMESTAMP:
             raise RuntimeError("Upcoming state has an out-of-range scheduled timestamp")
+
+
+def _migrate_state(state: dict) -> dict:
+    """Upgrade the once-daily state without losing publication retry data."""
+    if state.get("schema_version") != LEGACY_STATE_SCHEMA_VERSION:
+        return state
+    migrated = dict(state)
+    migrated["schema_version"] = STATE_SCHEMA_VERSION
+    legacy_date = migrated.pop("last_probe_date_utc", None)
+    if legacy_date is not None:
+        if not isinstance(legacy_date, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", legacy_date):
+            raise RuntimeError("Upcoming state has an invalid legacy UTC probe date")
+        try:
+            day = datetime.strptime(legacy_date, "%Y-%m-%d")
+        except ValueError as exc:
+            raise RuntimeError("Upcoming state has an invalid legacy UTC probe date") from exc
+        migrated["last_probe_slot_utc"] = iso_utc(
+            day.replace(hour=PROBE_HOUR_UTC, minute=PROBE_MINUTE_UTC, tzinfo=timezone.utc)
+        )
+    return migrated
 
 
 def _publish_and_persist_state(
@@ -829,18 +886,18 @@ def _run_cycle_locked(
     if not force and not in_probe_window(current):
         return {"status": "outside_probe_window"}
 
-    state = _read_json(
+    state = _migrate_state(_read_json(
         state_path,
         {"schema_version": STATE_SCHEMA_VERSION},
         root=state_path.parent.parent,
-    )
+    ))
     _validate_state(state)
     publication_retried = _retry_pending_publication(state, state_path, artifact_path, publish)
     pending_before_probe = bool(state.get("publish_pending"))
 
-    probe_date = current.date().isoformat()
-    if not force and state.get("last_probe_date_utc") == probe_date:
-        result: dict[str, object] = {"status": "already_probed", "probe_date_utc": probe_date}
+    probe_slot = probe_slot_utc(current) if not force else iso_utc(current.replace(second=0, microsecond=0))
+    if not force and state.get("last_probe_slot_utc") == probe_slot:
+        result: dict[str, object] = {"status": "already_probed", "probe_slot_utc": probe_slot}
         if publication_retried:
             result["publication_retried"] = True
         return result
@@ -850,8 +907,6 @@ def _run_cycle_locked(
         if publication_retried:
             result["publication_retried"] = True
         return result
-    if publication_retried:
-        return {"status": "publication_retried", "publication_retried": True}
     try:
         streams = discover(current)
     except SkipRun:
@@ -860,7 +915,10 @@ def _run_cycle_locked(
     if isinstance(streams, Stream):
         streams = [streams]
     if not streams:
-        artifact_payload = artifact_for(None, current)
+        artifact_payload = preserve_artifact_timestamp_when_events_match(
+            artifact_for(None, current),
+            artifact_path,
+        )
         artifact_digest = _payload_digest(artifact_payload)
         if publish:
             provisional_state = dict(state)
@@ -875,7 +933,7 @@ def _run_cycle_locked(
         )
         new_state = {
             "schema_version": STATE_SCHEMA_VERSION,
-            "last_probe_date_utc": probe_date,
+            "last_probe_slot_utc": probe_slot,
             "hold_until_utc": None,
             "publish_pending": pending_before_probe or bool(artifact_changed and publish),
         }
@@ -888,8 +946,12 @@ def _run_cycle_locked(
             _publish_and_persist_state(publish, new_state, state_path, artifact_digest)
         return {"status": "not_found", "artifact_changed": artifact_changed}
 
-    lead_stream = streams[0]
-    artifact_payload = artifact_for(streams, current)
+    stream_list: list[Stream] = list(streams)
+    lead_stream = stream_list[0]
+    artifact_payload = preserve_artifact_timestamp_when_events_match(
+        artifact_for(stream_list, current),
+        artifact_path,
+    )
     artifact_digest = _payload_digest(artifact_payload)
     if publish:
         provisional_state = dict(state)
@@ -904,7 +966,7 @@ def _run_cycle_locked(
     )
     new_state = {
         "schema_version": STATE_SCHEMA_VERSION,
-        "last_probe_date_utc": probe_date,
+        "last_probe_slot_utc": probe_slot,
         "hold_until_utc": None,
         "video_id": lead_stream.video_id,
         "scheduled_start_utc": iso_utc(lead_stream.start_utc),
@@ -919,6 +981,7 @@ def _run_cycle_locked(
         _publish_and_persist_state(publish, new_state, state_path, artifact_digest)
     return {
         "status": "found",
+        "probe_slot_utc": probe_slot,
         "video_id": lead_stream.video_id,
         "events": len(streams),
         "scheduled_start_utc": iso_utc(lead_stream.start_utc),
@@ -969,7 +1032,7 @@ def publish_git(pending_commit: str | None = None) -> bool:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Discover and publish the next Nadgryzieni live stream")
-    parser.add_argument("--run-now", action="store_true", help="bypass the 04:30 UTC probe window")
+    parser.add_argument("--run-now", action="store_true", help="bypass the four daily UTC probe windows")
     parser.add_argument("--no-publish", action="store_true", help="write local artifacts without committing/pushing")
     args = parser.parse_args(argv)
     now = datetime.now(timezone.utc)

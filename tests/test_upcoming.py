@@ -270,6 +270,111 @@ class UpcomingDiscoveryTests(unittest.TestCase):
             datetime(2026, 9, 5, 4, 30, tzinfo=timezone.utc),
         )
 
+    def test_probe_windows_cover_exactly_four_evenly_spaced_utc_slots(self):
+        expected_hours = {4, 10, 16, 22}
+        for hour in range(24):
+            at_start = datetime(2026, 9, 15, hour, 30, tzinfo=timezone.utc)
+            near_end = at_start + timedelta(minutes=4)
+            after_end = at_start + timedelta(minutes=5)
+            self.assertEqual(upcoming.in_probe_window(at_start), hour in expected_hours)
+            self.assertEqual(upcoming.in_probe_window(near_end), hour in expected_hours)
+            self.assertFalse(upcoming.in_probe_window(after_end))
+
+    def test_legacy_daily_state_migrates_to_the_first_probe_slot(self):
+        migrated = upcoming._migrate_state({
+            "schema_version": 1,
+            "last_probe_date_utc": "2026-09-15",
+            "hold_until_utc": None,
+            "publish_pending": False,
+            "video_id": "TitleChg608",
+            "scheduled_start_utc": "2026-09-19T07:00:00Z",
+        })
+
+        upcoming._validate_state(migrated)
+        self.assertEqual(migrated["schema_version"], 2)
+        self.assertNotIn("last_probe_date_utc", migrated)
+        self.assertEqual(migrated["last_probe_slot_utc"], "2026-09-15T04:30:00Z")
+
+    def test_identical_events_preserve_timestamp_when_clock_moves_backward(self):
+        stream = upcoming.Stream(
+            video_id="TitleChg608",
+            title="608: Corrected title | Nadgryzieni",
+            start_utc=datetime(2026, 9, 19, 7, 0, tzinfo=timezone.utc),
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            artifact_path = Path(temp_dir) / "upcoming.json"
+            existing = upcoming.artifact_for(
+                stream,
+                datetime(2026, 9, 16, 10, 30, tzinfo=timezone.utc),
+            )
+            artifact_path.write_text(json.dumps(existing), encoding="utf-8")
+            generated = upcoming.artifact_for(
+                stream,
+                datetime(2026, 9, 16, 4, 30, tzinfo=timezone.utc),
+            )
+
+            preserved = upcoming.preserve_artifact_timestamp_when_events_match(
+                generated,
+                artifact_path,
+            )
+
+        self.assertEqual(preserved["updated_at_utc"], "2026-09-16T10:30:00Z")
+
+    def test_cycle_probes_each_slot_once_and_republishes_same_video_title_change(self):
+        slot_times = [
+            datetime(2026, 9, 15, hour, 30, tzinfo=timezone.utc)
+            for hour in (4, 10, 16, 22)
+        ]
+        titles = iter((
+            "608: Original title | Nadgryzieni",
+            "608: Corrected title | Nadgryzieni",
+            "608: Corrected title | Nadgryzieni",
+            "608: Corrected title | Nadgryzieni",
+        ))
+        discovery_calls = []
+        publish_calls = []
+
+        def discover(now):
+            discovery_calls.append(now)
+            return upcoming.Stream(
+                video_id="TitleChg608",
+                title=next(titles),
+                start_utc=datetime(2026, 9, 19, 7, 0, tzinfo=timezone.utc),
+            )
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            state_path = root / "state.json"
+            artifact_path = root / "upcoming.json"
+            results = [
+                upcoming.run_cycle(
+                    slot,
+                    state_path=state_path,
+                    artifact_path=artifact_path,
+                    discover=discover,
+                    publish=lambda: (publish_calls.append(True) or True),
+                )
+                for slot in slot_times
+            ]
+            duplicate = upcoming.run_cycle(
+                slot_times[-1] + timedelta(minutes=1),
+                state_path=state_path,
+                artifact_path=artifact_path,
+                discover=lambda _now: self.fail("same slot must not rediscover"),
+                publish=lambda: True,
+            )
+            payload = json.loads(artifact_path.read_text(encoding="utf-8"))
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+
+        self.assertEqual([result["status"] for result in results], ["found"] * 4)
+        self.assertEqual([result["artifact_changed"] for result in results], [True, True, False, False])
+        self.assertEqual(duplicate["status"], "already_probed")
+        self.assertEqual(len(discovery_calls), 4)
+        self.assertEqual(payload["events"][0]["title"], "608: Corrected title | Nadgryzieni")
+        self.assertEqual(payload["updated_at_utc"], "2026-09-15T10:30:00Z")
+        self.assertEqual(state["last_probe_slot_utc"], "2026-09-15T22:30:00Z")
+        self.assertEqual(publish_calls, [True, True])
+
     def test_cycle_replaces_a_found_stream_at_the_next_daily_probe(self):
         first_probe = datetime(2026, 8, 24, 4, 30, tzinfo=timezone.utc)
         first_stream = upcoming.Stream(
@@ -371,7 +476,7 @@ class UpcomingDiscoveryTests(unittest.TestCase):
             self.assertFalse(reconciled["publish_pending"])
             self.assertNotIn("pending_artifact_sha256", reconciled)
 
-    def test_pending_publication_retries_without_rediscovery(self):
+    def test_pending_publication_retry_continues_with_current_slot_discovery(self):
         probe = datetime(2026, 8, 24, 4, 30, tzinfo=timezone.utc)
         stream = upcoming.Stream(
             video_id="fRAaGylDNM8",
@@ -403,18 +508,20 @@ class UpcomingDiscoveryTests(unittest.TestCase):
                 publish_calls.append("success")
                 return True
 
+            discovery_calls = []
             retried = upcoming.run_cycle(
                 datetime(2026, 8, 25, 4, 30, tzinfo=timezone.utc),
                 state_path=state_path,
                 artifact_path=artifact_path,
-                discover=lambda _now: self.fail("pending publication must retry without discovery"),
+                discover=lambda now: (discovery_calls.append(now) or stream),
                 publish=successful_publish,
             )
-            self.assertEqual(retried["status"], "publication_retried")
+            self.assertEqual(retried["status"], "found")
+            self.assertEqual(len(discovery_calls), 1)
             self.assertEqual(publish_calls, ["failed", "success"])
             self.assertFalse(json.loads(state_path.read_text())["publish_pending"])
 
-    def test_pending_commit_is_retried_without_discovery(self):
+    def test_pending_commit_retry_continues_with_current_slot_discovery(self):
         probe = datetime(2026, 8, 24, 4, 30, tzinfo=timezone.utc)
         stream = upcoming.Stream(
             video_id="fRAaGylDNM8",
@@ -441,6 +548,7 @@ class UpcomingDiscoveryTests(unittest.TestCase):
             pending_state = json.loads(state_path.read_text(encoding="utf-8"))
             self.assertEqual(pending_state["pending_commit"], pending_commit)
             retry_calls = []
+            discovery_calls = []
             with patch.object(
                 upcoming,
                 "publish_git",
@@ -450,10 +558,11 @@ class UpcomingDiscoveryTests(unittest.TestCase):
                     probe + timedelta(days=1),
                     state_path=state_path,
                     artifact_path=artifact_path,
-                    discover=lambda _now: self.fail("pending publication must not rediscover"),
+                    discover=lambda now: (discovery_calls.append(now) or stream),
                     publish=upcoming.publish_git,
                 )
-            self.assertEqual(retried["status"], "publication_retried")
+            self.assertEqual(retried["status"], "found")
+            self.assertEqual(len(discovery_calls), 1)
             self.assertEqual(retry_calls, [pending_commit])
             final_state = json.loads(state_path.read_text(encoding="utf-8"))
             self.assertFalse(final_state["publish_pending"])

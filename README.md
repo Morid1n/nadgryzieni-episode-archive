@@ -34,7 +34,8 @@ nadgryzieni-episode-archive/
 ├── upcoming.json       # Osobny, wygasający artefakt zaplanowanego streamu
 ├── host_metadata.json  # Audytowalny manifest osób przypisanych do odcinków i proweniencji
 ├── nadgryzieni_hosts.py # Parser RRN/Patreon, audyt i bezpieczne apply hostów
-├── nadgryzieni_upcoming.py # Discovery YouTube i sobotni gate karty upcoming
+├── nadgryzieni_upcoming.py # Discovery YouTube i cztery dzienne okna karty upcoming
+├── nadgryzieni_buffer_trigger.py # Idempotentny handoff po probe do Buffer
 ├── nadgryzieni_pipeline.py # Bezpieczny pipeline RSS/Patreon → archiwum/site
 ├── patreon_posts.json  # Zweryfikowany fallback linków Patreon
 ├── cron/                # Wrappery harmonogramu weekendowego i retry
@@ -62,7 +63,7 @@ Aktywny pipeline jest uruchamiany z profilu R2-D2. Główny job Hermesa działa 
 
 Pipeline wymaga zweryfikowanego wygenerowanego outputu przed synchronizacją Obsidian i publikacją GitHub Pages. Gdy nie ma nowych odcinków, nie tworzy commita ani nie wykonuje pushu.
 
-Karta nadchodzącego wydarzenia jest niezależna od archiwum: `upcoming.json` jest pobierany przez stronę i nigdy nie zwiększa liczby odcinków, statystyk ani tabeli historycznej. `nadgryzieni_upcoming.py` odczytuje publiczny kanał YouTube bez podążania za redirectami; gdy strona kanału jest blokowana przez redirect consent, korzysta z lokalnego, maszynowo czytelnego wyniku `yt-dlp` i publikuje wyłącznie zmieniony `upcoming.json`. Job Hermesa uruchamia lekki gate co 5 minut, ale wykonuje zapytanie sieciowe tylko w oknie 04:30 UTC (raz dziennie). Po znalezieniu streamu discovery jest wstrzymywane do następnej soboty 04:30 UTC; po wygaśnięciu eventu karta jest czyszczona albo zastępowana kolejnym potwierdzonym streamem.
+Karta nadchodzącego wydarzenia jest niezależna od archiwum: `upcoming.json` jest pobierany przez stronę i nigdy nie zwiększa liczby odcinków, statystyk ani tabeli historycznej. `nadgryzieni_upcoming.py` odczytuje publiczny kanał YouTube bez podążania za redirectami; gdy strona kanału jest blokowana przez redirect consent, korzysta z lokalnego, maszynowo czytelnego wyniku `yt-dlp` i publikuje wyłącznie zmieniony `upcoming.json`. Job Hermesa uruchamia lekki gate co 5 minut, ale wykonuje dokładnie cztery zapytania sieciowe dziennie, w oknach 04:30, 10:30, 16:30 i 22:30 UTC. Każde zapytanie ponownie odczytuje tytuł i termin już znanego `video_id`; zmiana aktualizuje ten sam event zamiast tworzyć duplikat. Minutę po ticku discovery osobny, lokalnie bramkowany job uruchamia `nadgryzieni_buffer_trigger.py`. Trigger czeka na zakończoną publikację `upcoming.json`, po czym od razu wykonuje idempotentne reconcile obu kampanii Buffer; znacznik slotu zapisuje dopiero po pełnym readbacku. Błąd pozostawia slot do retry przy następnym ticku, przyszłe posty są edytowane w miejscu, brakujące są tworzone, a wysłane nie są odtwarzane automatycznie.
 
 Jednorazowe odtworzenie hostów wykonuje się dwuetapowo — audyt nie zmienia repozytorium, a `apply` odrzuca niepełny lub nieaktualny audyt:
 
