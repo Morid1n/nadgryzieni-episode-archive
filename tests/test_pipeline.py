@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import json
 import os
 import ssl
@@ -9,6 +10,7 @@ import tempfile
 import unittest
 from datetime import date, timedelta
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 
@@ -268,6 +270,15 @@ class PipelineHardeningTests(unittest.TestCase):
             with self.assertRaises(pipeline.GitPushPendingError):
                 pipeline._push_with_retries("/tmp/repo")
 
+    def test_keychain_identity_loader_does_not_read_secret(self):
+        loaded = subprocess.CompletedProcess(["ssh-add"], 0, "", "")
+        with patch.object(pipeline.sys, "platform", "darwin"), patch.object(
+            Path, "is_file", return_value=True
+        ), patch.object(pipeline.subprocess, "run", return_value=loaded) as run:
+            pipeline._load_keychain_ssh_identity()
+        self.assertEqual(run.call_args.args[0][:2], ["ssh-add", "--apple-load-keychain"])
+        self.assertNotIn("password", " ".join(run.call_args.args[0]).lower())
+
     def test_local_commits_ahead_reject_unrelated_paths_before_push(self):
         completed = subprocess.CompletedProcess(
             ["git", "diff"],
@@ -278,6 +289,79 @@ class PipelineHardeningTests(unittest.TestCase):
         with patch.object(pipeline.subprocess, "run", return_value=completed):
             with self.assertRaisesRegex(RuntimeError, "unrelated paths"):
                 pipeline._ensure_ahead_commits_are_allowed("/tmp/repo", {"README.md"})
+
+    def test_archive_publication_reconciles_verified_pending_upcoming_commit(self):
+        pending_commit = "a" * 40
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            state_path = root / "upcoming-state.json"
+            artifact_path = root / "upcoming.json"
+            artifact_path.write_text('{"events":[]}', encoding="utf-8")
+            digest = hashlib.sha256(artifact_path.read_bytes()).hexdigest()
+            state = {
+                "schema_version": 2,
+                "publish_pending": True,
+                "pending_artifact_sha256": digest,
+                "pending_commit": pending_commit,
+            }
+            state_path.write_text(json.dumps(state), encoding="utf-8")
+            attempts = []
+
+            class CycleLock:
+                def __enter__(self):
+                    return True
+
+                def __exit__(self, *_args):
+                    return False
+
+            fake_upcoming = SimpleNamespace(
+                STATE_PATH=state_path,
+                ARTIFACT_PATH=artifact_path,
+                STATE_SCHEMA_VERSION=2,
+                _read_json=lambda *_args, **_kwargs: state,
+                _migrate_state=lambda value: value,
+                _validate_state=lambda _value: None,
+                _artifact_digest=lambda path: hashlib.sha256(path.read_bytes()).hexdigest(),
+                _exclusive_cycle_lock=lambda _path: CycleLock(),
+                _retry_pending_publication=lambda current, *_args: attempts.append(
+                    current["pending_commit"]
+                ) or True,
+                publish_git=object(),
+            )
+            with patch.dict(sys.modules, {"nadgryzieni_upcoming": fake_upcoming}), patch.object(
+                pipeline, "_git_head_sha", return_value=pending_commit
+            ):
+                self.assertTrue(pipeline._reconcile_pending_upcoming_publication(str(root)))
+            self.assertEqual(attempts, [pending_commit])
+
+    def test_git_publication_continues_after_recovering_upcoming_commit(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+
+            def git(*args):
+                return subprocess.run(
+                    ["git", *args], cwd=root, check=True, capture_output=True, text=True
+                )
+
+            git("init", "-q")
+            git("config", "user.email", "test@example.invalid")
+            git("config", "user.name", "Test")
+            (root / "data.json").write_text("{}\n", encoding="utf-8")
+            git("add", "data.json")
+            git("commit", "-qm", "initial")
+            with patch.object(pipeline, "REPO_DIR", root), patch.object(
+                pipeline, "_reject_unrelated_staged_paths"
+            ), patch.object(
+                pipeline,
+                "_local_commits_ahead_of_origin",
+                side_effect=[True, False],
+            ), patch.object(
+                pipeline, "_reconcile_pending_upcoming_publication", return_value=True
+            ) as reconcile:
+                self.assertTrue(
+                    pipeline._git_commit_and_push_paths_locked("archive", ["data.json"])
+                )
+            reconcile.assert_called_once_with(str(root))
 
     def test_main_releases_pipeline_lock_after_run(self):
         with patch.object(pipeline, "acquire_pipeline_lock", return_value=True), patch.object(pipeline, "release_pipeline_lock") as release_lock, patch.object(pipeline, "run_pipeline", return_value=0), patch.object(sys, "argv", ["nadgryzieni_pipeline.py"]), patch.dict(os.environ, {"NADGRYZIENI_RUN_KIND": "manual"}):

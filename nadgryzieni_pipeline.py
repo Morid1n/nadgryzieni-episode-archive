@@ -3403,6 +3403,52 @@ def _ensure_ahead_commits_are_allowed(repo: str, allowed: set[str]) -> None:
         )
 
 
+def _reconcile_pending_upcoming_publication(repo: str) -> bool:
+    """Finish a verified pending upcoming publication before archive Git work.
+
+    The upcoming collector and archive pipeline share one checkout and main
+    branch. If an upcoming push failed after its local commit was created, the
+    archive publisher must finish that exact commit first; otherwise it would
+    either push unrelated history or leave a valid archive update stranded.
+    """
+    try:
+        import nadgryzieni_upcoming as upcoming
+    except ImportError as exc:
+        raise RuntimeError("Could not load the upcoming publication recovery module") from exc
+
+    state_path = Path(upcoming.STATE_PATH)
+    artifact_path = Path(upcoming.ARTIFACT_PATH)
+    expected_artifact = Path(repo) / "upcoming.json"
+    if artifact_path.resolve() != expected_artifact.resolve():
+        raise RuntimeError("Upcoming publication artifact is outside the archive checkout")
+
+    with upcoming._exclusive_cycle_lock(state_path) as acquired:
+        if not acquired:
+            log.info("Upcoming publication lock is busy; archive publication will retry later.")
+            return False
+        state = upcoming._migrate_state(upcoming._read_json(
+            state_path,
+            {"schema_version": upcoming.STATE_SCHEMA_VERSION},
+            root=state_path.parent.parent,
+        ))
+        upcoming._validate_state(state)
+        if state.get("publish_pending") is not True:
+            return False
+        pending_commit = state.get("pending_commit")
+        if pending_commit is None:
+            log.info("Upcoming publication is still preparing its commit; archive will retry later.")
+            return False
+        current_commit = _git_head_sha(repo)
+        if current_commit != pending_commit:
+            raise RuntimeError("Pending upcoming commit no longer matches local main")
+        return bool(upcoming._retry_pending_publication(
+            state,
+            state_path,
+            artifact_path,
+            upcoming.publish_git,
+        ))
+
+
 def _git_head_sha(repo: str) -> str | None:
     result = subprocess.run(
         ["git", "rev-parse", "HEAD"],
@@ -3427,8 +3473,30 @@ def _ensure_main_branch(repo: str) -> None:
         raise RuntimeError("Automated publication requires the local main branch")
 
 
+def _load_keychain_ssh_identity() -> None:
+    """Load the configured macOS SSH identity without reading its secret."""
+    if sys.platform != "darwin":
+        return
+    identity = Path.home() / ".ssh" / "id_ed25519"
+    if not identity.is_file():
+        return
+    loaded = subprocess.run(
+        ["ssh-add", "--apple-load-keychain", str(identity)],
+        capture_output=True,
+        text=True,
+    )
+    if loaded.returncode == 0:
+        log.info("Loaded the Git SSH identity from the macOS keychain")
+    else:
+        log.debug(
+            "Could not load the Git SSH identity from the macOS keychain: %s",
+            _redact_git_output(loaded.stderr.strip()),
+        )
+
+
 def _push_with_retries(repo: str) -> bool:
     _ensure_main_branch(repo)
+    _load_keychain_ssh_identity()
     push_cmd = ["git", "push", "origin", "HEAD:main"]
     for attempt in range(1, 4):
         pushed = subprocess.run(push_cmd, cwd=repo, capture_output=True, text=True)
@@ -3457,6 +3525,12 @@ def _git_commit_and_push_paths_locked(message: str, paths: list[str], dry: bool 
     ahead_of_origin = _local_commits_ahead_of_origin(repo)
     if ahead_of_origin is None:
         raise RuntimeError("Could not determine whether local commits are ahead of origin")
+    if ahead_of_origin:
+        if _reconcile_pending_upcoming_publication(repo):
+            pushed_existing_commit = True
+            ahead_of_origin = _local_commits_ahead_of_origin(repo)
+            if ahead_of_origin is None:
+                raise RuntimeError("Could not recheck local commits after upcoming recovery")
     if ahead_of_origin:
         retry_state = _read_retry_state(RETRY_STATE_PATH)
         current_commit = _git_head_sha(repo)
