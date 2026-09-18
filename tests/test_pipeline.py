@@ -903,8 +903,8 @@ class PipelineHardeningTests(unittest.TestCase):
         data = json.loads((REPO_DIR / "data.json").read_text(encoding="utf-8"))
         upcoming = json.loads((REPO_DIR / "upcoming.json").read_text(encoding="utf-8"))
         episode_ids = {str(row.get("episode")) for row in data["episodes"]}
-        self.assertEqual(len(data["episodes"]), 585)
-        self.assertTrue({"605", "605.5", "606", "607", "607.5"}.issubset(episode_ids))
+        self.assertEqual(len(data["episodes"]), 587)
+        self.assertTrue({"605", "605.5", "606", "607", "607.5", "608", "608.5"}.issubset(episode_ids))
         self.assertEqual(upcoming["schema_version"], 2)
         self.assertEqual(upcoming["source_url"], "https://www.youtube.com/@imagazinepl/streams")
         self.assertIsInstance(upcoming["events"], list)
