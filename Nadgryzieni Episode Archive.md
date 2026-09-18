@@ -585,3 +585,5 @@
 | 583 | 606   | 606: Dominik Łada – pierwsze wrażenia na żywo z Apple Park                                                   | 2026-09-10   | 59:03    | Dominik Łada; Wojtek Pietrusiewicz |
 | 584 | 607   | 607: iPhone Duo czy iPhone 18 Pro – którego warto kupić?                                                     | 2026-09-11   | 2:17:08  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 585 | 607.5 | 607: (Afterparty) Komu innemu bym dał, ale Mecie nie dam                                                     | 2026-09-11   | 1:32:04  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 586 | 608   | 608: Mamy iPhone 18 Pro; Steam Frame jeszcze nie                                                             | 2026-09-18   | 3:32:23  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 587 | 608.5 | 608: (Afterparty) Recenzja AirPods 5                                                                         | 2026-09-18   | 0:40:38  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |

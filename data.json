@@ -12767,12 +12767,60 @@
         "paired_record_key": "rk_f289cc69bd2df36e5508fed0",
         "paired_episode": "607"
       }
+    },
+    {
+      "record_key": "rk_3ea0480e562140d1c9134d1c",
+      "episode": "608",
+      "title": "608: Mamy iPhone 18 Pro; Steam Frame jeszcze nie",
+      "date": "2026-09-18",
+      "duration": "3:32:23",
+      "minutes": 212.38,
+      "category": "main",
+      "year": 2026,
+      "url": "https://retrorocketnetwork.pl/608-mamy-iphone-18-pro-steam-frame-jeszcze-nie",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/608-mamy-iphone-18-pro-steam-frame-jeszcze-nie",
+      "hosts_provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/608-mamy-iphone-18-pro-steam-frame-jeszcze-nie"
+      }
+    },
+    {
+      "record_key": "rk_3ef3474e143ebe55835afe06",
+      "episode": "608.5",
+      "title": "608: (Afterparty) Recenzja AirPods 5",
+      "date": "2026-09-18",
+      "duration": "0:40:38",
+      "minutes": 40.63,
+      "category": "afterparty",
+      "year": 2026,
+      "url": "https://www.patreon.com/iMagazinePL/posts/608-afterparty-5-169890880",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/608-mamy-iphone-18-pro-steam-frame-jeszcze-nie",
+      "hosts_provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_3ea0480e562140d1c9134d1c",
+        "paired_episode": "608"
+      }
     }
   ],
   "stats": {
-    "total_episodes": 585,
-    "total_listening_hours": 1004.0,
-    "average_duration": 103.0,
+    "total_episodes": 587,
+    "total_listening_hours": 1008.2,
+    "average_duration": 103.1,
     "min_duration": 0.18,
     "max_duration": 288.65
   },
@@ -12826,5 +12874,5 @@
       "color": "#7bdcb5"
     }
   },
-  "average_duration": 103.0
+  "average_duration": 103.1
 }

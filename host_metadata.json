@@ -2993,6 +2993,21 @@
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
       }
     },
+    "rk_3ea0480e562140d1c9134d1c": {
+      "record_key": "rk_3ea0480e562140d1c9134d1c",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/608-mamy-iphone-18-pro-steam-frame-jeszcze-nie",
+      "provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/608-mamy-iphone-18-pro-steam-frame-jeszcze-nie"
+      }
+    },
     "rk_3eb060f0536de88af373636c": {
       "record_key": "rk_3eb060f0536de88af373636c",
       "hosts": [
@@ -3009,6 +3024,23 @@
       "audit": {
         "parser_version": "nadgryzieni-hosts/2.2",
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
+      }
+    },
+    "rk_3ef3474e143ebe55835afe06": {
+      "record_key": "rk_3ef3474e143ebe55835afe06",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/608-mamy-iphone-18-pro-steam-frame-jeszcze-nie",
+      "provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_3ea0480e562140d1c9134d1c",
+        "paired_episode": "608"
       }
     },
     "rk_4000973d1dd0298c92afc710": {
