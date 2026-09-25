@@ -1,13 +1,6 @@
 {
   "schema_version": 2,
-  "updated_at_utc": "2026-09-21T16:30:26Z",
+  "updated_at_utc": "2026-09-25T10:30:28Z",
   "source_url": "https://www.youtube.com/@imagazinepl/streams",
-  "events": [
-    {
-      "video_id": "1yvOu87CR-E",
-      "title": "609: Mac mini M6 to potwór! | Nadgryzieni",
-      "scheduled_start_utc": "2026-09-25T07:00:00Z",
-      "url": "https://www.youtube.com/watch?v=1yvOu87CR-E"
-    }
-  ]
+  "events": []
 }
