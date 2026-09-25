@@ -587,3 +587,5 @@
 | 585 | 607.5 | 607: (Afterparty) Komu innemu bym dał, ale Mecie nie dam                                                     | 2026-09-11   | 1:32:04  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 586 | 608   | 608: Mamy iPhone 18 Pro; Steam Frame jeszcze nie                                                             | 2026-09-18   | 3:32:23  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 587 | 608.5 | 608: (Afterparty) Recenzja AirPods 5                                                                         | 2026-09-18   | 0:40:38  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 588 | 609   | 609: Mac mini M6 to potwór!                                                                                  | 2026-09-25   | 3:10:33  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 589 | 609.5 | 609: (Afterparty) Środkowy palec emoji                                                                       | 2026-09-25   | 0:41:57  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |

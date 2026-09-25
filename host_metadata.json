@@ -1576,6 +1576,21 @@
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
       }
     },
+    "rk_214c089854c7c41436c94fe8": {
+      "record_key": "rk_214c089854c7c41436c94fe8",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/609-mac-mini-m6-to-potwor",
+      "provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/609-mac-mini-m6-to-potwor"
+      }
+    },
     "rk_21aed0c34b89d4d69cb65112": {
       "record_key": "rk_21aed0c34b89d4d69cb65112",
       "hosts": [
@@ -1756,6 +1771,23 @@
       "audit": {
         "parser_version": "nadgryzieni-hosts/2.2",
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
+      }
+    },
+    "rk_2706cd266bd86157cd9231bd": {
+      "record_key": "rk_2706cd266bd86157cd9231bd",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/609-mac-mini-m6-to-potwor",
+      "provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_214c089854c7c41436c94fe8",
+        "paired_episode": "609"
       }
     },
     "rk_278f56944e7ebccc11b05843": {
