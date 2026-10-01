@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "updated_at_utc": "2026-09-25T16:30:28Z",
+  "updated_at_utc": "2026-10-01T08:45:51Z",
   "source_url": "https://www.youtube.com/@imagazinepl/streams",
   "events": [
     {
       "video_id": "a7bj94pPbII",
-      "title": "610: Rozmowy (nie tylko) o tech | Nadgryzieni",
+      "title": "610: Meta Muse czyta Twoje wiadomości – czy można mu ufać? | Nadgryzieni",
       "scheduled_start_utc": "2026-10-02T07:00:00Z",
       "url": "https://www.youtube.com/watch?v=a7bj94pPbII"
     }
