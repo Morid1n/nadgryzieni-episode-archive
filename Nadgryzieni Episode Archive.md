@@ -589,3 +589,5 @@
 | 587 | 608.5 | 608: (Afterparty) Recenzja AirPods 5                                                                         | 2026-09-18   | 0:40:38  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 588 | 609   | 609: Mac mini M6 to potwór!                                                                                  | 2026-09-25   | 3:10:33  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 589 | 609.5 | 609: (Afterparty) Środkowy palec emoji                                                                       | 2026-09-25   | 0:41:57  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 590 | 610   | 610: Meta Muse czyta Twoje wiadomości – czy można mu ufać?                                                   | 2026-10-02   | 2:46:21  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 591 | 610.5 | 610: (Afterparty) World of Warcraft Forever i Corgi przebrany za syrenę                                      | 2026-10-02   | 0:56:11  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |

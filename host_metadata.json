@@ -4649,6 +4649,23 @@
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
       }
     },
+    "rk_66c863b798b3e16730fa162f": {
+      "record_key": "rk_66c863b798b3e16730fa162f",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/610-meta-muse-czyta-twoje-wiadomosci-czy-mozna-mu-ufac",
+      "provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_89f19ae07c497e638cd4ef27",
+        "paired_episode": "610"
+      }
+    },
     "rk_66c9a1c851420005e508ef45": {
       "record_key": "rk_66c9a1c851420005e508ef45",
       "hosts": [],
@@ -6250,6 +6267,21 @@
       "audit": {
         "parser_version": "nadgryzieni-hosts/2.2",
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
+      }
+    },
+    "rk_89f19ae07c497e638cd4ef27": {
+      "record_key": "rk_89f19ae07c497e638cd4ef27",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/610-meta-muse-czyta-twoje-wiadomosci-czy-mozna-mu-ufac",
+      "provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/610-meta-muse-czyta-twoje-wiadomosci-czy-mozna-mu-ufac"
       }
     },
     "rk_8a4d568941a56eb8fa438a7c": {
