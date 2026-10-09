@@ -592,3 +592,4 @@
 | 590 | 610   | 610: Meta Muse czyta Twoje wiadomości – czy można mu ufać?                                                   | 2026-10-02   | 2:46:21  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 591 | 610.5 | 610: (Afterparty) World of Warcraft Forever i Corgi przebrany za syrenę                                      | 2026-10-02   | 0:56:11  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 592 | 611   | 611: MX Keypad vs Stream Deck – po co nam przyciski w dobie agentów AI?                                      | 2026-10-09   | 2:59:18  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 593 | 611.5 | 611: (Afterparty) MX Keypad vs Stream Deck – po co nam przyciski w dobie agentów AI?                         | 2026-10-09   | 1:31:19  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
