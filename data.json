@@ -12911,12 +12911,35 @@
         "paired_record_key": "rk_89f19ae07c497e638cd4ef27",
         "paired_episode": "610"
       }
+    },
+    {
+      "record_key": "rk_55da94614103d0ae0989f93c",
+      "episode": "611",
+      "title": "611: MX Keypad vs Stream Deck – po co nam przyciski w dobie agentów AI?",
+      "date": "2026-10-09",
+      "duration": "2:59:18",
+      "minutes": 179.3,
+      "category": "main",
+      "year": 2026,
+      "url": "https://retrorocketnetwork.pl/611-mx-keypad-vs-stream-deck-po-co-nam-przyciski-w-dobie-agentow-ai",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/611-mx-keypad-vs-stream-deck-po-co-nam-przyciski-w-dobie-agentow-ai",
+      "hosts_provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/611-mx-keypad-vs-stream-deck-po-co-nam-przyciski-w-dobie-agentow-ai"
+      }
     }
   ],
   "stats": {
-    "total_episodes": 591,
-    "total_listening_hours": 1015.8,
-    "average_duration": 103.1,
+    "total_episodes": 592,
+    "total_listening_hours": 1018.8,
+    "average_duration": 103.3,
     "min_duration": 0.18,
     "max_duration": 288.65
   },
@@ -12970,5 +12993,5 @@
       "color": "#7bdcb5"
     }
   },
-  "average_duration": 103.1
+  "average_duration": 103.3
 }

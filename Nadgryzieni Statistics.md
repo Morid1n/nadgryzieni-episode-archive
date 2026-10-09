@@ -1,7 +1,7 @@
 # Nadgryzieni — Statistics
 
 > Generated from the episode archive: `Nadgryzieni Episode Archive.md`
-> Last updated: 2026-10-02
+> Last updated: 2026-10-09
 
 ---
 
@@ -9,9 +9,9 @@
 
 | Metric | Value |
 |---|---|
-| **Total episodes** | 591 |
-| **Date range** | 2010-01-28 — 2026-10-02 |
-| **Episodes with duration** | 591 |
+| **Total episodes** | 592 |
+| **Date range** | 2010-01-28 — 2026-10-09 |
+| **Episodes with duration** | 592 |
 | **Episodes without duration** | 0 |
 
 ---
@@ -20,12 +20,12 @@
 
 | Metric | Value |
 |---|---|
-| **Total listening time** | 1015h 49m (1015.8 hours) |
-| **Average duration** | 103.1 min (1.7h) |
-| **Median duration** | 98.0 min (1.6h) |
+| **Total listening time** | 1018h 48m (1018.8 hours) |
+| **Average duration** | 103.3 min (1.7h) |
+| **Median duration** | 98.1 min (1.6h) |
 | **Longest episode** | 288.6 min |
 | **Shortest episode** | 0.2 min |
-| **Episodes over 2 hours** | 209 |
+| **Episodes over 2 hours** | 210 |
 | **Episodes under 30 minutes** | 44 |
 
 ---
@@ -50,7 +50,7 @@
 | 2023 | 56 | 144.4 min |
 | 2024 | 58 | 133.3 min |
 | 2025 | 57 | 128.3 min |
-| 2026 | 59 | 127.5 min |
+| 2026 | 60 | 128.3 min |
 
 ---
 
@@ -59,9 +59,9 @@
 | Bracket | Count | % |
 |---|---|---|
 | Under 30 min | 44 | 7.4% |
-| 30 min – 1 hour | 89 | 15.1% |
+| 30 min – 1 hour | 89 | 15.0% |
 | 1 hour – 2 hours | 249 | 42.1% |
-| 2 hours – 3 hours | 157 | 26.6% |
+| 2 hours – 3 hours | 158 | 26.7% |
 | 3 hours – 4 hours | 49 | 8.3% |
 | Over 4 hours | 3 | 0.5% |
 
@@ -71,7 +71,7 @@
 
 | Year | Count |
 |---|---|
-| 2026 | 59 |
+| 2026 | 60 |
 | 2025 | 57 |
 | 2024 | 58 |
 | 2023 | 56 |
@@ -104,7 +104,7 @@
 | July | 57 | 9.6% |
 | August | 44 | 7.4% |
 | September | 52 | 8.8% |
-| October | 42 | 7.1% |
+| October | 43 | 7.3% |
 | November | 40 | 6.8% |
 | December | 61 | 10.3% |
 
@@ -118,7 +118,7 @@
 | Tuesday | 41 | 6.9% |
 | Wednesday | 53 | 9.0% |
 | Thursday | 90 | 15.2% |
-| Friday | 307 | 51.9% |
+| Friday | 308 | 52.0% |
 | Saturday | 25 | 4.2% |
 | Sunday | 18 | 3.0% |
 
@@ -128,7 +128,7 @@
 
 | Category | Count |
 |---|---|
-| Main episodes | 528 |
+| Main episodes | 529 |
 | (Afterparty) | 18 |
 | (Live) | 11 |
 | (Po Godzinach) | 10 |
@@ -188,12 +188,12 @@
 
 ## Summary
 
-- **Total episodes:** 591
-- **Total listening time:** 1015h 49m
-- **Average duration:** 103.1 min
-- **Median duration:** 98.0 min
-- **Date range:** 2010-01-28 — 2026-10-02
+- **Total episodes:** 592
+- **Total listening time:** 1018h 48m
+- **Average duration:** 103.3 min
+- **Median duration:** 98.1 min
+- **Date range:** 2010-01-28 — 2026-10-09
 
 ---
 
-*Last updated: 2026-10-02*
+*Last updated: 2026-10-09*

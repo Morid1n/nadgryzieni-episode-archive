@@ -4011,6 +4011,21 @@
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
       }
     },
+    "rk_55da94614103d0ae0989f93c": {
+      "record_key": "rk_55da94614103d0ae0989f93c",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/611-mx-keypad-vs-stream-deck-po-co-nam-przyciski-w-dobie-agentow-ai",
+      "provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/611-mx-keypad-vs-stream-deck-po-co-nam-przyciski-w-dobie-agentow-ai"
+      }
+    },
     "rk_562ab13b1d4dfd9b6478cb75": {
       "record_key": "rk_562ab13b1d4dfd9b6478cb75",
       "hosts": [],
