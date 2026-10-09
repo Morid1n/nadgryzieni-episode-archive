@@ -19,7 +19,11 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 
-SLUG_TEMPLATE = r"{episode}-afterparty(?:-[a-z0-9]+)*-\d{{6,12}}"
+# Patreon may expose a valid Afterparty post with a title-derived slug rather
+# than an ``afterparty`` slug. The rendered metadata/title remains the
+# Afterparty proof; the URL only needs the canonical creator/episode/post-id
+# shape.
+SLUG_TEMPLATE = r"{episode}-[a-z0-9]+(?:-[a-z0-9]+)*-\d{{6,12}}"
 
 
 def normalize_duration(value: str) -> str:

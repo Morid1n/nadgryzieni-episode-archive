@@ -64,7 +64,7 @@ SCRIPT_JS_PATH = REPO_DIR / "script.js"
 README_PATH = REPO_DIR / "README.md"
 
 # Obsidian vault directory for syncing archive and statistics
-VAULT_DIR = Path("/Users/tarkin/Library/Mobile Documents/com~apple~CloudDocs/! Hermes !/Scarif Vault/20-Podcast")
+VAULT_DIR = Path("/Users/tarkin/Library/Mobile Documents/com~apple~CloudDocs/! Death Star !/Scarif Vault/20-Podcast")
 
 RSS_URL = "https://retrorocketnetwork.pl/category/nadgryzieni-rss/feed/"
 
@@ -1160,7 +1160,7 @@ def load_patreon_manifest(path: Path = PATREON_MANIFEST_PATH) -> list[dict]:
             or parsed_url.path != f"/iMagazinePL/posts/{slug}"
             or parsed_url.query
             or parsed_url.fragment
-            or not re.fullmatch(rf"{episode}-afterparty(?:-[a-z0-9]+)*-\d{{6,12}}", slug)
+            or not re.fullmatch(rf"{episode}-[a-z0-9]+(?:-[a-z0-9]+)*-\d{{6,12}}", slug)
             or url != expected_url
         ):
             continue
@@ -1172,6 +1172,10 @@ def load_patreon_manifest(path: Path = PATREON_MANIFEST_PATH) -> list[dict]:
             if not title or "(Afterparty)" not in title:
                 continue
             entry["title"] = title
+        elif "-afterparty" not in slug:
+            # A generic title-derived slug is accepted only when the browser
+            # supplied the explicit Afterparty title as proof of classification.
+            continue
 
         pub_date = post.get("date")
         if pub_date is not None:
@@ -1422,7 +1426,7 @@ def _canonical_patreon_rss_url(value: str, episode_number: str) -> str | None:
         return None
     slug = parsed.path[len(prefix):]
     if (
-        not re.fullmatch(r"\d+-afterparty(?:-[a-z0-9]+)*-\d{6,12}", slug)
+        not re.fullmatch(r"\d+-[a-z0-9]+(?:-[a-z0-9]+)*-\d{6,12}", slug)
         or slug.split("-", 1)[0] != str(episode_number)
     ):
         return None
