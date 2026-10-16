@@ -1,13 +1,6 @@
 {
   "schema_version": 2,
-  "updated_at_utc": "2026-10-13T16:30:34Z",
+  "updated_at_utc": "2026-10-16T08:30:35Z",
   "source_url": "https://www.youtube.com/@imagazinepl/streams",
-  "events": [
-    {
-      "video_id": "BhuAhQP7G7c",
-      "title": "612: HomeView, Apple TV 4K, HomePod mini 2 – są nowości od Apple! | Nadgryzieni",
-      "scheduled_start_utc": "2026-10-16T07:00:00Z",
-      "url": "https://www.youtube.com/watch?v=BhuAhQP7G7c"
-    }
-  ]
+  "events": []
 }
