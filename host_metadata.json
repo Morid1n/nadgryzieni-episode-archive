@@ -9524,6 +9524,23 @@
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
       }
     },
+    "rk_e03bb4d04af324ce4fd0779a": {
+      "record_key": "rk_e03bb4d04af324ce4fd0779a",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/612-homeview-apple-tv-4k-homepod-mini-2-sa-nowosci-od-apple",
+      "provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_ecdc36c2c6cbdccd512fb1b4",
+        "paired_episode": "612"
+      }
+    },
     "rk_e09ca54c14790979fa894e66": {
       "record_key": "rk_e09ca54c14790979fa894e66",
       "hosts": [
@@ -9997,6 +10014,21 @@
       "audit": {
         "parser_version": "nadgryzieni-hosts/2.2",
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
+      }
+    },
+    "rk_ecdc36c2c6cbdccd512fb1b4": {
+      "record_key": "rk_ecdc36c2c6cbdccd512fb1b4",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/612-homeview-apple-tv-4k-homepod-mini-2-sa-nowosci-od-apple",
+      "provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/612-homeview-apple-tv-4k-homepod-mini-2-sa-nowosci-od-apple"
       }
     },
     "rk_ed00ca362f20283f5adc42cd": {

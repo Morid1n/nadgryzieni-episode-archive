@@ -12959,11 +12959,59 @@
         "paired_record_key": "rk_55da94614103d0ae0989f93c",
         "paired_episode": "611"
       }
+    },
+    {
+      "record_key": "rk_ecdc36c2c6cbdccd512fb1b4",
+      "episode": "612",
+      "title": "612: HomeView, Apple TV 4K, HomePod mini 2 – są nowości od Apple!",
+      "date": "2026-10-16",
+      "duration": "2:10:17",
+      "minutes": 130.28,
+      "category": "main",
+      "year": 2026,
+      "url": "https://retrorocketnetwork.pl/612-homeview-apple-tv-4k-homepod-mini-2-sa-nowosci-od-apple",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/612-homeview-apple-tv-4k-homepod-mini-2-sa-nowosci-od-apple",
+      "hosts_provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/612-homeview-apple-tv-4k-homepod-mini-2-sa-nowosci-od-apple"
+      }
+    },
+    {
+      "record_key": "rk_e03bb4d04af324ce4fd0779a",
+      "episode": "612.5",
+      "title": "612: (Afterparty) Latająca Tesla Roadster",
+      "date": "2026-10-16",
+      "duration": "0:54:22",
+      "minutes": 54.37,
+      "category": "afterparty",
+      "year": 2026,
+      "url": "https://www.patreon.com/iMagazinePL/posts/612-afterparty-172525962",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/612-homeview-apple-tv-4k-homepod-mini-2-sa-nowosci-od-apple",
+      "hosts_provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_ecdc36c2c6cbdccd512fb1b4",
+        "paired_episode": "612"
+      }
     }
   ],
   "stats": {
-    "total_episodes": 593,
-    "total_listening_hours": 1020.3,
+    "total_episodes": 595,
+    "total_listening_hours": 1023.4,
     "average_duration": 103.2,
     "min_duration": 0.18,
     "max_duration": 288.65
