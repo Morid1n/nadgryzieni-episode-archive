@@ -595,3 +595,5 @@
 | 593 | 611.5 | 611: (Afterparty) MX Keypad vs Stream Deck – po co nam przyciski w dobie agentów AI?                         | 2026-10-09   | 1:31:19  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 594 | 612   | 612: HomeView, Apple TV 4K, HomePod mini 2 – są nowości od Apple!                                            | 2026-10-16   | 2:10:17  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 595 | 612.5 | 612: (Afterparty) Latająca Tesla Roadster                                                                    | 2026-10-16   | 0:54:22  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 596 | 613   | 613: iPhone Duo                                                                                              | 2026-10-23   | 2:42:21  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 597 | 613.5 | 613: (Afterparty) Apple TV kontra Smart TV                                                                   | 2026-10-23   | 0:47:41  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |

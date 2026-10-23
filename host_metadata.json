@@ -4571,6 +4571,21 @@
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
       }
     },
+    "rk_64195210c6fa83fcc0374756": {
+      "record_key": "rk_64195210c6fa83fcc0374756",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/613-iphone-duo",
+      "provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/613-iphone-duo"
+      }
+    },
     "rk_64c309ef3806987ef4764cc9": {
       "record_key": "rk_64c309ef3806987ef4764cc9",
       "hosts": [],
@@ -10996,6 +11011,23 @@
       "audit": {
         "parser_version": "nadgryzieni-hosts/2.2",
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
+      }
+    },
+    "rk_fca46659c498c9cd0fdff752": {
+      "record_key": "rk_fca46659c498c9cd0fdff752",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/613-iphone-duo",
+      "provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_64195210c6fa83fcc0374756",
+        "paired_episode": "613"
       }
     },
     "rk_fcf0b4bfb5a4450d35c16bfc": {

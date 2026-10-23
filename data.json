@@ -13007,11 +13007,59 @@
         "paired_record_key": "rk_ecdc36c2c6cbdccd512fb1b4",
         "paired_episode": "612"
       }
+    },
+    {
+      "record_key": "rk_64195210c6fa83fcc0374756",
+      "episode": "613",
+      "title": "613: iPhone Duo",
+      "date": "2026-10-23",
+      "duration": "2:42:21",
+      "minutes": 162.35,
+      "category": "main",
+      "year": 2026,
+      "url": "https://retrorocketnetwork.pl/613-iphone-duo",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/613-iphone-duo",
+      "hosts_provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/613-iphone-duo"
+      }
+    },
+    {
+      "record_key": "rk_fca46659c498c9cd0fdff752",
+      "episode": "613.5",
+      "title": "613: (Afterparty) Apple TV kontra Smart TV",
+      "date": "2026-10-23",
+      "duration": "0:47:41",
+      "minutes": 47.68,
+      "category": "afterparty",
+      "year": 2026,
+      "url": "https://www.patreon.com/iMagazinePL/posts/613-afterparty-173174886",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/613-iphone-duo",
+      "hosts_provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_64195210c6fa83fcc0374756",
+        "paired_episode": "613"
+      }
     }
   ],
   "stats": {
-    "total_episodes": 595,
-    "total_listening_hours": 1023.4,
+    "total_episodes": 597,
+    "total_listening_hours": 1026.9,
     "average_duration": 103.2,
     "min_duration": 0.18,
     "max_duration": 288.65
