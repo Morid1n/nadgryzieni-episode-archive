@@ -1,13 +1,6 @@
 {
   "schema_version": 2,
-  "updated_at_utc": "2026-10-27T16:30:53Z",
+  "updated_at_utc": "2026-10-29T08:30:54Z",
   "source_url": "https://www.youtube.com/@imagazinepl/streams",
-  "events": [
-    {
-      "video_id": "TCN69TbM_MY",
-      "title": "614: Pękające ekrany w iPhone Duo i kolejne nowości Apple | Nadgryzieni",
-      "scheduled_start_utc": "2026-10-29T08:00:00Z",
-      "url": "https://www.youtube.com/watch?v=TCN69TbM_MY"
-    }
-  ]
+  "events": []
 }
