@@ -6080,6 +6080,21 @@
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
       }
     },
+    "rk_8422d3665c28564acae8efa1": {
+      "record_key": "rk_8422d3665c28564acae8efa1",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/614-pekajace-ekrany-w-iphone-duo-i-kolejne-nowosci-apple",
+      "provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/614-pekajace-ekrany-w-iphone-duo-i-kolejne-nowosci-apple"
+      }
+    },
     "rk_8487cc048b294c532a980fc0": {
       "record_key": "rk_8487cc048b294c532a980fc0",
       "hosts": [],
@@ -7480,6 +7495,23 @@
       "audit": {
         "parser_version": "nadgryzieni-hosts/2.2",
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
+      }
+    },
+    "rk_aa6c8db18a94c356128994e0": {
+      "record_key": "rk_aa6c8db18a94c356128994e0",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/614-pekajace-ekrany-w-iphone-duo-i-kolejne-nowosci-apple",
+      "provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_8422d3665c28564acae8efa1",
+        "paired_episode": "614"
       }
     },
     "rk_aa7e88dcfc75a95604f6f5b9": {

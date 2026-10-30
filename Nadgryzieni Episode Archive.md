@@ -597,3 +597,5 @@
 | 595 | 612.5 | 612: (Afterparty) Latająca Tesla Roadster                                                                    | 2026-10-16   | 0:54:22  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 596 | 613   | 613: iPhone Duo                                                                                              | 2026-10-23   | 2:42:21  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 597 | 613.5 | 613: (Afterparty) Apple TV kontra Smart TV                                                                   | 2026-10-23   | 0:47:41  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 598 | 614   | 614: Pękające ekrany w iPhone Duo i kolejne nowości Apple                                                    | 2026-10-29   | 2:11:53  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 599 | 614.5 | 614: (Afterparty) Kupiliśmy drukarki 3D!                                                                     | 2026-10-29   | 1:12:33  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
