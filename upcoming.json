@@ -1,6 +1,13 @@
 {
   "schema_version": 2,
-  "updated_at_utc": "2026-11-06T08:30:36Z",
+  "updated_at_utc": "2026-11-06T16:30:36Z",
   "source_url": "https://www.youtube.com/@imagazinepl/streams",
-  "events": []
+  "events": [
+    {
+      "video_id": "if0IU4nRFpM",
+      "title": "616: Przygody podróżujących drukarzy 3D cz. 5 | Nadgryzieni",
+      "scheduled_start_utc": "2026-11-13T08:00:00Z",
+      "url": "https://www.youtube.com/watch?v=if0IU4nRFpM"
+    }
+  ]
 }
