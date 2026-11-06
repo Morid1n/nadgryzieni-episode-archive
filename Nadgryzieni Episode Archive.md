@@ -599,3 +599,5 @@
 | 597 | 613.5 | 613: (Afterparty) Apple TV kontra Smart TV                                                                   | 2026-10-23   | 0:47:41  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 598 | 614   | 614: Pękające ekrany w iPhone Duo i kolejne nowości Apple                                                    | 2026-10-29   | 2:11:53  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 599 | 614.5 | 614: (Afterparty) Kupiliśmy drukarki 3D!                                                                     | 2026-10-29   | 1:12:33  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 600 | 615   | 615: Pierwsze wrażenia z MacBooka Pro z dotykowym ekranem, nowego iPada mini i iMaca                         | 2026-11-06   | 2:11:04  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 601 | 615.5 | 615: (Afterparty) Koszulkę masz z białym kołnierzem i nie wiem, co się dzieje                                | 2026-11-06   | 1:18:32  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |

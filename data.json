@@ -13103,11 +13103,59 @@
         "paired_record_key": "rk_8422d3665c28564acae8efa1",
         "paired_episode": "614"
       }
+    },
+    {
+      "record_key": "rk_a6ae2104a040f3db31da75b4",
+      "episode": "615",
+      "title": "615: Pierwsze wrażenia z MacBooka Pro z dotykowym ekranem, nowego iPada mini i iMaca",
+      "date": "2026-11-06",
+      "duration": "2:11:04",
+      "minutes": 131.07,
+      "category": "main",
+      "year": 2026,
+      "url": "https://retrorocketnetwork.pl/615-pierwsze-wrazenia-z-macbooka-pro-z-dotykowym-ekranem-nowego-ipada-mini-i-imaca",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/615-pierwsze-wrazenia-z-macbooka-pro-z-dotykowym-ekranem-nowego-ipada-mini-i-imaca",
+      "hosts_provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/615-pierwsze-wrazenia-z-macbooka-pro-z-dotykowym-ekranem-nowego-ipada-mini-i-imaca"
+      }
+    },
+    {
+      "record_key": "rk_fa91bb78806bb2ad8bf0b582",
+      "episode": "615.5",
+      "title": "615: (Afterparty) Koszulkę masz z białym kołnierzem i nie wiem, co się dzieje",
+      "date": "2026-11-06",
+      "duration": "1:18:32",
+      "minutes": 78.53,
+      "category": "afterparty",
+      "year": 2026,
+      "url": "https://www.patreon.com/iMagazinePL/posts/615-afterparty-z-174572736",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/615-pierwsze-wrazenia-z-macbooka-pro-z-dotykowym-ekranem-nowego-ipada-mini-i-imaca",
+      "hosts_provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_a6ae2104a040f3db31da75b4",
+        "paired_episode": "615"
+      }
     }
   ],
   "stats": {
-    "total_episodes": 599,
-    "total_listening_hours": 1030.3,
+    "total_episodes": 601,
+    "total_listening_hours": 1033.8,
     "average_duration": 103.2,
     "min_duration": 0.18,
     "max_duration": 288.65
