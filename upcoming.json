@@ -1,13 +1,6 @@
 {
   "schema_version": 2,
-  "updated_at_utc": "2026-11-03T20:30:35Z",
+  "updated_at_utc": "2026-11-06T08:30:36Z",
   "source_url": "https://www.youtube.com/@imagazinepl/streams",
-  "events": [
-    {
-      "video_id": "IPxJo_h5YwU",
-      "title": "615: Pierwsze wrażenia z MacBooka Pro z dotykowym ekranem, nowego iPada mini i iMaca | Nadgryzieni",
-      "scheduled_start_utc": "2026-11-06T08:00:00Z",
-      "url": "https://www.youtube.com/watch?v=IPxJo_h5YwU"
-    }
-  ]
+  "events": []
 }
