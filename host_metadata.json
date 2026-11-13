@@ -5749,6 +5749,23 @@
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
       }
     },
+    "rk_7ded358c50e653b8a951d895": {
+      "record_key": "rk_7ded358c50e653b8a951d895",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/616-przygody-poczatkujacych-drukarzy-3d-cz-5",
+      "provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_dba9c7fc4094f67426a4189c",
+        "paired_episode": "616"
+      }
+    },
     "rk_7e01b8f5dc3954e8adb6dee1": {
       "record_key": "rk_7e01b8f5dc3954e8adb6dee1",
       "hosts": [
@@ -9497,6 +9514,21 @@
       "audit": {
         "parser_version": "nadgryzieni-hosts/2.2",
         "dataset_fingerprint": "847a28a4246bdae40047ade3347b14feb093b0d569358f7a990ad43c960e9ed8"
+      }
+    },
+    "rk_dba9c7fc4094f67426a4189c": {
+      "record_key": "rk_dba9c7fc4094f67426a4189c",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/616-przygody-poczatkujacych-drukarzy-3d-cz-5",
+      "provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/616-przygody-poczatkujacych-drukarzy-3d-cz-5"
       }
     },
     "rk_dc2d5617a9ecbbde01e5621e": {

@@ -601,3 +601,5 @@
 | 599 | 614.5 | 614: (Afterparty) Kupiliśmy drukarki 3D!                                                                     | 2026-10-29   | 1:12:33  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 600 | 615   | 615: Pierwsze wrażenia z MacBooka Pro z dotykowym ekranem, nowego iPada mini i iMaca                         | 2026-11-06   | 2:11:04  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 601 | 615.5 | 615: (Afterparty) Koszulkę masz z białym kołnierzem i nie wiem, co się dzieje                                | 2026-11-06   | 1:18:32  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 602 | 616   | 616: Przygody początkujących drukarzy 3D cz. 5                                                               | 2026-11-13   | 3:13:43  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 603 | 616.5 | 616: (Afterparty) Przesuń twarz za plecak                                                                    | 2026-11-13   | 0:42:28  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |

@@ -13151,12 +13151,60 @@
         "paired_record_key": "rk_a6ae2104a040f3db31da75b4",
         "paired_episode": "615"
       }
+    },
+    {
+      "record_key": "rk_dba9c7fc4094f67426a4189c",
+      "episode": "616",
+      "title": "616: Przygody początkujących drukarzy 3D cz. 5",
+      "date": "2026-11-13",
+      "duration": "3:13:43",
+      "minutes": 193.72,
+      "category": "main",
+      "year": 2026,
+      "url": "https://retrorocketnetwork.pl/616-przygody-poczatkujacych-drukarzy-3d-cz-5",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/616-przygody-poczatkujacych-drukarzy-3d-cz-5",
+      "hosts_provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/616-przygody-poczatkujacych-drukarzy-3d-cz-5"
+      }
+    },
+    {
+      "record_key": "rk_7ded358c50e653b8a951d895",
+      "episode": "616.5",
+      "title": "616: (Afterparty) Przesuń twarz za plecak",
+      "date": "2026-11-13",
+      "duration": "0:42:28",
+      "minutes": 42.47,
+      "category": "afterparty",
+      "year": 2026,
+      "url": "https://www.patreon.com/iMagazinePL/posts/616-afterparty-175223094",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/616-przygody-poczatkujacych-drukarzy-3d-cz-5",
+      "hosts_provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_dba9c7fc4094f67426a4189c",
+        "paired_episode": "616"
+      }
     }
   ],
   "stats": {
-    "total_episodes": 601,
-    "total_listening_hours": 1033.8,
-    "average_duration": 103.2,
+    "total_episodes": 603,
+    "total_listening_hours": 1037.7,
+    "average_duration": 103.3,
     "min_duration": 0.18,
     "max_duration": 288.65
   },
@@ -13210,5 +13258,5 @@
       "color": "#7bdcb5"
     }
   },
-  "average_duration": 103.2
+  "average_duration": 103.3
 }
