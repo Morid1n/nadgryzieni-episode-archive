@@ -1,6 +1,13 @@
 {
   "schema_version": 2,
-  "updated_at_utc": "2026-11-13T08:30:06Z",
+  "updated_at_utc": "2026-11-17T16:30:40Z",
   "source_url": "https://www.youtube.com/@imagazinepl/streams",
-  "events": []
+  "events": [
+    {
+      "video_id": "VCORqzRHx30",
+      "title": "620: Rozmowy (nie tylko) o tech | Nadgryzieni",
+      "scheduled_start_utc": "2026-12-11T08:00:00Z",
+      "url": "https://www.youtube.com/watch?v=VCORqzRHx30"
+    }
+  ]
 }
