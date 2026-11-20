@@ -603,3 +603,5 @@
 | 601 | 615.5 | 615: (Afterparty) Koszulkę masz z białym kołnierzem i nie wiem, co się dzieje                                | 2026-11-06   | 1:18:32  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 602 | 616   | 616: Przygody początkujących drukarzy 3D cz. 5                                                               | 2026-11-13   | 3:13:43  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
 | 603 | 616.5 | 616: (Afterparty) Przesuń twarz za plecak                                                                    | 2026-11-13   | 0:42:28  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 604 | 617   | 617: Vibe-coding – jak stworzyć własny app dla iPhone od A do Z                                              | 2026-11-20   | 1:34:10  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |
+| 605 | 617.5 | 617: (Afterparty) Michał ma problemy z autem, a Thomas z szafką Ikea                                         | 2026-11-20   | 0:25:40  | Michał Śliwiński; Thomas Voland; Wojtek Pietrusiewicz |

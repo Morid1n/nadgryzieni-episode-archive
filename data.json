@@ -13199,12 +13199,60 @@
         "paired_record_key": "rk_dba9c7fc4094f67426a4189c",
         "paired_episode": "616"
       }
+    },
+    {
+      "record_key": "rk_49c7c7996b17c915c97e5475",
+      "episode": "617",
+      "title": "617: Vibe-coding – jak stworzyć własny app dla iPhone od A do Z",
+      "date": "2026-11-20",
+      "duration": "1:34:10",
+      "minutes": 94.17,
+      "category": "main",
+      "year": 2026,
+      "url": "https://retrorocketnetwork.pl/617-vibe-coding-jak-stworzyc-wlasny-app-dla-iphone-od-a-do-z",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/617-vibe-coding-jak-stworzyc-wlasny-app-dla-iphone-od-a-do-z",
+      "hosts_provenance": {
+        "kind": "direct_source",
+        "source_url": "https://retrorocketnetwork.pl/617-vibe-coding-jak-stworzyc-wlasny-app-dla-iphone-od-a-do-z"
+      }
+    },
+    {
+      "record_key": "rk_c9241bae4b07ee9723607f87",
+      "episode": "617.5",
+      "title": "617: (Afterparty) Michał ma problemy z autem, a Thomas z szafką Ikea",
+      "date": "2026-11-20",
+      "duration": "0:25:40",
+      "minutes": 25.67,
+      "category": "afterparty",
+      "year": 2026,
+      "url": "https://www.patreon.com/iMagazinePL/posts/617-afterparty-z-174176167",
+      "hosts": [
+        "Michał Śliwiński",
+        "Thomas Voland",
+        "Wojtek Pietrusiewicz"
+      ],
+      "hosts_status": "verified",
+      "hosts_source": "paired_rrn",
+      "hosts_source_url": "https://retrorocketnetwork.pl/617-vibe-coding-jak-stworzyc-wlasny-app-dla-iphone-od-a-do-z",
+      "hosts_provenance": {
+        "kind": "paired_rrn",
+        "rule": "afterparty_same_hosts_from_main",
+        "paired_record_key": "rk_49c7c7996b17c915c97e5475",
+        "paired_episode": "617"
+      }
     }
   ],
   "stats": {
-    "total_episodes": 603,
-    "total_listening_hours": 1037.7,
-    "average_duration": 103.3,
+    "total_episodes": 605,
+    "total_listening_hours": 1039.7,
+    "average_duration": 103.1,
     "min_duration": 0.18,
     "max_duration": 288.65
   },
@@ -13258,5 +13306,5 @@
       "color": "#7bdcb5"
     }
   },
-  "average_duration": 103.3
+  "average_duration": 103.1
 }

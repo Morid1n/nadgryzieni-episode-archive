@@ -1,7 +1,7 @@
 # Nadgryzieni — Statistics
 
 > Generated from the episode archive: `Nadgryzieni Episode Archive.md`
-> Last updated: 2026-11-13
+> Last updated: 2026-11-20
 
 ---
 
@@ -9,9 +9,9 @@
 
 | Metric | Value |
 |---|---|
-| **Total episodes** | 603 |
-| **Date range** | 2010-01-28 — 2026-11-13 |
-| **Episodes with duration** | 603 |
+| **Total episodes** | 605 |
+| **Date range** | 2010-01-28 — 2026-11-20 |
+| **Episodes with duration** | 605 |
 | **Episodes without duration** | 0 |
 
 ---
@@ -20,13 +20,13 @@
 
 | Metric | Value |
 |---|---|
-| **Total listening time** | 1037h 44m (1037.7 hours) |
-| **Average duration** | 103.3 min (1.7h) |
-| **Median duration** | 98.0 min (1.6h) |
+| **Total listening time** | 1039h 44m (1039.7 hours) |
+| **Average duration** | 103.1 min (1.7h) |
+| **Median duration** | 97.7 min (1.6h) |
 | **Longest episode** | 288.6 min |
 | **Shortest episode** | 0.2 min |
 | **Episodes over 2 hours** | 215 |
-| **Episodes under 30 minutes** | 44 |
+| **Episodes under 30 minutes** | 45 |
 
 ---
 
@@ -50,7 +50,7 @@
 | 2023 | 56 | 144.4 min |
 | 2024 | 58 | 133.3 min |
 | 2025 | 57 | 128.3 min |
-| 2026 | 71 | 124.5 min |
+| 2026 | 73 | 122.7 min |
 
 ---
 
@@ -58,10 +58,10 @@
 
 | Bracket | Count | % |
 |---|---|---|
-| Under 30 min | 44 | 7.3% |
-| 30 min – 1 hour | 92 | 15.3% |
-| 1 hour – 2 hours | 252 | 41.8% |
-| 2 hours – 3 hours | 162 | 26.9% |
+| Under 30 min | 45 | 7.4% |
+| 30 min – 1 hour | 92 | 15.2% |
+| 1 hour – 2 hours | 253 | 41.8% |
+| 2 hours – 3 hours | 162 | 26.8% |
 | 3 hours – 4 hours | 50 | 8.3% |
 | Over 4 hours | 3 | 0.5% |
 
@@ -71,7 +71,7 @@
 
 | Year | Count |
 |---|---|
-| 2026 | 71 |
+| 2026 | 73 |
 | 2025 | 57 |
 | 2024 | 58 |
 | 2023 | 56 |
@@ -96,16 +96,16 @@
 | Month | Count | % |
 |---|---|---|
 | January | 56 | 9.3% |
-| February | 42 | 7.0% |
-| March | 51 | 8.5% |
+| February | 42 | 6.9% |
+| March | 51 | 8.4% |
 | April | 46 | 7.6% |
-| May | 48 | 8.0% |
+| May | 48 | 7.9% |
 | June | 52 | 8.6% |
-| July | 57 | 9.5% |
+| July | 57 | 9.4% |
 | August | 44 | 7.3% |
 | September | 52 | 8.6% |
 | October | 50 | 8.3% |
-| November | 44 | 7.3% |
+| November | 46 | 7.6% |
 | December | 61 | 10.1% |
 
 ---
@@ -114,11 +114,11 @@
 
 | Day | Count | % |
 |---|---|---|
-| Monday | 57 | 9.5% |
+| Monday | 57 | 9.4% |
 | Tuesday | 41 | 6.8% |
 | Wednesday | 53 | 8.8% |
-| Thursday | 92 | 15.3% |
-| Friday | 317 | 52.6% |
+| Thursday | 92 | 15.2% |
+| Friday | 319 | 52.7% |
 | Saturday | 25 | 4.1% |
 | Sunday | 18 | 3.0% |
 
@@ -128,8 +128,8 @@
 
 | Category | Count |
 |---|---|
-| Main episodes | 534 |
-| (Afterparty) | 24 |
+| Main episodes | 535 |
+| (Afterparty) | 25 |
 | (Live) | 11 |
 | (Po Godzinach) | 10 |
 | SP (special) | 7 |
@@ -165,35 +165,35 @@
 |---|---|
 | pro | 91 |
 | apple | 71 |
-| iphone | 69 |
+| iphone | 70 |
 | nie | 30 |
-| afterparty | 25 |
+| afterparty | 26 |
 | mac | 24 |
 | macbook | 24 |
 | ipad | 23 |
 | air | 22 |
 | wwdc | 21 |
+| jak | 20 |
 | nowy | 19 |
-| jak | 19 |
 | mini | 17 |
 | wszystko | 17 |
 | wrażenia | 17 |
 | jest | 16 |
 | pierwsze | 14 |
 | nowe | 13 |
+| dla | 12 |
 | live | 12 |
-| google | 12 |
 
 ---
 
 ## Summary
 
-- **Total episodes:** 603
-- **Total listening time:** 1037h 44m
-- **Average duration:** 103.3 min
-- **Median duration:** 98.0 min
-- **Date range:** 2010-01-28 — 2026-11-13
+- **Total episodes:** 605
+- **Total listening time:** 1039h 44m
+- **Average duration:** 103.1 min
+- **Median duration:** 97.7 min
+- **Date range:** 2010-01-28 — 2026-11-20
 
 ---
 
-*Last updated: 2026-11-13*
+*Last updated: 2026-11-20*
